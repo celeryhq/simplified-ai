@@ -27,28 +27,10 @@ The two compose: `generate-image` returns an **asset id** → pass it into
 
 All three read the **same** skills and the **same** [`.mcp.json`](.mcp.json) connector.
 
-## Layout
-
-```
-simplified-for-ai/
-├── .mcp.json                    # hosted MCP connector (OAuth) — shared by all clients
-├── .claude-plugin/plugin.json   # Claude Code manifest
-├── .cursor-plugin/plugin.json   # Cursor manifest
-├── .codex-plugin/plugin.json    # Codex / ChatGPT Apps manifest
-├── AGENTS.md                    # agent operating guidance (Codex reads natively)
-├── SKILL_TREE.md                # skill index
-├── README.md
-├── skills/
-│   ├── generate-image/
-│   │   ├── SKILL.md             # self-contained (models, storage, payloads, prompts)
-│   │   └── agents/openai.yaml   # per-skill Codex metadata
-│   └── simplified-social/
-│       ├── SKILL.md
-│       ├── agents/openai.yaml
-│       └── references/{platform-settings,analytics}.md
-├── assets/                      # simplified-logo.png, simplified-treadmark-logo.png
-└── evals/                       # test cases + runnable I/O harness
-```
+Skills live in [`skills/`](skills/); the shared MCP connector is in
+[`.mcp.json`](.mcp.json); per-client manifests are in `.claude-plugin/`,
+`.cursor-plugin/`, and `.codex-plugin/`. See [AGENTS.md](AGENTS.md) and
+[SKILL_TREE.md](SKILL_TREE.md) for details.
 
 ## Connector & auth
 
