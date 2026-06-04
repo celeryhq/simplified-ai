@@ -18,12 +18,14 @@ The two compose: `generate-image` returns an **asset id** → pass it into
 
 **Claude Code**
 ```
-/plugin add celeryhq/simplified-for-ai
+/plugin marketplace add celeryhq/simplified-for-ai
+/plugin install simplified@simplified-for-ai
 ```
 
 **Codex**
 ```
-codex plugin add celeryhq/simplified-for-ai
+codex plugin marketplace add celeryhq/simplified-for-ai
+codex plugin add simplified@simplified-for-ai
 ```
 
 **Cursor** — Settings → Plugins → add from this repo.
@@ -36,7 +38,10 @@ All clients read the same plugin and the same [`.mcp.json`](.mcp.json) connector
 
 ```
 simplified-for-ai/
-├── .claude-plugin/plugin.json
+├── .claude-plugin/
+│   ├── marketplace.json            ← Claude Code marketplace catalog
+│   └── plugin.json                 ← Claude Code plugin manifest
+├── .agents/plugins/marketplace.json   ← Codex marketplace catalog
 ├── .codex-plugin/plugin.json
 ├── .cursor-plugin/plugin.json
 ├── .mcp.json                       ← hosted MCP connector (OAuth)
