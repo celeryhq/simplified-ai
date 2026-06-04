@@ -22,11 +22,10 @@ The two compose: `generate-image` returns an **asset id** → pass it into
 /plugin install simplified@simplified-for-ai
 ```
 
-**Codex**
-```
-codex plugin marketplace add celeryhq/simplified-for-ai
-codex plugin add simplified@simplified-for-ai
-```
+**Codex** — point Codex at this repo as a working directory; it reads
+[`AGENTS.md`](AGENTS.md) and [`.mcp.json`](.mcp.json) automatically. (One-step
+install via `codex plugin add` is pending submission to OpenAI's curated
+marketplace.)
 
 **Cursor** — Settings → Plugins → add from this repo.
 
@@ -41,8 +40,6 @@ simplified-for-ai/
 ├── .claude-plugin/
 │   ├── marketplace.json            ← Claude Code marketplace catalog
 │   └── plugin.json                 ← Claude Code plugin manifest
-├── .agents/plugins/marketplace.json   ← Codex marketplace catalog
-├── .codex-plugin/plugin.json
 ├── .cursor-plugin/plugin.json
 ├── .mcp.json                       ← hosted MCP connector (OAuth)
 ├── AGENTS.md, SKILL_TREE.md
