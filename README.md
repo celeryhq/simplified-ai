@@ -22,29 +22,33 @@ The two compose: `generate-image` returns an **asset id** → pass it into
 /plugin install simplified@simplified-for-ai
 ```
 
-**Codex** — point Codex at this repo as a working directory; it reads
-[`AGENTS.md`](AGENTS.md) and [`.mcp.json`](.mcp.json) automatically. (One-step
-install via `codex plugin add` is pending submission to OpenAI's curated
-marketplace.)
+**Codex**
+```
+codex plugin marketplace add celeryhq/simplified-for-ai
+codex plugin add simplified@simplified-for-ai
+```
 
 **Cursor** — Settings → Plugins → add from this repo.
 
 **ChatGPT (Apps)** — enable the Simplified app (hosted MCP connector); no install needed.
 
-All clients read the same plugin and the same [`.mcp.json`](.mcp.json) connector.
+All clients read the same plugin and the same [`.mcp.json`](simplified/.mcp.json) connector.
 
 ## Layout
 
 ```
-simplified-for-ai/
-├── .claude-plugin/
-│   ├── marketplace.json            ← Claude Code marketplace catalog
-│   └── plugin.json                 ← Claude Code plugin manifest
-├── .cursor-plugin/plugin.json
-├── .mcp.json                       ← hosted MCP connector (OAuth)
-├── AGENTS.md, SKILL_TREE.md
-├── skills/{generate-image,simplified-social}/
-├── assets/
+simplified-for-ai/                      ← marketplace root
+├── .claude-plugin/marketplace.json     → ./simplified   (Claude Code)
+├── .agents/plugins/marketplace.json    → ./simplified   (Codex)
+├── README.md, LICENSE
+└── simplified/                         ← the plugin
+    ├── .claude-plugin/plugin.json
+    ├── .codex-plugin/plugin.json
+    ├── .cursor-plugin/plugin.json
+    ├── .mcp.json                       ← hosted MCP connector (OAuth)
+    ├── AGENTS.md, SKILL_TREE.md
+    ├── skills/{generate-image,simplified-social}/
+    └── assets/
 ├── evals/                          ← contributor QA (not installed)
 ├── README.md
 └── LICENSE

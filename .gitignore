@@ -1,3 +1,6 @@
 __pycache__/
 *.pyc
 /tmp/
+
+# Submission prep — kept local, not checked in
+/submission/
