@@ -1,11 +1,11 @@
 {
-  "name": "simplified-for-ai",
+  "name": "simplified-ai",
   "interface": {
     "displayName": "Simplified"
   },
   "plugins": [
     {
-      "name": "simplified-for-ai",
+      "name": "simplified-ai",
       "source": {
         "source": "local",
         "path": "./"

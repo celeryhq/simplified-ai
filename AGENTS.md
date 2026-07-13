@@ -18,10 +18,9 @@ LinkedIn, Pinterest, Threads, Bluesky, and Google Business — through:
 ## Plugin structure
 
 ```
-simplified-for-ai/
+simplified-ai/
 ├── .mcp.json                 # hosted MCP connector (OAuth) — shared by all clients
 ├── .claude-plugin/plugin.json   # Claude Code manifest
-├── .cursor-plugin/plugin.json   # Cursor manifest
 ├── .codex-plugin/plugin.json    # Codex / ChatGPT Apps manifest
 ├── skills/                   # SKILL.md workflows (Agent Skills spec)
 │   ├── generate-image/

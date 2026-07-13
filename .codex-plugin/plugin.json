@@ -1,13 +1,13 @@
 {
   "name": "simplified-ai",
-  "version": "1.0.0+codex.20260615170129",
+  "version": "1.0.0",
   "description": "Generate AI images and manage social media with Simplified from Codex.",
   "author": {
     "name": "Simplified",
     "url": "https://simplified.com"
   },
   "homepage": "https://simplified.com",
-  "repository": "https://github.com/celeryhq/simplified-for-ai",
+  "repository": "https://github.com/celeryhq/simplified-ai",
   "license": "MIT",
   "keywords": [
     "image-generation",
@@ -32,7 +32,7 @@
     "websiteURL": "https://simplified.com",
     "privacyPolicyURL": "https://simplified.com/privacy",
     "termsOfServiceURL": "https://simplified.com/terms",
-    "brandColor": "#7C3AED",
+    "brandColor": "#FFAD00",
     "composerIcon": "./assets/simplified-icon-256.png",
     "logo": "./assets/simplified-logo.png",
     "defaultPrompt": [

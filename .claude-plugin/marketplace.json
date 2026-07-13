@@ -10,7 +10,7 @@
   },
   "plugins": [
     {
-      "name": "simplified",
+      "name": "simplified-ai",
       "source": "./",
       "description": "Generate AI images and manage social media (post, schedule, draft, analyze) across 10 platforms — via skills + a hosted MCP connector.",
       "version": "1.0.0",
@@ -25,7 +25,8 @@
         "social-media",
         "content-creation",
         "scheduling",
-        "analytics"
+        "analytics",
+        "simplified"
       ]
     }
   ]

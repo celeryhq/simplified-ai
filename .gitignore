@@ -2,5 +2,12 @@ __pycache__/
 *.pyc
 /tmp/
 
+# macOS / editor cruft
+.DS_Store
+.idea/
+.vscode/
+.venv/
+node_modules/
+
 # Submission prep — kept local, not checked in
 /submission/
