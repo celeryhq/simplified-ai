@@ -6,14 +6,14 @@
   },
   "metadata": {
     "description": "Generate AI images and manage social media with Simplified, from your AI coding assistant.",
-    "version": "1.0.0"
+    "version": "1.0.1"
   },
   "plugins": [
     {
       "name": "simplified-ai",
       "source": "./",
       "description": "Generate AI images and manage social media (post, schedule, draft, analyze) across 10 platforms — via skills + a hosted MCP connector.",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "author": {
         "name": "Simplified",
         "url": "https://simplified.com"
