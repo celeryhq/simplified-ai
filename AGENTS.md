@@ -60,6 +60,13 @@ client refreshes its token automatically (server emits the standard challenge).
   publish action; the `action` enum is `schedule | add_to_queue | draft`.
 - **Carry the `asset_id`, not the URL.** Generated-image URLs are signed and expire;
   the `asset_id` is permanent and is what `simplified-social.media` accepts.
+- **Show returned URLs as links — never embed them.** Any URL a tool or skill
+  returns (image results, asset URLs, review-bundle links, exports) must be shown as
+  a plain URL or a Markdown link — **never** Markdown image syntax (`![alt](url)`)
+  and never anything that makes the client fetch/render the asset inline. The user
+  clicks the link; the agent does not render it. Inline rendering breaks on signed/
+  expiring URLs and produces poor UX (e.g. Codex trying to display the image instead
+  of showing a clickable URL).
 - **Stop if not connected.** If `social_getSocialMediaAccounts` is empty, tell the
   user to connect an account — don't attempt to post.
 

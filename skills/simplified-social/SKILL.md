@@ -78,6 +78,11 @@ Build the post payload:
 
 Publishing is outward-facing. For `schedule` / `add_to_queue`, **show the composed post to the user and get explicit confirmation first** (drafting first with `action:"draft"` is a good way to preview). Then call `social_createSocialMediaPost`.
 
+**Show returned URLs as links, never embed them.** Any URL these tools return
+(review-bundle links, published-post URLs, media URLs) must be presented as a plain
+URL or Markdown link — **never** Markdown image syntax (`![](url)`) and never
+inline-rendered. The user clicks the link; the agent does not render it.
+
 ## Choosing the Right Analytics Tool
 
 | User asks about... | Tool to call |
