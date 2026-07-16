@@ -3,6 +3,8 @@
 Machine-checkable definitions behind [openai-test-cases.md](openai-test-cases.md).
 Each case has: the user prompt, the **tool sequence** we expect the model to call,
 the **arguments contract**, and **assertions** (deterministic checks on tool I/O).
+The eight marketer workflow skills have a separate 24-case agent suite in
+[skill-cases.json](skill-cases.json).
 
 Two layers:
 - **Agent layer** — does the model pick the right tool(s) for the prompt? (eyeballed

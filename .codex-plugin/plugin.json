@@ -1,7 +1,7 @@
 {
   "name": "simplified-ai",
-  "version": "1.0.1",
-  "description": "Generate AI images and manage social media with Simplified from Codex.",
+  "version": "1.2.0",
+  "description": "Operate Simplified and run marketer-grade content workflows from Codex.",
   "author": {
     "name": "Simplified",
     "url": "https://simplified.com"
@@ -15,14 +15,17 @@
     "content-creation",
     "scheduling",
     "analytics",
+    "video-generation",
+    "brand-management",
+    "marketing-workflows",
     "simplified"
   ],
   "skills": "./skills/",
   "mcpServers": "./.mcp.json",
   "interface": {
     "displayName": "Simplified for AI",
-    "shortDescription": "Generate images and manage social posts with Simplified.",
-    "longDescription": "Simplified for AI brings image generation and social media workflows into Codex through Agent Skills and the hosted Simplified MCP connector. Generate reusable image assets, draft social posts, schedule content, queue posts, and review analytics across connected channels.",
+    "shortDescription": "Operate Simplified with marketer-grade workflows.",
+    "longDescription": "Simplified for AI combines platform operator skills with marketer workflows through the hosted Simplified MCP connector. Manage brand context and marketing projects, generate reusable image and video assets, plan evergreen and local content, build cross-platform campaigns, run disciplined creative tests, prepare stakeholder reviews, publish safely, and turn social analytics into next actions.",
     "developerName": "Simplified",
     "category": "Productivity",
     "capabilities": [
@@ -36,9 +39,9 @@
     "composerIcon": "./assets/simplified-icon-256.png",
     "logo": "./assets/simplified-logo.png",
     "defaultPrompt": [
-      "Generate a social image with Simplified.",
-      "Draft a post for my connected channels.",
-      "Review social analytics in Simplified."
+      "Plan a month of content for my connected channels.",
+      "Turn this launch brief into a cross-platform campaign.",
+      "Review social performance and recommend what to do next."
     ]
   }
 }

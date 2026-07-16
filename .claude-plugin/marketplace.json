@@ -5,15 +5,15 @@
     "url": "https://simplified.com"
   },
   "metadata": {
-    "description": "Generate AI images and manage social media with Simplified, from your AI coding assistant.",
-    "version": "1.0.1"
+    "description": "Operate Simplified and run marketer-grade content workflows.",
+    "version": "1.2.0"
   },
   "plugins": [
     {
       "name": "simplified-ai",
       "source": "./",
-      "description": "Generate AI images and manage social media (post, schedule, draft, analyze) across 10 platforms — via skills + a hosted MCP connector.",
-      "version": "1.0.1",
+      "description": "Operate Simplified and run marketer-grade creation, campaign, evergreen, local, testing, review, and performance workflows.",
+      "version": "1.2.0",
       "author": {
         "name": "Simplified",
         "url": "https://simplified.com"
@@ -26,6 +26,9 @@
         "content-creation",
         "scheduling",
         "analytics",
+        "video-generation",
+        "brand-management",
+        "marketing-workflows",
         "simplified"
       ]
     }

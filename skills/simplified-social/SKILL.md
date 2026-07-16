@@ -5,7 +5,8 @@ description: >-
   queue, draft, and analyze across Facebook, Instagram, TikTok, YouTube,
   LinkedIn, Pinterest, Threads, Bluesky and Google Business. Triggers: social
   media, post to, schedule post, publish on, social accounts, analytics, reach,
-  impressions, engagement, followers growth, content calendar.
+  impressions, engagement, followers growth, content calendar, attach local
+  media, upload an image or video for a social post.
 ---
 
 # Simplified Social Media
@@ -14,7 +15,9 @@ Schedule, queue, and draft social media posts, and retrieve analytics across 10 
 
 ## Connector
 
-All tools (`social_getSocialMediaAccounts`, `social_createSocialMediaPost`, `social_getSocialMediaAnalyticsRange`, etc.) are provided by the **Simplified hosted MCP connector** (`https://apikit.simplified.com/mcp`), namespaced `social_*`. They are not built-in tools.
+All tools (`social_getSocialMediaAccounts`, `social_createSocialMediaPost`,
+`api_createAsset`, etc.) are provided by the **Simplified hosted MCP connector**
+(`https://apikit.simplified.com/mcp`). They are not built-in tools.
 
 The connector is **OAuth-secured** — Codex walks the OAuth flow; there is no API key to set.
 
@@ -73,6 +76,13 @@ Build the post payload:
 - `additional` — platform-specific settings (see below)
 
 **Attaching a generated image:** `media` accepts Simplified **asset UUIDs**, resolved server-side to fresh permanent URLs at publish time — exactly what the **generate-image** skill returns with `storage:"asset"`. Pass that `asset_id` straight into `media`.
+
+**Attaching a local file:** never pass a client-local path to the hosted server.
+Read [references/assets.md](references/assets.md), then follow the UI-equivalent
+flow: `api_signAssetUpload` → direct client PUT to signed storage →
+`api_registerAsset`. Poll `api_getAsset` until `status=4`, then pass that exact UUID
+into `media`. Never expose the signed upload URL or attach Simplified auth to the
+storage PUT.
 
 ### Step 4: Confirm, then Publish
 
@@ -138,6 +148,34 @@ Returns `{ accounts: [...] }`. Each account object:
 | `media`       | string[] | No       | Asset UUIDs or public media URLs (max 10) |
 | `tags`        | int[]    | No       | Tag IDs |
 | `additional`  | object   | Per platform | Platform-specific settings |
+
+### `social_getSocialMediaDrafts`
+
+Lists unpublished drafts for selected accounts. `account_ids` is required and must
+be a comma-separated string of numeric IDs returned by
+`social_getSocialMediaAccounts`, for example `"123,456"`. If a multi-account lookup
+returns no rows when drafts are expected, retry once per account ID, merge the
+results, and deduplicate by exact draft ID. This per-account fallback is read-only
+and must not create replacement drafts. Optional filters are `page`, `per_page`,
+`search`, `tz`, `order_by`, and `order` (`asc` or `desc`). Omit ordering by default;
+if the connector rejects an optional filter, retry without that filter rather than
+treating the drafts as absent.
+
+### `social_updateSocialMediaDraft`
+
+Updates one draft. `draft_id` is required. Optional fields are `message`, `media`,
+`tags`, `date`, `time`, and `timezone`. Only pass fields the user asked to change.
+
+### `social_createSocialMediaReviewBundle`
+
+Creates a shareable stakeholder-review package. `title` is required; `description`
+and `draft_ids` are optional. Prefer one call containing all selected draft IDs.
+Draft IDs must come from `social_getSocialMediaDrafts`; never fabricate them. The
+response includes `linkToReview`, which must be shown as a link and never embedded.
+
+The hosted connector currently does not expose a separate tool for appending drafts
+to an existing bundle. Do not recreate an existing bundle unless the user explicitly
+asks for a replacement.
 
 ### `social_getSocialMediaAnalyticsRange`
 
@@ -300,6 +338,8 @@ Key enum values:
 - **Audience data availability varies** — `social_getSocialMediaAnalyticsAudience` may return partial or empty data depending on the network.
 - **Post `date` format** must be `YYYY-MM-DD HH:MM` (24-hour, no seconds, no timezone — uses account timezone).
 - **Media** must be a Simplified asset UUID (from `generate-image` with `storage:"asset"`) or a publicly accessible URL — localhost does not work.
+- **Local media** uses `api_signAssetUpload` → direct storage PUT →
+  `api_registerAsset`; never send a local path to the hosted connector.
 - **`date` is required** when `action` is `schedule` — omit it for `add_to_queue` and `draft`.
 - **Platform character limits** — see `references/platform-settings.md`.
 - **Instagram always requires `channel`** — include `channel: { value: "direct" }` for every Instagram post.

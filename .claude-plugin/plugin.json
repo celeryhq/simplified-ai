@@ -1,8 +1,8 @@
 {
   "name": "simplified-ai",
   "displayName": "Simplified",
-  "description": "Generate AI images and manage social media (post, schedule, draft, analyze) across 10 platforms — via skills + a hosted MCP connector.",
-  "version": "1.0.1",
+  "description": "Operate Simplified and run marketer-grade creation, campaign, evergreen, local, testing, review, and performance workflows.",
+  "version": "1.2.0",
   "license": "MIT",
   "author": {
     "name": "Simplified",
@@ -16,6 +16,9 @@
     "content-creation",
     "scheduling",
     "analytics",
+    "video-generation",
+    "brand-management",
+    "marketing-workflows",
     "simplified"
   ]
 }

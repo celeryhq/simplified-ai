@@ -8,7 +8,7 @@ interface:
   icon_small: "assets/simplified-icon-256.png"
   icon_large: "assets/simplified-logo.png"
   brand_color: "#FFAD00"   # Simplified amber (wordmark gray: #43464E)
-  default_prompt: "Generate a product image of a coffee cup on a white background"
+  default_prompt: "Use $generate-image to create a product image of a coffee cup on a white background."
 
 dependencies:
   tools:

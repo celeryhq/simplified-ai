@@ -13,18 +13,18 @@ social.
 
 ## The two surfaces
 
-There is **one codebase** (`simplified-apikit`, built on [FastMCP](https://gofastmcp.com))
-exposed through **two surfaces** that differ only by which tools they expose (the
-**profile**):
+There is **one toolkit codebase** (`simplified-apikit`, built on
+[FastMCP](https://gofastmcp.com)) exposed through two surfaces. The hosted deployment
+uses a curated allowlist; `smp serve` uses a local profile:
 
 | Surface | URL / entry | Profile | Tools | Install |
 |---|---|---|---|---|
-| **Hosted connector** | `https://apikit.simplified.com/mcp` | `mcp` | 17 (social + image gen) | none — OAuth |
-| **Full toolkit** | `smp serve` (local stdio/HTTP) | `full` | ~100 (all namespaces) | `pipx install simplified-apikit` |
+| **Hosted connector** | `https://apikit.simplified.com/mcp` | deployed allowlist | 105 verified live | none — OAuth |
+| **Full toolkit** | `smp serve` (local stdio/HTTP) | `full` | 106 (all namespaces) | `pipx install simplified-apikit` |
 
-Both auto-generate their tools from the same bundled OpenAPI specs, so tool names,
-request shapes, async polling, and composite-field handling never drift between
-them.
+Both auto-generate tool schemas from OpenAPI specs. Because the hosted allowlist is
+deployed independently, keep its inventory under test; the verified snapshot lives
+in [`evals/hosted-tool-inventory.json`](../evals/hosted-tool-inventory.json).
 
 ---
 
@@ -35,14 +35,57 @@ The server selects a **tool profile** via the `SMP_PROFILE` env var (or
 
 | Profile | Tools | Purpose |
 |---|---|---|
-| `mcp` | 16 social tools + `api_generateImage` | The curated public connector. Small enough for app-directory review forms; focused on the two published skills. **This is what the hosted connector runs.** |
-| `full` | everything (~100) | Default for the CLI and `smp serve`. The entire platform. |
+| `mcp` | 49 tools: workspace identity, teamspace discovery, social, image/video generation, assets, brand context, and marketing projects | A compact local profile for marketer workflows. |
+| `full` | everything (106) | Default for the CLI and `smp serve`. The entire platform. |
 
 ```bash
 smp serve --profile full          # all tools (default)
-smp serve --profile mcp           # mirror the hosted connector
+smp serve --profile mcp           # run the local curated profile
 SMP_PROFILE=mcp smp serve         # same, via env
 ```
+
+### Hosted inventory snapshot
+
+Verified through authenticated Codex MCP initialization on 2026-07-15, the hosted
+connector exposes **105 tools**. It covers all five namespaces documented below:
+project management, workspace and brand operations, AI image/video/audio generation,
+assets and documents, social operations and analytics, media editing and
+transcription, and notifications.
+
+The hosted social surface supports creating a review bundle with all selected IDs
+in `social_createSocialMediaReviewBundle.draft_ids`. It does **not** currently
+expose `social_addDraftsToSocialMediaReviewBundle`; that append operation remains
+available in the full toolkit.
+
+The local `mcp` source profile remains a compact 49-tool subset for marketer
+workflows. It includes authenticated `whoami`, workspace details, teamspace
+discovery, all 16 social operations, image/video generation, direct asset ingestion,
+brand context, and marketing projects. The hosted deployment is broader than that
+local profile and currently matches the 106-tool `full` catalog except for
+`social_addDraftsToSocialMediaReviewBundle`.
+
+Attached files follow the same flow as the Simplified UI: authenticated signing,
+direct client-to-storage PUT, then asset registration. The hosted server never
+attempts to read a client-local path or proxy file bytes.
+
+The source inventory is captured separately in
+[`evals/source-profile-tool-inventory.json`](../evals/source-profile-tool-inventory.json).
+The live hosted snapshot is captured independently because hosted deployment and
+local profile definitions can change on different release schedules.
+
+### Workspace and teamspace context
+
+`api_getWorkspaceInfo` is the hosted connector's authoritative `whoami`: it returns
+the authenticated user, the credential-bound workspace, workspace defaults, and
+active teamspaces. `api_listTeamspaces` resolves names to numeric IDs, and
+`api_getWorkspace` reads richer workspace metadata.
+
+The CLI can persist an active teamspace and send its numeric ID as the `Space`
+header. Hosted MCP remains stateless: every generated tool accepts optional
+`space_id`, which middleware forwards as `Space` for that call, its asynchronous
+polls, and hook follow-ups. Agents resolve a teamspace once and pass the same
+`space_id` on every related call; omitting it returns to the credential's default
+workspace context.
 
 ---
 
@@ -56,7 +99,7 @@ SMP_PROFILE=mcp smp serve         # same, via env
 - the agent toolkit powering Simplified's own assistants
 
 > **Distribution.** The hosted connector at `https://apikit.simplified.com/mcp` is
-> the public, zero-install path and covers image generation + social. The
+> the public, zero-install path and exposes the 105-tool hosted profile. The
 > `simplified-apikit` CLI/toolkit (the `full` profile) is distributed to Simplified
 > workspaces — see your workspace settings or contact Simplified for the install
 > command. The sections below document what it does once installed.
@@ -116,7 +159,7 @@ Boards, statuses, tasks, and everything around them.
   `addTaskDependency`, `removeTaskDependency`
 - **Workspace** — `listWorkspaceMembers`
 
-### `api` — Assets, brand kits, generation, documents (36)
+### `api` — Assets, brand kits, generation, documents (39)
 
 - **Workspace context** — `listTeamspaces`, `getWorkspace`, `getWorkspaceInfo`
 - **Brand kits (V2)** — `listBrandKits`, `createBrandKit`, `getBrandKit`,
@@ -137,7 +180,8 @@ Boards, statuses, tasks, and everything around them.
 
 ### `social` — Social media (16)
 
-The same suite the hosted connector exposes.
+The full toolkit includes one operation beyond the current hosted connector:
+appending drafts to an existing review bundle.
 
 - **Accounts** — `getSocialMediaAccounts`
 - **Posts** — `createSocialMediaPost`, `getSocialMediaPosts`,
@@ -195,19 +239,16 @@ Desktop Custom Connectors, Cursor, Codex, and any spec-compliant MCP host.
 
 ### Codex CLI (OAuth-gated remote MCP)
 
-Codex's OAuth-capable client is behind an experimental flag:
+Add the connector to Codex configuration:
 
 ```toml
-# ~/.codex/config.toml
-[features]
-experimental_use_rmcp_client = true
-
 [mcp_servers.simplified]
 url = "https://apikit.simplified.com/mcp"
 ```
 
-Then `codex mcp login simplified` to run the OAuth flow. (Without the flag, Codex
-reports `Auth: Unsupported`.)
+Then run `codex mcp login simplified` to complete OAuth. The hosted connector uses
+stateless token validation; fresh and concurrent Codex sessions were verified on
+2026-07-15 without `SessionExpired404`.
 
 ### Local full toolkit (stdio)
 

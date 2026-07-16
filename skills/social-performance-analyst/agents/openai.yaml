@@ -1,0 +1,18 @@
+interface:
+  display_name: "Social Performance Analyst"
+  short_description: "Turn social metrics into clear next actions."
+  icon_small: "assets/simplified-icon-256.png"
+  icon_large: "assets/simplified-logo.png"
+  brand_color: "#FFAD00"
+  default_prompt: "Use $social-performance-analyst to explain last month's results and recommend what to do next."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "simplified"
+      description: "Simplified hosted MCP connector for social analytics."
+      transport: "http"
+      url: "https://apikit.simplified.com/mcp"
+
+policy:
+  allow_implicit_invocation: true

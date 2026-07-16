@@ -1,40 +1,125 @@
 # Skill Tree
 
-Index of skills in this plugin. Each is a directory under [skills/](skills/) with a
-`SKILL.md` (Agent Skills spec) plus an optional `agents/openai.yaml` (Codex metadata)
-and `references/` for deep detail.
+The plugin provides fourteen shared Codex/Claude skills in two layers: six
+Simplified platform operators and eight marketer workflows. Each top-level folder
+contains a canonical `SKILL.md`; `agents/openai.yaml` adds Codex UI metadata without
+forking the workflow instructions.
 
-```
+```text
 skills/
-├── generate-image/
-│   ├── SKILL.md                 # text-to-image generation workflow
-│   └── agents/openai.yaml       # Codex UI metadata + MCP dependency
-└── simplified-social/
-    ├── SKILL.md                 # post / schedule / draft / analyze workflow
-    ├── agents/openai.yaml
-    └── references/
-        ├── platform-settings.md # per-platform `additional` settings + limits
-        └── analytics.md         # metrics, default sets, response shapes
+├── generate-image/                 # model discovery → reusable image asset
+├── generate-video/                 # model discovery → reusable video asset
+├── simplified-workspace/           # whoami + workspace/teamspace resolution
+├── simplified-social/              # assets, accounts, posts, reviews, analytics
+├── manage-brand/                   # brand kit + reusable brand context
+├── manage-projects/                # projects, deliverables, handoffs, exports
+├── social-content-planner/         # goals → weekly/monthly calendar
+├── cross-platform-campaign/        # brief → coordinated channel rollout
+├── content-repurposer/             # source → channel-native post sequence
+├── evergreen-content-engine/       # durable expertise → renewable content system
+├── local-business-marketing/       # local truth → visits, calls, and bookings
+├── creative-testing/               # hypothesis → controlled creative learning
+├── social-performance-analyst/     # metrics → evidence-backed next actions
+└── campaign-review/                # drafts → stakeholder approval package
 ```
 
-## Skills
+## Platform operators
 
-### generate-image
-**Trigger:** create / generate / make / design an image, photo, graphic, logo, banner.
-**Tool:** `api_generateImage`.
-**Does:** text-to-image across Flux, Google (Gemini/Imagen), OpenAI GPT Image,
-Ideogram, Stable Diffusion, Qwen, SeeDream. Returns a viewable URL; with
-`storage:"asset"` also a reusable `asset_id` for the social skill.
+### `simplified-workspace`
 
-### simplified-social
-**Trigger:** post / schedule / publish to social; social accounts; analytics, reach,
-engagement, followers.
-**Tools:** `social_getSocialMediaAccounts`, `social_createSocialMediaPost`,
-`social_getSocialMediaAnalytics{Range,Posts,Aggregated,Audience}`, plus drafts/tags.
-**Does:** draft → confirm → schedule/queue posts, and pull analytics, across 10
-platforms. Accepts a `generate-image` `asset_id` in `media` to post a generated image.
+Identify the authenticated user and workspace, read workspace defaults, resolve
+accessible teamspaces to numeric IDs, and prevent cross-space resource mistakes.
 
-## Cross-skill flow
+### `generate-image`
 
-`generate-image` (`storage:"asset"`) → `asset_id` → `simplified-social`
-(`media:["<asset_id>"]`) → draft post → confirm → publish.
+Discover current image models and field schemas, generate from prompts or
+references, and return a permanent asset ID when the result will be reused.
+
+### `generate-video`
+
+Discover current video models and capabilities, generate text/image/video-guided
+motion, poll the correct variation status, and preserve reusable video assets.
+
+### `simplified-social`
+
+Handle direct asset uploads, account discovery, platform-specific post settings,
+draft/schedule/queue actions, post lifecycle, reviews, and analytics with a hard
+draft-before-publish boundary.
+
+### `manage-brand`
+
+Create and maintain brand identity, visual rules, voice, ICPs, positioning, USPs,
+content pillars, writing examples, and other reusable brand context from evidence.
+
+### `manage-projects`
+
+Turn approved plans into projects and accountable deliverables; manage item order,
+assignments, comments, assets, and partner exports without implying publishing
+authorization.
+
+## Marketer workflows
+
+### `social-content-planner`
+
+Build a chronological, goal-led weekly or monthly channel plan and optionally save
+approved copy as drafts.
+
+### `cross-platform-campaign`
+
+Create the campaign spine, channel-native rollout, reusable media, drafts, review
+handoff, and explicitly approved schedule for a launch, offer, or event.
+
+### `content-repurposer`
+
+Transform authoritative source material into distinct channel-native posts while
+preserving facts, claims, qualifications, and attribution.
+
+### `evergreen-content-engine`
+
+Create durable content territories, recurring franchises, a scored content bank,
+a sustainable first cycle, and explicit refresh/fatigue/retirement rules.
+
+### `local-business-marketing`
+
+Build verified, location-specific social and Google Business programs around local
+discovery, trust, timely demand, and calls, bookings, directions, or visits.
+
+### `creative-testing`
+
+Turn campaign uncertainty into a falsifiable hypothesis, controlled variants,
+objective-aligned metrics, a decision rule, and a reusable learning record.
+
+### `social-performance-analyst`
+
+Translate KPIs, trends, post results, and audience signals into a measured verdict,
+limitations, three prioritized actions, and a next experiment.
+
+### `campaign-review`
+
+Inspect and revise selected drafts, create a stakeholder review bundle, and keep
+review approval separate from scheduling or publishing authorization.
+
+## Composition map
+
+```text
+brand evidence → manage-brand
+                    ↓
+source / goal / offer / local need / test hypothesis
+                    ↓
+planner / campaign / repurposer / evergreen / local / creative-testing
+                    ↓
+generate-image / generate-video → permanent asset IDs
+                    ↓
+simplified-social → drafts → campaign-review → explicit approval → publish
+                    ↓
+social-performance-analyst → learning → next content or creative test
+
+approved plan → manage-projects → accountable production and handoffs
+```
+
+## Release dependency
+
+The current production inventory snapshot still contains 19 hosted tools. The new
+video, brand, project, and asset operators require the companion hosted MCP source
+profile in `simplified-apikit` to be deployed before live end-to-end verification.
+The plugin evals keep that production snapshot unchanged until deployment.
