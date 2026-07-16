@@ -57,6 +57,13 @@ in `social_createSocialMediaReviewBundle.draft_ids`. It does **not** currently
 expose `social_addDraftsToSocialMediaReviewBundle`; that append operation remains
 available in the full toolkit.
 
+`social_createSocialMediaPost` supports 13 platform integrations, including
+Mastodon, Reddit, and Telegram. Reddit posts require
+`additional.reddit.post.targets`. The same create call accepts ordered
+`comments` entries for auto-comments; each `delay` is a nonnegative number of
+seconds after the post publishes, enabling patterns such as a link in the first
+comment after a chosen number of minutes.
+
 The local `mcp` source profile remains a compact 49-tool subset for marketer
 workflows. It includes authenticated `whoami`, workspace details, teamspace
 discovery, all 16 social operations, image/video generation, direct asset ingestion,

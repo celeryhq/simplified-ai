@@ -101,6 +101,12 @@ PLATFORM_CONTRACT_TERMS = {
         "api_getasset",
         "never pass a client-local path",
         "never attach the simplified oauth/api authorization header",
+        "mastodon",
+        "additional.reddit.post.targets",
+        "telegram",
+        "auto-comments",
+        "`delay` is measured in",
+        "`delay = x * 60`",
     ],
     "generate-video": [
         "api_getmodelfields",

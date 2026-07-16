@@ -13,7 +13,7 @@
 
 Bring your **Simplified** marketing workspace into your AI assistant. Manage brand
 context and content operations, generate reusable image and video assets, and run
-your social presence across 10 platforms—through shared skills for Claude, ChatGPT,
+your social presence across 13 platforms—through shared skills for Claude, ChatGPT,
 Codex, and Cursor.
 
 Under the hood it's a **Model Context Protocol (MCP)** connector. This repo ships
@@ -62,9 +62,10 @@ deliverables, review gates, comments, assignments, and controlled exports.
 
 **📣 Run social** — draft, schedule, queue, publish, update, and delete posts across
 **Facebook, Instagram, TikTok, YouTube, LinkedIn, Pinterest, Threads, Bluesky,
-X/Twitter, and Google Business**. Manage drafts and tags, bundle drafts into a
-shareable **review link**, and pull **analytics** (time-series, per-post, aggregated
-KPIs, and audience demographics).
+X/Twitter, Google Business, Mastodon, Reddit, and Telegram**. Add timed
+auto-comments for patterns such as “link in first comment,” manage drafts and tags,
+bundle drafts into a shareable **review link**, and pull **analytics** (time-series,
+per-post, aggregated KPIs, and audience demographics).
 
 **🗓️ Plan content** — turn goals, audiences, offers, and key dates into practical
 weekly or monthly calendars with channel-aware content pillars and cadence.
@@ -255,6 +256,8 @@ Codex sessions were verified successfully on July 15, 2026.
 - **Confirm before spending credits** (image/video generation) or **publishing** (social).
 - **Draft → confirm → publish** for social posts; never publish without confirmation.
 - **"Post now" → `add_to_queue`** — the `action` enum is `schedule | add_to_queue | draft`.
+- **First comments use post-relative delays** — convert “after X minutes” to
+  `comments[0].delay = X * 60` seconds and preview the text and delay before publishing.
 - **Carry the `asset_id`, not the URL** — generated-image URLs are signed and expire;
   the asset id is permanent and is what the social `media` field accepts.
 - **Resolve workspace scope first** — when a workspace or teamspace is named or

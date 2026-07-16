@@ -10,7 +10,7 @@ skills/
 ├── generate-image/                 # model discovery → reusable image asset
 ├── generate-video/                 # model discovery → reusable video asset
 ├── simplified-workspace/           # whoami + workspace/teamspace resolution
-├── simplified-social/              # assets, accounts, posts, reviews, analytics
+├── simplified-social/              # 13 platforms, auto-comments, reviews, analytics
 ├── manage-brand/                   # brand kit + reusable brand context
 ├── manage-projects/                # projects, deliverables, handoffs, exports
 ├── social-content-planner/         # goals → weekly/monthly calendar
@@ -43,8 +43,8 @@ motion, poll the correct variation status, and preserve reusable video assets.
 ### `simplified-social`
 
 Handle direct asset uploads, account discovery, platform-specific post settings,
-draft/schedule/queue actions, post lifecycle, reviews, and analytics with a hard
-draft-before-publish boundary.
+draft/schedule/queue actions, timed auto-comments, post lifecycle, reviews, and
+analytics across 13 platforms with a hard draft-before-publish boundary.
 
 ### `manage-brand`
 
@@ -119,7 +119,7 @@ approved plan → manage-projects → accountable production and handoffs
 
 ## Release dependency
 
-The current production inventory snapshot still contains 19 hosted tools. The new
-video, brand, project, and asset operators require the companion hosted MCP source
-profile in `simplified-apikit` to be deployed before live end-to-end verification.
-The plugin evals keep that production snapshot unchanged until deployment.
+The expanded hosted MCP profile is live. Authenticated discovery verified 105
+hosted tools on July 15, 2026; the local `full` profile exposes 106. The only known
+profile difference is that hosted MCP does not yet expose
+`social_addDraftsToSocialMediaReviewBundle`.

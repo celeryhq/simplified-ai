@@ -142,6 +142,30 @@
       "required": ["capability", "model", "parameters"],
       "additionalProperties": false
     },
+    "social_createSocialMediaPost": {
+      "type": "object",
+      "properties": {
+        "account_ids": {"type": "array", "items": {"type": "string"}},
+        "action": {"type": "string", "enum": ["schedule", "add_to_queue", "draft"]},
+        "additional": {"type": "object"},
+        "comments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "delay": {"type": "integer", "minimum": 0},
+              "message": {"type": "string"}
+            }
+          }
+        },
+        "date": {"type": "string"},
+        "media": {"type": "array", "items": {"type": "string"}, "maxItems": 10},
+        "message": {"type": "string", "maxLength": 5000},
+        "tags": {"type": "array", "items": {"type": "integer"}}
+      },
+      "required": ["message", "action"],
+      "additionalProperties": false
+    },
     "social_createSocialMediaReviewBundle": {
       "type": "object",
       "properties": {

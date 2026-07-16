@@ -48,7 +48,7 @@ simplified-ai/
 | [generate-image](skills/generate-image/SKILL.md) | Text-to-image generation (Flux, Gemini/Imagen, GPT Image, Ideogram, …); saves as a reusable asset | `api_generateImage` |
 | [generate-video](skills/generate-video/SKILL.md) | Model-aware AI video generation and render polling | `api_getModelFields`, `api_generateVideo`, `api_getVideoVariation` |
 | [simplified-workspace](skills/simplified-workspace/SKILL.md) | Authenticated identity, workspace settings, and safe teamspace discovery | workspace and teamspace tools |
-| [simplified-social](skills/simplified-social/SKILL.md) | Draft / schedule / queue posts + analytics across 10 platforms | `social_*` |
+| [simplified-social](skills/simplified-social/SKILL.md) | Draft / schedule / queue posts, timed auto-comments, and analytics across 13 platforms | `social_*` |
 | [manage-brand](skills/manage-brand/SKILL.md) | Evidence-led brand kits and reusable brand context | brand-kit and context-document tools |
 | [manage-projects](skills/manage-projects/SKILL.md) | Marketing projects, deliverables, assignments, and exports | project and item tools |
 | [social-content-planner](skills/social-content-planner/SKILL.md) | Goal-led weekly and monthly content calendars | accounts, analytics, drafts, scheduling |
@@ -88,6 +88,10 @@ client refreshes its token automatically (server emits the standard challenge).
   scheduling/queuing. Never publish without explicit user confirmation.
 - **"Post now" → `add_to_queue`** (publishes ASAP). There is no separate immediate
   publish action; the `action` enum is `schedule | add_to_queue | draft`.
+- **Auto-comments are post-relative.** `comments[].delay` is a nonnegative number
+  of seconds after the post publishes, not after the preceding comment. Convert
+  “first comment after X minutes” to `X * 60`, and include the comment text and
+  delay in the pre-publish confirmation.
 - **Carry the `asset_id`, not the URL.** Generated-image URLs are signed and expire;
   the `asset_id` is permanent and is what `simplified-social.media` accepts.
 - **Show returned URLs as links — never embed them.** Any URL a tool or skill
