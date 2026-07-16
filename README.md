@@ -11,10 +11,11 @@
   <img src="https://img.shields.io/badge/auth-OAuth-brightgreen.svg" alt="Auth: OAuth" />
 </p>
 
-Bring your **Simplified** marketing workspace into your AI assistant. Manage brand
-context and content operations, generate reusable image and video assets, and run
-your social presence across 13 platforms—through shared skills for Claude, ChatGPT,
-Codex, and Cursor.
+Bring AI social media management and on-brand content creation into your assistant
+with **Simplified**. Create images and videos, manage brand kits and marketing
+projects, plan content calendars, schedule and analyze social posts across 13
+platforms, and run client approval workflows through shared skills for Claude,
+ChatGPT, Codex, and Cursor.
 
 Under the hood it's a **Model Context Protocol (MCP)** connector. This repo ships
 the **plugin** — a curated, safety-railed front-end over that connector — but the

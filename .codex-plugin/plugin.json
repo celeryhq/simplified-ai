@@ -1,7 +1,7 @@
 {
   "name": "simplified-ai",
   "version": "1.2.0",
-  "description": "Operate Simplified and run marketer-grade content workflows from Codex.",
+  "description": "AI social media management, on-brand content creation, scheduling, analytics, and marketing workflows with Simplified.",
   "author": {
     "name": "Simplified",
     "url": "https://simplified.com"
@@ -10,6 +10,11 @@
   "repository": "https://github.com/celeryhq/simplified-ai",
   "license": "MIT",
   "keywords": [
+    "ai-social-media-management",
+    "ai-content-creation",
+    "social-media-scheduling",
+    "social-media-analytics",
+    "content-calendar",
     "image-generation",
     "social-media",
     "content-creation",
@@ -17,6 +22,8 @@
     "analytics",
     "video-generation",
     "brand-management",
+    "brand-kit",
+    "marketing-automation",
     "marketing-workflows",
     "simplified"
   ],
@@ -24,8 +31,8 @@
   "mcpServers": "./.mcp.json",
   "interface": {
     "displayName": "Simplified for AI",
-    "shortDescription": "Operate Simplified with marketer-grade workflows.",
-    "longDescription": "Simplified for AI combines platform operator skills with marketer workflows through the hosted Simplified MCP connector. Manage brand context and marketing projects, generate reusable image and video assets, plan evergreen and local content, build cross-platform campaigns, run disciplined creative tests, prepare stakeholder reviews, publish safely, and turn social analytics into next actions.",
+    "shortDescription": "Create, schedule, and analyze on-brand social content.",
+    "longDescription": "Simplified for AI is an AI social media management and content creation plugin for marketers, agencies, and businesses. Create on-brand images, videos, and channel-native posts; manage brand kits and marketing projects; build content calendars and cross-platform campaigns; schedule safely across 13 social platforms; prepare client review bundles; and turn social media analytics into actionable next steps through the hosted Simplified MCP connector.",
     "developerName": "Simplified",
     "category": "Productivity",
     "capabilities": [
