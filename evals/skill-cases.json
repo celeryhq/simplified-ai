@@ -197,6 +197,40 @@
       }
     },
     {
+      "id": "V4-agency-client-isolation",
+      "skill": "campaign-review",
+      "prompt": "In the Acme client teamspace, package the approved launch drafts into a client review bundle. Do not include anything from our other agency clients.",
+      "expected": {
+        "required_tools": ["api_getWorkspaceInfo", "api_listTeamspaces", "social_getSocialMediaAccounts", "social_getSocialMediaDrafts", "social_createSocialMediaReviewBundle"],
+        "ordered_tools": ["api_getWorkspaceInfo", "api_listTeamspaces", "social_getSocialMediaAccounts", "social_getSocialMediaDrafts", "social_createSocialMediaReviewBundle"],
+        "required_args": [
+          {"tool": "social_getSocialMediaAccounts", "path": "space_id", "nonempty": true},
+          {"tool": "social_getSocialMediaDrafts", "path": "space_id", "nonempty": true},
+          {"tool": "social_getSocialMediaDrafts", "path": "account_ids", "nonempty": true},
+          {"tool": "social_createSocialMediaReviewBundle", "path": "space_id", "nonempty": true},
+          {"tool": "social_createSocialMediaReviewBundle", "path": "draft_ids", "nonempty": true}
+        ],
+        "forbidden_tools": ["social_createSocialMediaPost"],
+        "required_output_terms": ["acme", "review"]
+      }
+    },
+    {
+      "id": "V5-bundle-all-drafts",
+      "skill": "campaign-review",
+      "prompt": "Create a review bundle of all drafts for this client and present it to me.",
+      "expected": {
+        "required_tools": ["social_getSocialMediaAccounts", "social_getSocialMediaDrafts", "social_createSocialMediaReviewBundle"],
+        "ordered_tools": ["social_getSocialMediaAccounts", "social_getSocialMediaDrafts", "social_createSocialMediaReviewBundle"],
+        "required_args": [
+          {"tool": "social_getSocialMediaDrafts", "path": "account_ids", "nonempty": true},
+          {"tool": "social_getSocialMediaDrafts", "path": "per_page", "equals": 100},
+          {"tool": "social_createSocialMediaReviewBundle", "path": "draft_ids", "nonempty": true}
+        ],
+        "forbidden_tools": ["social_createSocialMediaPost"],
+        "required_output_terms": ["review", "included"]
+      }
+    },
+    {
       "id": "E1-evergreen-system-plan-only",
       "skill": "evergreen-content-engine",
       "prompt": "Build a 90-day evergreen content engine from our customer FAQs and founder expertise. Show me the system before creating anything in Simplified.",

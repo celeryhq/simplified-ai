@@ -73,6 +73,12 @@ weekly or monthly calendars with channel-aware content pillars and cadence.
 **🚀 Run campaigns** — adapt one launch or promotion across channels, generate
 reusable campaign assets, create drafts, and package them for stakeholder review.
 
+**🤝 Run agency approvals** — isolate each client by workspace/teamspace, assemble
+only that client's selected drafts, and create a separate shareable review bundle
+and approval link per client and campaign. An explicit “bundle all drafts” request
+collects every draft in that client scope and presents the link with a completeness
+manifest.
+
 **♻️ Repurpose content** — turn articles, announcements, transcripts, case studies,
 and events into distinct channel-native posts without inventing claims.
 

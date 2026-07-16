@@ -5,20 +5,20 @@ connector (`https://apikit.simplified.com/mcp`). Image generation, stateless OAu
 workspace/brand/project operators, social reads, analytics, draft creation, and an
 image-to-draft flow were verified end to end.
 
-Last live connector run: 2026-07-15. Last skill-contract run: 2026-07-15.
+Last live connector run: 2026-07-15. Last skill-contract run: 2026-07-16.
 
 ## Marketer skill evals
 
 `python3 evals/run_skill_evals.py` validates six platform operator contracts,
-eight marketer workflow contracts, 24 marketer routing cases, and 12
+eight marketer workflow contracts, 26 marketer routing cases, and 12
 source-profile platform routing cases without credentials or network access.
 
 | Suite | Cases/checks | Status | Last run |
 |---|---:|---|---|
 | Catalog IDs and schema | 2 | ✅ pass | 2026-07-14 |
-| Per-workflow scenario coverage | 24 cases, 3 per workflow | ✅ pass | 2026-07-15 |
+| Per-workflow scenario coverage | 26 cases, at least 3 per workflow | ✅ pass | 2026-07-16 |
 | New platform routing coverage | 12 cases, 3 per new operator | ✅ pass | 2026-07-15 |
-| Skill contracts and metadata | 14 | ✅ pass | 2026-07-15 |
+| Skill contracts and metadata | 14 | ✅ pass | 2026-07-16 |
 | Hosted tool inventory compatibility | 105 live tools | ✅ pass | 2026-07-15 |
 | Source profile inventory compatibility | 49 source tools | ✅ pass | 2026-07-15 |
 | Sample agent trace + asset handoff | 1 | ✅ pass | 2026-07-14 |

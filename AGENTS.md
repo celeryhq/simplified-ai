@@ -86,6 +86,9 @@ client refreshes its token automatically (server emits the standard challenge).
   IDs, then pass `space_id` on every downstream tool call in that scoped task.
 - **Draft before publish.** For social posts, create a `draft` and show it before
   scheduling/queuing. Never publish without explicit user confirmation.
+- **Keep agency reviews client-isolated.** Resolve the client's workspace/teamspace,
+  carry its `space_id` through every account, draft, update, and review-bundle call,
+  and create a separate bundle per client and campaign. Never mix cross-client IDs.
 - **"Post now" → `add_to_queue`** (publishes ASAP). There is no separate immediate
   publish action; the `action` enum is `schedule | add_to_queue | draft`.
 - **Auto-comments are post-relative.** `comments[].delay` is a nonnegative number

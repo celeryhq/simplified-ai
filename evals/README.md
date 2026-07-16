@@ -9,8 +9,8 @@ contributors. Safe to ignore if you're just installing the skills.
   format (Scenario / User prompt / Tool triggered / Expected output). Paste into the form.
 - [cases.md](cases.md) — canonical definitions: expected tool sequence, argument
   contract, and assertions for each case (agent layer + I/O layer).
-- [skill-cases.json](skill-cases.json) — 36 machine-readable routing scenarios:
-  24 marketer cases (three per workflow) plus 12 source-profile cases for AI
+- [skill-cases.json](skill-cases.json) — 38 machine-readable routing scenarios:
+  26 marketer cases (at least three per workflow) plus 12 source-profile cases for AI
   video, brand management, marketing projects, and workspace/teamspace context.
 - [hosted-tool-inventory.json](hosted-tool-inventory.json) — authenticated snapshot
   of the live hosted tool names and critical input schemas.

@@ -1,7 +1,7 @@
 # Marketer Workflow Smoke Cases
 
 Human-readable smoke scenarios for the outcome-driven skills. The canonical suite
-contains 24 machine-readable cases in [skill-cases.json](skill-cases.json), graded by
+contains 25 machine-readable cases in [skill-cases.json](skill-cases.json), graded by
 [run_skill_evals.py](run_skill_evals.py). These eight are a compact review subset.
 
 ## W1 — Build a plan without remote writes
@@ -41,6 +41,27 @@ contains 24 machine-readable cases in [skill-cases.json](skill-cases.json), grad
 - **Expected tools:** `social_getSocialMediaAccounts`, `social_getSocialMediaDrafts`, then `social_createSocialMediaReviewBundle` with all selected IDs in `draft_ids`.
 - **Expected behavior:** show or verify the selected draft manifest and return the review URL as a link.
 - **Must not:** treat review approval as permission to schedule or publish.
+
+### Agency variant
+
+- **Prompt:** "In the Acme client teamspace, package the approved launch drafts
+  into a client review bundle. Do not include anything from our other clients."
+- **Expected tools:** resolve the workspace/teamspace first, then carry the same
+  `space_id` through account discovery, draft reads, and bundle creation.
+- **Expected behavior:** create one Acme-specific bundle and link with an explicit
+  client/teamspace manifest.
+- **Must not:** reuse account, draft, asset, or bundle IDs from another client.
+
+### All-drafts variant
+
+- **Prompt:** "Create a review bundle of all drafts for this client and present it
+  to me."
+- **Expected tools:** list all scoped accounts, retrieve all draft pages with the
+  per-account fallback when necessary, deduplicate exact draft IDs, then create one
+  review bundle.
+- **Expected behavior:** return the clickable review link and discovered, included,
+  excluded, and failed draft counts.
+- **Must not:** stop at a preview or include drafts from another client scope.
 
 ## W6 — Build a renewable evergreen system
 

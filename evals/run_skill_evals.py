@@ -63,6 +63,11 @@ CONTRACT_TERMS = {
         "per-account fallback",
         "`draft_ids`",
         "not publishing authorization",
+        "one review bundle per client",
+        "space_id",
+        "never combine drafts",
+        "all drafts",
+        "per_page: 100",
     ],
     "evergreen-content-engine": [
         "content territories",

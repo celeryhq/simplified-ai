@@ -97,7 +97,9 @@ limitations, three prioritized actions, and a next experiment.
 ### `campaign-review`
 
 Inspect and revise selected drafts, create a stakeholder review bundle, and keep
-review approval separate from scheduling or publishing authorization.
+review approval separate from scheduling or publishing authorization. Agency
+workflows resolve the client teamspace first and keep one bundle per client and
+campaign so drafts and IDs never cross client boundaries.
 
 ## Composition map
 
