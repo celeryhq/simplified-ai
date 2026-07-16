@@ -1,0 +1,15 @@
+interface:
+  display_name: "Manage Brand"
+  short_description: "Maintain brand kits and reusable brand context."
+  default_prompt: "Use $manage-brand to review and update our brand voice and content pillars in Simplified."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "simplified"
+      description: "Simplified hosted MCP connector for brand kits and brand context."
+      transport: "http"
+      url: "https://apikit.simplified.com/mcp"
+
+policy:
+  allow_implicit_invocation: true

@@ -1,7 +1,7 @@
 {
   "name": "simplified-ai",
-  "version": "1.0.1",
-  "description": "Generate AI images and manage social media with Simplified from Codex.",
+  "version": "1.2.0",
+  "description": "AI social media management, on-brand content creation, scheduling, analytics, and marketing workflows with Simplified.",
   "author": {
     "name": "Simplified",
     "url": "https://simplified.com"
@@ -10,19 +10,29 @@
   "repository": "https://github.com/celeryhq/simplified-ai",
   "license": "MIT",
   "keywords": [
+    "ai-social-media-management",
+    "ai-content-creation",
+    "social-media-scheduling",
+    "social-media-analytics",
+    "content-calendar",
     "image-generation",
     "social-media",
     "content-creation",
     "scheduling",
     "analytics",
+    "video-generation",
+    "brand-management",
+    "brand-kit",
+    "marketing-automation",
+    "marketing-workflows",
     "simplified"
   ],
   "skills": "./skills/",
   "mcpServers": "./.mcp.json",
   "interface": {
     "displayName": "Simplified for AI",
-    "shortDescription": "Generate images and manage social posts with Simplified.",
-    "longDescription": "Simplified for AI brings image generation and social media workflows into Codex through Agent Skills and the hosted Simplified MCP connector. Generate reusable image assets, draft social posts, schedule content, queue posts, and review analytics across connected channels.",
+    "shortDescription": "Create, schedule, and analyze on-brand social content.",
+    "longDescription": "Simplified for AI is an AI social media management and content creation plugin for marketers, agencies, and businesses. Create on-brand images, videos, and channel-native posts; manage brand kits and marketing projects; build content calendars and cross-platform campaigns; schedule safely across 13 social platforms; prepare client review bundles; and turn social media analytics into actionable next steps through the hosted Simplified MCP connector.",
     "developerName": "Simplified",
     "category": "Productivity",
     "capabilities": [
@@ -36,9 +46,9 @@
     "composerIcon": "./assets/simplified-icon-256.png",
     "logo": "./assets/simplified-logo.png",
     "defaultPrompt": [
-      "Generate a social image with Simplified.",
-      "Draft a post for my connected channels.",
-      "Review social analytics in Simplified."
+      "Plan a month of content for my connected channels.",
+      "Turn this launch brief into a cross-platform campaign.",
+      "Review social performance and recommend what to do next."
     ]
   }
 }

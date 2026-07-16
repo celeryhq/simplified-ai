@@ -18,6 +18,9 @@ Always respect these limits when composing post messages:
 | Threads         | 500 chars    |
 | Google Business | 1500 chars   |
 | Bluesky         | 300 chars    |
+| Mastodon        | 500 chars    |
+| Reddit          | Platform and subreddit rules |
+| Telegram        | 4096 chars   |
 
 ---
 
@@ -259,11 +262,68 @@ No required additionals. No platform-specific `additional` settings.
 
 ---
 
+## Mastodon
+
+No required additionals. No platform-specific `additional` settings.
+
+**Message limit:** 500 chars.
+
+---
+
+## Reddit
+
+Required additionals: **`post.targets`**
+
+Reddit uses `additional.reddit.post.targets`. The array must contain at least one
+target, and each target requires `subreddit`, `title`, and `type`.
+
+```json
+"reddit": {
+  "post": {
+    "targets": [
+      {
+        "subreddit": "devtestsmp",
+        "title": "What we learned from shipping",
+        "type": "self",
+        "flairId": null,
+        "flairText": null,
+        "nsfw": false,
+        "url": null
+      }
+    ]
+  }
+}
+```
+
+| Field | Type / values | Required | Notes |
+|---|---|---|---|
+| `post.targets` | array | Yes | At least one entry; add entries to post to multiple subreddits |
+| `post.targets[].subreddit` | string | Yes | Subreddit name without the `r/` prefix |
+| `post.targets[].title` | string | Yes | Reddit post title |
+| `post.targets[].type` | `self`, `link` | Yes | `self` is a text post; `link` requires `url` |
+| `post.targets[].url` | URL | For `link` | Link-post destination |
+| `post.targets[].flairId` | string or `null` | No | Subreddit flair ID |
+| `post.targets[].flairText` | string or `null` | No | Flair text |
+| `post.targets[].nsfw` | boolean | No | Defaults to `false` |
+
+---
+
+## Telegram
+
+No required additionals. No platform-specific `additional` settings.
+
+**Message limit:** 4096 chars.
+
+---
+
 ## Gotchas
 
 - **Date format** for `schedule` must be `YYYY-MM-DD HH:MM` (24-hour, no seconds, no timezone — uses account timezone).
 - **`date` is required** when `action` is `schedule`; omit it for `add_to_queue` and `draft`.
 - **Media** must be a Simplified asset UUID (from `generate-image` with `storage:"asset"`) or a publicly accessible URL — localhost does not work.
+- **Reddit requires targets** — `additional.reddit.post.targets` must contain at
+  least one entry with `subreddit`, `title`, and `type`; `url` is required for
+  `type: "link"`.
 - **Instagram always requires `channel`** — include `channel: { value: "direct" }` for every Instagram post.
 - **TikTok `postType`** values are `video` and `photo` (not `image`); **channel** values are `direct` and `reminder` (not `business`).
 - **LinkedIn audience** value is `LOGGED_IN` (not `LOGGED_IN_MEMBERS`).

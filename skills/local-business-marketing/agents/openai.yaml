@@ -1,0 +1,15 @@
+interface:
+  display_name: "Local Business Marketing"
+  short_description: "Plan locally relevant content that drives action."
+  default_prompt: "Use $local-business-marketing to create a month of local social content and Google Business drafts."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "simplified"
+      description: "Simplified hosted MCP connector for local social and Google Business workflows."
+      transport: "http"
+      url: "https://apikit.simplified.com/mcp"
+
+policy:
+  allow_implicit_invocation: true

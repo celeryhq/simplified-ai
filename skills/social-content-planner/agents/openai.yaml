@@ -1,0 +1,18 @@
+interface:
+  display_name: "Social Content Planner"
+  short_description: "Build goal-led social content calendars."
+  icon_small: "assets/simplified-icon-256.png"
+  icon_large: "assets/simplified-logo.png"
+  brand_color: "#FFAD00"
+  default_prompt: "Use $social-content-planner to plan a month of social content around my business goals."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "simplified"
+      description: "Simplified hosted MCP connector for social workflows."
+      transport: "http"
+      url: "https://apikit.simplified.com/mcp"
+
+policy:
+  allow_implicit_invocation: true

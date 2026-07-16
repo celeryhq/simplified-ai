@@ -1,0 +1,48 @@
+[
+  {
+    "id": "C2-generate-campaign-asset",
+    "skill": "cross-platform-campaign",
+    "tools": [
+      {
+        "name": "api_getModelFields",
+        "arguments": {"type": "image"}
+      },
+      {
+        "name": "api_generateImage",
+        "arguments": {
+          "model": "example.image-model",
+          "capability": "prompt",
+          "storage": "asset",
+          "parameters": {"prompt": "summer product campaign visual"}
+        },
+        "result": {
+          "detail": {
+            "result": [
+              {"asset_id": "asset-eval-123", "url": "https://example.invalid/image.webp"}
+            ]
+          }
+        }
+      },
+      {
+        "name": "social_getSocialMediaAccounts",
+        "arguments": {}
+      },
+      {
+        "name": "social_createSocialMediaPost",
+        "arguments": {
+          "message": "Summer starts here.",
+          "account_ids": [123],
+          "action": "draft",
+          "media": ["asset-eval-123"],
+          "additional": {
+            "instagram": {
+              "postType": {"value": "post"},
+              "channel": {"value": "direct"}
+            }
+          }
+        }
+      }
+    ],
+    "output": "Campaign drafts created for review. Nothing was scheduled or published."
+  }
+]
