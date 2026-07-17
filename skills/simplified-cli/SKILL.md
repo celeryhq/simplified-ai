@@ -1,16 +1,12 @@
 ---
 name: simplified-cli
-version: 1.0.0
 description: >
-  Entry point for the Simplified CLI (`smp <module> <cmd>`) — covers Project Manager,
+  Entry point for the Simplified CLI (`smp MODULE COMMAND`) — covers Project Manager,
   Media (image/video AI), Assets API (brand kits, projects, assets), Social Media,
   and the MCP server (`smp serve`). Trigger on any request to use the `smp` CLI,
   manage Simplified PM boards/tasks, generate or process images/videos, manage
   brand kits or assets, schedule social media posts, or expose Simplified as MCP
   tools to Claude Desktop / Cursor / Cline.
-requires:
-  bins: ["smp"]
-  env: ["SMP_TOKEN"]
 ---
 
 # Simplified CLI (`smp`) — Module Index
@@ -161,4 +157,3 @@ inline; the toolkit makes follow-up sub-resource calls automatically.
 
 **Pagination.** List endpoints default to `page_size=10`. Add `--page-size 100` to
 get more.
-
