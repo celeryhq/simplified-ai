@@ -206,7 +206,8 @@ simplified-ai/
 - [x] `action` semantics verified against backend (`add_to_queue` = publish ASAP).
 - [x] Codex marketplace config complete (`.codex-plugin/` + `.agents/plugins/marketplace.json`).
 - [x] Claude Connectors Directory submission prepared (`submission/claude-directory.md`).
-- [ ] ChatGPT App submission (pending business verification).
+- [x] ChatGPT App submission artifacts prepared (`submission/chatgpt-app-submission.*`).
+- [ ] ChatGPT App review submission (pending business verification).
 - [ ] Claude Connectors Directory listing live (pending Anthropic review).
 - [ ] Cursor plugin install.
 

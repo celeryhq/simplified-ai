@@ -1,8 +1,10 @@
 # Simplified Codex Plugin — Test Cases (OpenAI submission)
 
 Paste these into the OpenAI Codex plugin submission form (fields: **Scenario**,
-**User prompt**, **Tool triggered**, **Expected output**). At least 5 required; 6
-provided for full coverage of both skills + the cross-skill flow.
+**User prompt**, **Tool triggered**, **Expected output**). At least 5 are required;
+6 are provided here for focused coverage of the two published skills plus the
+cross-skill flow. The broader ChatGPT App portal copy lives in
+[`../submission/chatgpt-app-submission.json`](../submission/chatgpt-app-submission.json).
 
 ## Prerequisites for the review account
 - **AI credits** available (cases 1, 2, 6 consume credits — image generation).
@@ -19,7 +21,7 @@ OAuth-secured. Tool names are namespaced `api_*` (image) and `social_*` (social)
 - **Scenario:** Generate an AI image from a text description.
 - **User prompt:** `Generate an image of a white ceramic coffee cup on a clean white background, soft studio lighting`
 - **Tool triggered:** `api_generateImage`
-- **Expected output:** A `SUCCESS` response with a viewable image URL (1024×1024 WebP). With the default `transient` storage, `detail.result[0]` is a temporary image URL. The assistant returns/links the generated image.
+- **Expected output:** A `SUCCESS` response with a viewable image URL (1024×1024 WebP). With the default `transient` storage, `detail.result[0]` is a temporary image URL. The assistant returns the generated image URL as a clickable link, not an inline-rendered image.
 
 ## Test Case 2 — Generate a graphic with text + a specific aspect ratio
 - **Scenario:** Generate a landscape promo banner with text rendered inside the image.

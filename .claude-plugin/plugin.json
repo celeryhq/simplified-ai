@@ -1,8 +1,8 @@
 {
   "name": "simplified-ai",
   "displayName": "Simplified",
-  "description": "Generate AI images and manage social media (post, schedule, draft, analyze) across 10 platforms — via skills + a hosted MCP connector.",
-  "version": "1.0.1",
+  "description": "Generate AI images, manage social media, and operate project boards via skills and a hosted MCP connector.",
+  "version": "1.0.2",
   "license": "MIT",
   "author": {
     "name": "Simplified",
@@ -16,6 +16,8 @@
     "content-creation",
     "scheduling",
     "analytics",
+    "project-management",
+    "tasks",
     "simplified"
   ]
 }

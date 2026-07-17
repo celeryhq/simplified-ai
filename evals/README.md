@@ -5,8 +5,9 @@ release. Not required to *use* the plugin — kept in the repo for transparency 
 contributors. Safe to ignore if you're just installing the skills.
 
 ## Files
-- [openai-test-cases.md](openai-test-cases.md) — the 6 cases in OpenAI's submission
-  format (Scenario / User prompt / Tool triggered / Expected output). Paste into the form.
+- [openai-test-cases.md](openai-test-cases.md) — the review cases in OpenAI's
+  submission format (Scenario / User prompt / Tool triggered / Expected output).
+  Paste into the form.
 - [cases.md](cases.md) — canonical definitions: expected tool sequence, argument
   contract, and assertions for each case (agent layer + I/O layer).
 - [run_evals.py](run_evals.py) — runnable harness that checks the **I/O layer**
