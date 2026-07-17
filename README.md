@@ -50,7 +50,7 @@ The plugin just adds the workflow knowledge on top.
 
 **🎨 Generate images** — text-to-image and image-to-image across Flux, Google
 (Gemini / Imagen), OpenAI GPT Image, Ideogram, Recraft, Stable Diffusion, Qwen, and
-SeeDream. Saved as a reusable **asset** you can drop straight into a post.
+Seedream. Saved as a reusable **asset** you can drop straight into a post.
 
 **🎬 Generate videos** — discover current model capabilities, create text- or
 reference-guided motion, poll real render completion, and retain reusable assets.

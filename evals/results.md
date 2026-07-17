@@ -117,11 +117,12 @@ tested with five marketer prompts. It selected `social-content-planner`,
 returns only `detail`. The `url` is a **signed CloudFront URL that expires** — carry
 the `asset_id` downstream.
 
-### api_getVideoModelFields({type:"image"})
-Returns **22 models** (Flux, Google Gemini/Imagen, OpenAI GPT Image, Ideogram,
-Stability, Qwen, ByteDance). Identical via direct API and via MCP. ✅ Confirmed: `count`
-is only on some models; OpenAI `imgen*` use `size` not `aspect_ratio`. (Full table in
-the skill's earlier reference / `generate-image/SKILL.md`.)
+### api_getModelFields({type:"image"})
+The live hosted MCP returned **16 models** on 2026-07-16 (Flux, Recraft, Ideogram,
+Google Gemini, OpenAI GPT Image, Qwen, and ByteDance). ✅ Model capabilities and
+catalog credit metadata are dynamic; query the selected model and capability again
+before generation. OpenAI `imgen*` models use `size` rather than `aspect_ratio`, and
+their catalog `credits_per_image` is a baseline rather than a guaranteed final charge.
 
 ## Social output contracts
 

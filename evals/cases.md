@@ -32,7 +32,7 @@ Verified response shapes (see [results.md](results.md)):
   - `detail.result` is a non-empty list
   - transient → `detail.result[0]` is a URL string; `detail.transient == true`
   - the URL returns HTTP 200 `image/webp`
-- **Agent pass:** asks to confirm only if the request is ambiguous; otherwise generates directly; returns the image URL.
+- **Agent pass:** confirms the live catalog/schema, chooses `google.gemini-3.1-flash-image-preview` as the quality-first default when available, asks to confirm only if the request is ambiguous, otherwise generates directly, and returns the image URL.
 
 ## C2 — Generate image (text-in-image, specific model + ratio)
 - **Prompt:** 'Make a 16:9 promo banner that says "Summer Sale" in bold modern type'
@@ -40,7 +40,7 @@ Verified response shapes (see [results.md](results.md)):
 - **Assertions:**
   - `status == "SUCCESS"`, `detail.result` non-empty
   - returned image is landscape 16:9 (≈1.78 ratio)
-- **Agent pass:** picks a text-capable model (Ideogram or Gemini) and sets `aspect_ratio:"16:9"`.
+- **Agent pass:** confirms the live catalog/schema, picks `ideogram.ideogram-v3-turbo` for a typography-first banner (or Gemini Pro when dense professional layout/4K is requested), explains the choice when cost or output differs materially, and sets `aspect_ratio:"16:9"` when that is the discovered field.
 
 ## C3 — List connected social accounts (read)
 - **Prompt:** "Which social media accounts do I have connected?"
