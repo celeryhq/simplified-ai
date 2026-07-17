@@ -1,0 +1,15 @@
+interface:
+  display_name: "Evergreen Content Engine"
+  short_description: "Build a durable, renewable content program."
+  default_prompt: "Use $evergreen-content-engine to create a 90-day evergreen content system for my business."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "simplified"
+      description: "Simplified hosted MCP connector for social planning, drafting, and analytics."
+      transport: "http"
+      url: "https://apikit.simplified.com/mcp"
+
+policy:
+  allow_implicit_invocation: true

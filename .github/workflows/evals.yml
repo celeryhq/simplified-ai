@@ -1,0 +1,41 @@
+name: Plugin evals
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/evals.yml"
+      - ".codex-plugin/**"
+      - ".claude-plugin/**"
+      - "skills/**"
+      - "evals/**"
+
+permissions:
+  contents: read
+
+jobs:
+  skill-contracts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Validate marketer skills and hosted inventory
+        run: python3 evals/run_skill_evals.py
+      - name: Validate JSON manifests and eval fixtures
+        run: |
+          python3 -m json.tool .codex-plugin/plugin.json >/dev/null
+          python3 -m json.tool .claude-plugin/plugin.json >/dev/null
+          python3 -m json.tool .claude-plugin/marketplace.json >/dev/null
+          python3 -m json.tool evals/skill-cases.json >/dev/null
+          python3 -m json.tool evals/hosted-tool-inventory.json >/dev/null
+          python3 -m json.tool evals/source-profile-tool-inventory.json >/dev/null
+          python3 -m json.tool evals/fixtures/sample-skill-traces.json >/dev/null
+          python3 -m json.tool evals/fixtures/live-routing-smoke-2026-07-14.json >/dev/null
+      - name: Grade sample agent trace
+        run: >-
+          python3 evals/run_skill_evals.py
+          --traces evals/fixtures/sample-skill-traces.json
+          --allow-missing

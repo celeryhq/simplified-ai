@@ -5,9 +5,9 @@ this plugin.
 
 ## Project overview
 
-Simplified for AI lets agents **generate AI images** and **manage social media**
-(post, schedule, draft, analyze) across Facebook, Instagram, TikTok, YouTube,
-LinkedIn, Pinterest, Threads, Bluesky, and Google Business — through:
+Simplified for AI lets agents operate Simplified's **image/video generation,
+assets, brand context, marketing projects, and social media**, then compose those
+platform primitives into marketer workflows — through:
 
 - **Skills** ([skills/](skills/)) — `SKILL.md` workflow files that teach the agent
   sequencing, terminology, and safety behavior.
@@ -24,7 +24,19 @@ simplified-ai/
 ├── .codex-plugin/plugin.json    # Codex / ChatGPT Apps manifest
 ├── skills/                   # SKILL.md workflows (Agent Skills spec)
 │   ├── generate-image/
-│   └── simplified-social/
+│   ├── generate-video/
+│   ├── simplified-workspace/
+│   ├── simplified-social/
+│   ├── manage-brand/
+│   ├── manage-projects/
+│   ├── social-content-planner/
+│   ├── cross-platform-campaign/
+│   ├── content-repurposer/
+│   ├── evergreen-content-engine/
+│   ├── local-business-marketing/
+│   ├── creative-testing/
+│   ├── social-performance-analyst/
+│   └── campaign-review/
 ├── assets/                   # brand icon + logo
 └── evals/                    # test cases + runnable I/O harness
 ```
@@ -34,10 +46,25 @@ simplified-ai/
 | Skill | Purpose | Tools |
 |---|---|---|
 | [generate-image](skills/generate-image/SKILL.md) | Text-to-image generation (Flux, Gemini/Imagen, GPT Image, Ideogram, …); saves as a reusable asset | `api_generateImage` |
-| [simplified-social](skills/simplified-social/SKILL.md) | Draft / schedule / queue posts + analytics across 10 platforms | `social_*` |
+| [generate-video](skills/generate-video/SKILL.md) | Model-aware AI video generation and render polling | `api_getModelFields`, `api_generateVideo`, `api_getVideoVariation` |
+| [simplified-workspace](skills/simplified-workspace/SKILL.md) | Authenticated identity, workspace settings, and safe teamspace discovery | workspace and teamspace tools |
+| [simplified-social](skills/simplified-social/SKILL.md) | Draft / schedule / queue posts, timed auto-comments, and analytics across 13 platforms | `social_*` |
+| [manage-brand](skills/manage-brand/SKILL.md) | Evidence-led brand kits and reusable brand context | brand-kit and context-document tools |
+| [manage-projects](skills/manage-projects/SKILL.md) | Marketing projects, deliverables, assignments, and exports | project and item tools |
+| [social-content-planner](skills/social-content-planner/SKILL.md) | Goal-led weekly and monthly content calendars | accounts, analytics, drafts, scheduling |
+| [cross-platform-campaign](skills/cross-platform-campaign/SKILL.md) | Coordinated channel-native campaign rollouts | image generation + social |
+| [content-repurposer](skills/content-repurposer/SKILL.md) | Source content into channel-native post sequences | drafts + optional image generation |
+| [evergreen-content-engine](skills/evergreen-content-engine/SKILL.md) | Durable content territories, franchises, content bank, and renewal loop | accounts, analytics, drafts |
+| [local-business-marketing](skills/local-business-marketing/SKILL.md) | Verified local and Google Business programs | accounts, assets, drafts, platform settings |
+| [creative-testing](skills/creative-testing/SKILL.md) | Controlled creative experiments and reusable learning | analytics, generation, drafts |
+| [social-performance-analyst](skills/social-performance-analyst/SKILL.md) | KPI, trend, post, and audience analysis with next actions | social analytics |
+| [campaign-review](skills/campaign-review/SKILL.md) | Draft QA, revisions, and stakeholder review bundles | drafts + review bundles |
 
-The two compose: `generate-image` returns an **asset id** → pass it into
-`simplified-social`'s `media` field to post a freshly generated image.
+The outcome-driven skills compose the six platform operators. Workspace identity
+establishes the scope for every other operator. Image and video
+generation return permanent **asset IDs** for `simplified-social.media`; brand and
+project skills provide reusable context and operational handoffs. Workflow skills
+orchestrate those primitives around marketer jobs without duplicating API mechanics.
 
 ## MCP server
 
@@ -52,12 +79,22 @@ client refreshes its token automatically (server emits the standard challenge).
 
 ## Key conventions (agent behavior)
 
-- **Confirm before spending credits.** Image generation and social publishing
+- **Confirm before spending credits.** Image/video generation and social publishing
   consume credits / post to live accounts — confirm when intent is ambiguous.
+- **Resolve scope before scoped work.** Use `api_getWorkspaceInfo` as `whoami` when
+  workspace/teamspace context is named or uncertain. Resolve names to exact numeric
+  IDs, then pass `space_id` on every downstream tool call in that scoped task.
 - **Draft before publish.** For social posts, create a `draft` and show it before
   scheduling/queuing. Never publish without explicit user confirmation.
+- **Keep agency reviews client-isolated.** Resolve the client's workspace/teamspace,
+  carry its `space_id` through every account, draft, update, and review-bundle call,
+  and create a separate bundle per client and campaign. Never mix cross-client IDs.
 - **"Post now" → `add_to_queue`** (publishes ASAP). There is no separate immediate
   publish action; the `action` enum is `schedule | add_to_queue | draft`.
+- **Auto-comments are post-relative.** `comments[].delay` is a nonnegative number
+  of seconds after the post publishes, not after the preceding comment. Convert
+  “first comment after X minutes” to `X * 60`, and include the comment text and
+  delay in the pre-publish confirmation.
 - **Carry the `asset_id`, not the URL.** Generated-image URLs are signed and expire;
   the `asset_id` is permanent and is what `simplified-social.media` accepts.
 - **Show returned URLs as links — never embed them.** Any URL a tool or skill

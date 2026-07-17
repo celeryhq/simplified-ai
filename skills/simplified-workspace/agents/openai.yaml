@@ -1,0 +1,4 @@
+interface:
+  display_name: "Simplified Workspace"
+  short_description: "Resolve workspace identity and teamspace context safely."
+  default_prompt: "Use $simplified-workspace to show who I am and which Simplified workspace and teamspaces I can access."

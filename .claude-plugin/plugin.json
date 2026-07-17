@@ -1,8 +1,8 @@
 {
   "name": "simplified-ai",
   "displayName": "Simplified",
-  "description": "Generate AI images, manage social media, and operate project boards via skills and a hosted MCP connector.",
-  "version": "1.0.2",
+  "description": "AI social media management, on-brand content creation, scheduling, analytics, and marketing workflows with Simplified.",
+  "version": "1.2.0",
   "license": "MIT",
   "author": {
     "name": "Simplified",
@@ -11,13 +11,23 @@
   "homepage": "https://simplified.com",
   "repository": "https://github.com/celeryhq/simplified-ai",
   "keywords": [
+    "ai-social-media-management",
+    "ai-content-creation",
+    "social-media-scheduling",
+    "social-media-analytics",
+    "content-calendar",
     "image-generation",
     "social-media",
     "content-creation",
     "scheduling",
     "analytics",
+    "video-generation",
+    "brand-management",
+    "brand-kit",
+    "marketing-automation",
+    "marketing-workflows",
     "project-management",
-    "tasks",
+    "todos",
     "simplified"
   ]
 }

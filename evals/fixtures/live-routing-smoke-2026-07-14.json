@@ -1,0 +1,17 @@
+{
+  "plugin": "simplified-ai@simplified-ai",
+  "version": "1.1.0",
+  "model": "gpt-5.4",
+  "codex_cli": "0.142.5",
+  "run_at": "2026-07-14",
+  "tool_calls_allowed": false,
+  "results": {
+    "social content calendar": "social-content-planner",
+    "cross-platform launch": "cross-platform-campaign",
+    "webinar repurposing": "content-repurposer",
+    "monthly performance analysis": "social-performance-analyst",
+    "client review link": "campaign-review"
+  },
+  "passed": 5,
+  "failed": 0
+}

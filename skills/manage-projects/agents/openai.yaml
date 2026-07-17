@@ -1,0 +1,15 @@
+interface:
+  display_name: "Manage Projects"
+  short_description: "Organize marketing projects and content work."
+  default_prompt: "Use $manage-projects to create a campaign project and organize its content deliverables."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "simplified"
+      description: "Simplified hosted MCP connector for projects and content operations."
+      transport: "http"
+      url: "https://apikit.simplified.com/mcp"
+
+policy:
+  allow_implicit_invocation: true

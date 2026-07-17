@@ -1,0 +1,18 @@
+interface:
+  display_name: "Campaign Review"
+  short_description: "Prepare social drafts for stakeholder approval."
+  icon_small: "assets/simplified-icon-256.png"
+  icon_large: "assets/simplified-logo.png"
+  brand_color: "#FFAD00"
+  default_prompt: "Use $campaign-review to package these social drafts for client review and approval."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "simplified"
+      description: "Simplified hosted MCP connector for social review workflows."
+      transport: "http"
+      url: "https://apikit.simplified.com/mcp"
+
+policy:
+  allow_implicit_invocation: true

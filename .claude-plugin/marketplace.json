@@ -5,15 +5,15 @@
     "url": "https://simplified.com"
   },
   "metadata": {
-    "description": "Generate media, manage social channels, and organize project work with Simplified.",
-    "version": "1.0.2"
+    "description": "AI social media management and on-brand content creation with Simplified.",
+    "version": "1.2.0"
   },
   "plugins": [
     {
       "name": "simplified-ai",
       "source": "./",
-      "description": "Generate AI images, manage social media, and operate project boards via skills and a hosted MCP connector.",
-      "version": "1.0.2",
+      "description": "Create, schedule, review, and analyze on-brand social content with Simplified AI marketing workflows.",
+      "version": "1.2.0",
       "author": {
         "name": "Simplified",
         "url": "https://simplified.com"
@@ -21,13 +21,24 @@
       "homepage": "https://simplified.com",
       "license": "MIT",
       "keywords": [
+        "ai-social-media-management",
+        "ai-content-creation",
+        "social-media-scheduling",
+        "social-media-analytics",
+        "content-calendar",
         "image-generation",
         "social-media",
         "content-creation",
         "scheduling",
         "analytics",
+        "video-generation",
+        "brand-management",
+        "brand-kit",
+        "marketing-automation",
+        "marketing-workflows",
         "project-management",
-        "tasks",
+        "task-management",
+        "todos",
         "simplified"
       ]
     }

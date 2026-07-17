@@ -1,0 +1,208 @@
+{
+  "server": "https://apikit.simplified.com/mcp",
+  "verified_at": "2026-07-15",
+  "verified_with": "Authenticated Codex MCP initialization after stateless OAuth deployment",
+  "total": 105,
+  "names": [
+    "api_addComment",
+    "api_assignAgentToItem",
+    "api_buildBrandKit",
+    "api_createAsset",
+    "api_createBrandKit",
+    "api_createContextDocument",
+    "api_createDocument",
+    "api_createProject",
+    "api_createProjectItem",
+    "api_deleteContextDocument",
+    "api_deleteProject",
+    "api_deleteProjectItem",
+    "api_exportProjectItems",
+    "api_generateAudio",
+    "api_generateImage",
+    "api_generateVideo",
+    "api_getAsset",
+    "api_getBrandKit",
+    "api_getContextDocument",
+    "api_getContextDocumentByType",
+    "api_getCreditBalance",
+    "api_getModelFields",
+    "api_getProject",
+    "api_getProjectItem",
+    "api_getTaskResult",
+    "api_getVideoVariation",
+    "api_getWorkspace",
+    "api_getWorkspaceInfo",
+    "api_listBrandKits",
+    "api_listComments",
+    "api_listContextDocuments",
+    "api_listProjectItems",
+    "api_listProjects",
+    "api_listTeamspaces",
+    "api_listVoices",
+    "api_registerAsset",
+    "api_reorderProjectItem",
+    "api_signAssetUpload",
+    "api_updateContextDocument",
+    "media_addBRollsVideo",
+    "media_blurBackground",
+    "media_convertImageFormat",
+    "media_convertVideoFormat",
+    "media_downloadTranscriptionFile",
+    "media_generativeFill",
+    "media_getTranscription",
+    "media_imageOutpainting",
+    "media_magicInpaint",
+    "media_mergeVideos",
+    "media_removeAudio",
+    "media_removeBackground",
+    "media_replaceImageBackground",
+    "media_restoreImage",
+    "media_reverseVideo",
+    "media_scriptToVideo",
+    "media_sdScribble",
+    "media_speedupVideo",
+    "media_textToVideo",
+    "media_transcribeVideo",
+    "media_upscaleImage",
+    "notify_notify",
+    "pm_addTaskDependency",
+    "pm_cloneBoard",
+    "pm_cloneTask",
+    "pm_createBoard",
+    "pm_createStatus",
+    "pm_createTask",
+    "pm_deleteBoard",
+    "pm_deleteStatus",
+    "pm_deleteTask",
+    "pm_getBoard",
+    "pm_getStatus",
+    "pm_getTask",
+    "pm_getTaskActivity",
+    "pm_getTaskDependencies",
+    "pm_listBoards",
+    "pm_listStatuses",
+    "pm_listSubtasks",
+    "pm_listWorkspaceMembers",
+    "pm_moveStatus",
+    "pm_removeTaskDependency",
+    "pm_searchRecentTasks",
+    "pm_searchTasks",
+    "pm_updateBoard",
+    "pm_updateStatus",
+    "pm_updateTask",
+    "pm_updateTaskAssignees",
+    "pm_updateTaskAttachments",
+    "pm_updateTaskCustomFields",
+    "pm_updateTaskTags",
+    "social_createSocialMediaPost",
+    "social_createSocialMediaReviewBundle",
+    "social_createSocialMediaTag",
+    "social_deleteSocialMediaDraft",
+    "social_deleteSocialMediaPost",
+    "social_getSocialMediaAccounts",
+    "social_getSocialMediaAnalyticsAggregated",
+    "social_getSocialMediaAnalyticsAudience",
+    "social_getSocialMediaAnalyticsPosts",
+    "social_getSocialMediaAnalyticsRange",
+    "social_getSocialMediaDrafts",
+    "social_getSocialMediaPosts",
+    "social_listSocialMediaTags",
+    "social_updateSocialMediaDraft",
+    "social_updateSocialMediaPost"
+  ],
+  "critical_schemas": {
+    "api_getModelFields": {
+      "type": "object",
+      "properties": {
+        "capability": {"type": "string", "enum": ["prompt", "reference_image", "multiple_images", "first_last_frame", "video_to_video"]},
+        "model_id": {"type": "string"},
+        "type": {"type": "string", "enum": ["video", "image"]}
+      },
+      "required": ["type"],
+      "additionalProperties": false
+    },
+    "api_generateImage": {
+      "type": "object",
+      "properties": {
+        "capability": {"type": "string", "enum": ["prompt", "reference_image", "multiple_images", "first_last_frame", "video_to_video"]},
+        "model": {"type": "string"},
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "aspect_ratio": {"type": "string"},
+            "count": {"type": "integer"},
+            "negative_prompt": {"type": "string"},
+            "prompt": {"type": "string"}
+          },
+          "required": ["prompt"],
+          "additionalProperties": true
+        },
+        "storage": {"type": "string", "enum": ["default", "transient", "asset"]}
+      },
+      "required": ["capability", "model", "parameters"],
+      "additionalProperties": false
+    },
+    "social_createSocialMediaPost": {
+      "type": "object",
+      "properties": {
+        "account_ids": {"type": "array", "items": {"type": "string"}},
+        "action": {"type": "string", "enum": ["schedule", "add_to_queue", "draft"]},
+        "additional": {"type": "object"},
+        "comments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "delay": {"type": "integer", "minimum": 0},
+              "message": {"type": "string"}
+            }
+          }
+        },
+        "date": {"type": "string"},
+        "media": {"type": "array", "items": {"type": "string"}, "maxItems": 10},
+        "message": {"type": "string", "maxLength": 5000},
+        "tags": {"type": "array", "items": {"type": "integer"}}
+      },
+      "required": ["message", "action"],
+      "additionalProperties": false
+    },
+    "social_createSocialMediaReviewBundle": {
+      "type": "object",
+      "properties": {
+        "description": {"type": "string"},
+        "draft_ids": {"type": "array", "items": {"type": "string"}},
+        "title": {"type": "string"}
+      },
+      "required": ["title"],
+      "additionalProperties": false
+    },
+    "social_getSocialMediaDrafts": {
+      "type": "object",
+      "properties": {
+        "account_ids": {"type": "string"},
+        "order": {"type": "string", "enum": ["asc", "desc"]},
+        "order_by": {"type": "string"},
+        "page": {"type": "integer"},
+        "per_page": {"type": "integer"},
+        "search": {"type": "string"},
+        "tz": {"type": "string"}
+      },
+      "required": ["account_ids"],
+      "additionalProperties": false
+    },
+    "social_updateSocialMediaDraft": {
+      "type": "object",
+      "properties": {
+        "date": {"type": "string"},
+        "draft_id": {"type": "string"},
+        "media": {"type": "array", "items": {"type": "string"}},
+        "message": {"type": "string"},
+        "tags": {"type": "array", "items": {"type": "integer"}},
+        "time": {"type": "string"},
+        "timezone": {"type": "string"}
+      },
+      "required": ["draft_id"],
+      "additionalProperties": false
+    }
+  }
+}

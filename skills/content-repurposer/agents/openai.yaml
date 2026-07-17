@@ -1,0 +1,18 @@
+interface:
+  display_name: "Content Repurposer"
+  short_description: "Turn one source into channel-native posts."
+  icon_small: "assets/simplified-icon-256.png"
+  icon_large: "assets/simplified-logo.png"
+  brand_color: "#FFAD00"
+  default_prompt: "Use $content-repurposer to turn this announcement into a week of social content."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "simplified"
+      description: "Simplified hosted MCP connector for image and social workflows."
+      transport: "http"
+      url: "https://apikit.simplified.com/mcp"
+
+policy:
+  allow_implicit_invocation: true
