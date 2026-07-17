@@ -29,6 +29,18 @@ Turn approved brand evidence into a durable operating system for consistent mark
 7. For reusable strategic knowledge, use `api_createContextDocument` only when that canonical type does not exist. Otherwise retrieve it with `api_getContextDocumentByType` and update it with `api_updateContextDocument`.
 8. Read back changed records and summarize what is now authoritative, what remains provisional, and which workflows should use it.
 
+## Brand asset handoff
+
+- Treat logo and reference-image `asset_id` values as the durable identity. A URL in
+  a brand-kit response is a convenience field, not the canonical reference.
+- When handing a brand asset to image generation, resolve its UUID with
+  `api_getAsset`, require `status: 4`, and pass the returned current `file_url` only
+  when the live model schema expects a URL.
+- Preserve the complete query string on signed URLs. Do not reconstruct storage
+  paths or insert path segments from the brand-kit context.
+- Generated output returns a new permanent `asset_id`; carry that ID into social
+  drafts and publishing workflows rather than its preview URL.
+
 Read [references/brand-system.md](references/brand-system.md) before creating or restructuring a brand kit.
 
 ## Marketing Standard
