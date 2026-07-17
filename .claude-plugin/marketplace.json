@@ -6,14 +6,14 @@
   },
   "metadata": {
     "description": "AI social media management and on-brand content creation with Simplified.",
-    "version": "1.2.0"
+    "version": "1.3.0"
   },
   "plugins": [
     {
       "name": "simplified-ai",
       "source": "./",
       "description": "Create, schedule, review, and analyze on-brand social content with Simplified AI marketing workflows.",
-      "version": "1.2.0",
+      "version": "1.3.0",
       "author": {
         "name": "Simplified",
         "url": "https://simplified.com"
