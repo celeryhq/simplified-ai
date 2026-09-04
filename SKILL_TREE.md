@@ -1,9 +1,10 @@
 # Skill Tree
 
-The plugin provides fourteen shared Codex/Claude skills in two layers: six
-Simplified platform operators and eight marketer workflows. Each top-level folder
-contains a canonical `SKILL.md`; `agents/openai.yaml` adds Codex UI metadata without
-forking the workflow instructions.
+The plugin ships every folder under `skills/` — seventeen shared Codex/Claude
+skills, split between Simplified platform operators and marketer workflows.
+Each top-level folder contains a canonical `SKILL.md`;
+`agents/openai.yaml` adds Codex UI metadata without forking the workflow
+instructions.
 
 ```text
 skills/
@@ -13,6 +14,9 @@ skills/
 ├── simplified-social/              # 13 platforms, auto-comments, reviews, analytics
 ├── manage-brand/                   # brand kit + reusable brand context
 ├── manage-projects/                # projects, deliverables, handoffs, exports
+├── simplified-project-management/  # boards, tasks, assignees, dependencies
+├── simplified-workflows/           # build, publish and run multi-step automations
+├── simplified-cli/                 # the `smp` command line
 ├── social-content-planner/         # goals → weekly/monthly calendar
 ├── cross-platform-campaign/        # brief → coordinated channel rollout
 ├── content-repurposer/             # source → channel-native post sequence
@@ -56,6 +60,13 @@ content pillars, writing examples, and other reusable brand context from evidenc
 Turn approved plans into projects and accountable deliverables; manage item order,
 assignments, comments, assets, and partner exports without implying publishing
 authorization.
+
+### `simplified-workflows`
+
+Build, publish and run multi-step Simplified workflows; poll runs to completion,
+resolve approval gates, and control failed or stuck runs. Reads the connector's
+`workflow://` resources for the step-graph grammar rather than inferring it, and
+confirms the plan before anything that spends credits or reaches outside.
 
 ## Marketer workflows
 
