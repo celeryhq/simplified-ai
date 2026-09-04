@@ -1,0 +1,4 @@
+interface:
+  display_name: "Simplified Workflows"
+  short_description: "Build, publish and run multi-step Simplified workflows."
+  default_prompt: "Use $simplified-workflows to show me the workflows in my Simplified workspace and what inputs each one takes."
