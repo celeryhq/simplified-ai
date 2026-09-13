@@ -68,6 +68,20 @@ resolve approval gates, and control failed or stuck runs. Reads the connector's
 `workflow://` resources for the step-graph grammar rather than inferring it, and
 confirms the plan before anything that spends credits or reaches outside.
 
+### `simplified-project-management`
+**Trigger:** inspect or change Simplified boards, statuses, tasks, assignees,
+tags, dependencies, comments, activity, or tracked work.
+**Tools:** `pm_*` plus `api_listComments` and `api_addComment` for task comments.
+**Does:** discover tenant-specific identifiers, read current state, confirm
+consequential changes, execute precise writes, and verify the result directly.
+
+### `simplified-cli`
+**Trigger:** scripted, CI, or terminal work rather than a conversational flow.
+**Tools:** the `simplified` npm CLI for social, scheduling, analytics and media;
+the `smp` toolkit CLI for the full platform.
+**Does:** authenticate a profile, resolve teamspace context, and run JSON-native
+commands whose output feeds directly into pipelines.
+
 ## Marketer workflows
 
 ### `social-content-planner`
@@ -111,13 +125,6 @@ Inspect and revise selected drafts, create a stakeholder review bundle, and keep
 review approval separate from scheduling or publishing authorization. Agency
 workflows resolve the client teamspace first and keep one bundle per client and
 campaign so drafts and IDs never cross client boundaries.
-
-### `simplified-project-management`
-**Trigger:** inspect or change Simplified boards, statuses, tasks, assignees,
-tags, dependencies, comments, activity, or tracked work.
-**Tools:** `pm_*` plus `api_listComments` and `api_addComment` for task comments.
-**Does:** discover tenant-specific identifiers, read current state, confirm
-consequential changes, execute precise writes, and verify the result directly.
 
 ## Cross-skill flow
 
