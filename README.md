@@ -38,7 +38,7 @@ transcription, documents) is available through the full toolkit.
 | **What it is** | Curated [Skills](https://docs.claude.com/en/docs/agents-and-tools) that teach the assistant *how* to use the tools — sequencing, terminology, safety rails | The raw tool surface, callable by any MCP client |
 | **Best for** | Marketer workflows: plan, create, repurpose, review, publish, and improve—with guardrails | Power users, automations, and clients that don't use Skills |
 | **Setup** | One-line install (Claude Code / Codex) | Add one URL to your MCP config |
-| **Guided workflows** | 14 skills: 6 platform operators + 8 marketer workflows | Hosted connector: 105 live tools verified July 15, 2026. Full local toolkit: 106 tools |
+| **Guided workflows** | 17 skills: 9 platform operators + 8 marketer workflows | Hosted connector: 105 live tools verified July 15, 2026. Full local toolkit: 106 tools |
 | **Auth** | OAuth via the connector | OAuth via the connector |
 
 Both run on the **same hosted connector** — `https://apikit.simplified.com/mcp`.
