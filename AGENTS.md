@@ -29,6 +29,8 @@ simplified-ai/
 │   ├── simplified-social/
 │   ├── manage-brand/
 │   ├── manage-projects/
+│   ├── simplified-project-management/
+│   ├── simplified-cli/
 │   ├── social-content-planner/
 │   ├── cross-platform-campaign/
 │   ├── content-repurposer/
@@ -51,6 +53,8 @@ simplified-ai/
 | [simplified-social](skills/simplified-social/SKILL.md) | Draft / schedule / queue posts, timed auto-comments, and analytics across 13 platforms | `social_*` |
 | [manage-brand](skills/manage-brand/SKILL.md) | Evidence-led brand kits and reusable brand context | brand-kit and context-document tools |
 | [manage-projects](skills/manage-projects/SKILL.md) | Marketing projects, deliverables, assignments, and exports | project and item tools |
+| [simplified-project-management](skills/simplified-project-management/SKILL.md) | Boards, tasks, subtasks, dependencies, assignees, tags, custom fields, comments | `pm_*` |
+| [simplified-cli](skills/simplified-cli/SKILL.md) | The `smp` command line across PM, media, assets, social, and `smp serve` | CLI, not MCP |
 | [social-content-planner](skills/social-content-planner/SKILL.md) | Goal-led weekly and monthly content calendars | accounts, analytics, drafts, scheduling |
 | [cross-platform-campaign](skills/cross-platform-campaign/SKILL.md) | Coordinated channel-native campaign rollouts | image generation + social |
 | [content-repurposer](skills/content-repurposer/SKILL.md) | Source content into channel-native post sequences | drafts + optional image generation |
@@ -60,7 +64,7 @@ simplified-ai/
 | [social-performance-analyst](skills/social-performance-analyst/SKILL.md) | KPI, trend, post, and audience analysis with next actions | social analytics |
 | [campaign-review](skills/campaign-review/SKILL.md) | Draft QA, revisions, and stakeholder review bundles | drafts + review bundles |
 
-The outcome-driven skills compose the six platform operators. Workspace identity
+The outcome-driven skills compose the eight platform operators. Workspace identity
 establishes the scope for every other operator. Image and video
 generation return permanent **asset IDs** for `simplified-social.media`; brand and
 project skills provide reusable context and operational handoffs. Workflow skills

@@ -1,10 +1,14 @@
 # Skill Tree
 
-The plugin ships every folder under `skills/` — seventeen shared Codex/Claude
-skills, split between Simplified platform operators and marketer workflows.
-Each top-level folder contains a canonical `SKILL.md`;
-`agents/openai.yaml` adds Codex UI metadata without forking the workflow
-instructions.
+The plugin ships every folder under `skills/`. The sixteen documented below are
+the supported skills, split between Simplified platform operators and marketer
+workflows.
+
+Each top-level folder contains a canonical `SKILL.md`. Skills surfaced in Codex
+also carry `agents/openai.yaml`, which adds Codex UI metadata without forking the
+workflow instructions. `simplified-cli` deliberately has none: it drives the `smp`
+shell command rather than the hosted connector, so it is a Claude Code / Cursor
+skill and is not presented as a Codex app skill.
 
 ```text
 skills/
@@ -15,7 +19,6 @@ skills/
 ├── manage-brand/                   # brand kit + reusable brand context
 ├── manage-projects/                # projects, deliverables, handoffs, exports
 ├── simplified-project-management/  # boards, tasks, assignees, dependencies
-├── simplified-workflows/           # build, publish and run multi-step automations
 ├── simplified-cli/                 # the `smp` command line
 ├── social-content-planner/         # goals → weekly/monthly calendar
 ├── cross-platform-campaign/        # brief → coordinated channel rollout
@@ -60,13 +63,6 @@ content pillars, writing examples, and other reusable brand context from evidenc
 Turn approved plans into projects and accountable deliverables; manage item order,
 assignments, comments, assets, and partner exports without implying publishing
 authorization.
-
-### `simplified-workflows`
-
-Build, publish and run multi-step Simplified workflows; poll runs to completion,
-resolve approval gates, and control failed or stuck runs. Reads the connector's
-`workflow://` resources for the step-graph grammar rather than inferring it, and
-confirms the plan before anything that spends credits or reaches outside.
 
 ### `simplified-project-management`
 **Trigger:** inspect or change Simplified boards, statuses, tasks, assignees,
