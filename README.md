@@ -18,14 +18,16 @@ platforms, and run client approval workflows through shared skills for Claude,
 ChatGPT, Codex, and Cursor.
 
 Under the hood it's a **Model Context Protocol (MCP)** connector. This repo ships
-the **plugin** — a curated, safety-railed front-end over that connector — but the
-same hosted MCP can be wired into any MCP-capable client directly, and the wider
-Simplified platform (project management, brand kits, video & audio tools,
-transcription, documents) is available through the full toolkit.
+the **plugin** — a curated, safety-railed front-end over that connector, with guided
+skills for brand, projects, tasks, video, and social. The same hosted MCP can be
+wired into any MCP-capable client directly for the full raw tool surface — every
+individual tool, including media editing and transcription primitives, for
+clients that don't use Skills.
 
 > **TL;DR** — Want a guided experience? Install the **plugin** (below). Want raw
 > tools in your own client? Point it at `https://apikit.simplified.com/mcp`. Want
-> the entire Simplified platform (PM, brand kits, media editing)? See
+> every individual tool — media editing, transcription, and more — or a client
+> that doesn't use Skills? See
 > [the full MCP toolkit](#the-full-platform--simplified-apikit) and
 > [docs/MCP.md](docs/MCP.md).
 
@@ -38,7 +40,7 @@ transcription, documents) is available through the full toolkit.
 | **What it is** | Curated [Skills](https://docs.claude.com/en/docs/agents-and-tools) that teach the assistant *how* to use the tools — sequencing, terminology, safety rails | The raw tool surface, callable by any MCP client |
 | **Best for** | Marketer workflows: plan, create, repurpose, review, publish, and improve—with guardrails | Power users, automations, and clients that don't use Skills |
 | **Setup** | One-line install (Claude Code / Codex) | Add one URL to your MCP config |
-| **Guided workflows** | 17 skills: 9 platform operators + 8 marketer workflows | Hosted connector: 105 live tools verified July 15, 2026. Full local toolkit: 106 tools |
+| **Guided workflows** | 16 skills: 8 platform operators + 8 marketer workflows | Hosted connector: 105 live tools verified July 15, 2026. Full local toolkit: 106 tools |
 | **Auth** | OAuth via the connector | OAuth via the connector |
 
 Both run on the **same hosted connector** — `https://apikit.simplified.com/mcp`.
@@ -299,6 +301,8 @@ simplified-ai/
 │   ├── simplified-social/       ← social operations + platform rules  (social_*)
 │   ├── manage-brand/            ← brand kits + reusable context
 │   ├── manage-projects/         ← projects + content operations
+│   ├── simplified-project-management/ ← boards, tasks, dependencies
+│   ├── simplified-cli/          ← the `smp` command line
 │   ├── social-content-planner/  ← goal-led calendars and draft plans
 │   ├── cross-platform-campaign/ ← coordinated multi-channel rollouts
 │   ├── content-repurposer/      ← source content → channel-native posts
@@ -327,10 +331,15 @@ simplified-ai/
 - [x] Works as a Claude.ai / Desktop **Custom Connector**.
 - [x] Claude Code plugin verified end-to-end (marketplace + plugin + MCP).
 - [x] `action` semantics verified against backend (`add_to_queue` = publish ASAP).
-- [x] Codex marketplace config complete (`.codex-plugin/` + `.agents/plugins/marketplace.json`).
+- [x] Codex plugin manifest valid; installs and enables at v1.4.0 (verified with
+  `codex plugin add` against a local marketplace).
+- [ ] Codex local marketplace entry: `.agents/plugins/marketplace.json` sets
+  `source.path` to `./`, which Codex cannot resolve — a plugin must live in a
+  subdirectory of the marketplace root. Hosted/directory install is unaffected.
 - [ ] Codex legacy migration: existing `simplified-for-ai` installations need a
   one-time remove/reinstall path to move to the canonical `simplified-ai` identity.
-- [ ] ChatGPT App submission (pending business verification).
+- [ ] ChatGPT App submission (v1 submitted 2026-07-16, rejected on reviewer
+  sign-in; resubmission in progress with v1.4.0).
 - [ ] Claude Connectors Directory listing live (pending Anthropic review).
 - [ ] Cursor plugin install.
 
