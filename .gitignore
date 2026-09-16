@@ -11,3 +11,6 @@ node_modules/
 
 # Submission prep — kept local, not checked in
 /submission/
+
+# Internal release-execution scaffolding — kept local, not checked in
+/docs/superpowers/
