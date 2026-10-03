@@ -40,3 +40,7 @@ Check unequal reach, different publication time, audience mix, placement, paid s
 ## Learning record
 
 Write: result, evidence, limitations, decision, scope, and next test. A durable learning is specific enough to guide future creative but narrow enough not to overgeneralize.
+
+## Tool and authorization boundaries
+
+A test card is a design, not a running experiment. Create remote variants only when requested; scheduling requires approval of the concrete matrix. Keep the resolved `space_id` across baseline analytics, media, generation, drafts, and follow-up analysis. If a metric is unavailable, record that gap rather than fabricating a proxy or outcome.

@@ -93,6 +93,11 @@ CONTRACT_TERMS = {
 }
 
 PLATFORM_CONTRACT_TERMS = {
+    "manage-assets": [
+        "api_listassets", "api_getasset", "api_createasset",
+        "api_signassetupload", "api_registerasset", "space_id",
+        "pagination", "folder", "http put",
+    ],
     "generate-image": [
         "api_getmodelfields",
         "api_generateimage",

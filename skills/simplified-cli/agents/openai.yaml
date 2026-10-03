@@ -1,0 +1,6 @@
+interface:
+  display_name: "Simplified CLI"
+  short_description: "Use the smp CLI for local Simplified automation."
+  default_prompt: "Use $simplified-cli to check my installed smp commands and help me list assets in my chosen teamspace."
+policy:
+  allow_implicit_invocation: false

@@ -12,21 +12,22 @@ Turn approved brand evidence into a durable operating system for consistent mark
 - Treat websites, supplied documents, approved messaging, and existing brand records as evidence. Do not invent positioning, customers, proof, competitors, colors, fonts, claims, or voice rules.
 - Read the current kit or context document before changing it. Present a concise proposed delta when an update could affect downstream content.
 - Do not overwrite a mature brand system merely to improve phrasing. Preserve approved meaning and provenance.
-- Confirm before deleting a context document. Deletion removes its brand-kit link and may remove an orphaned underlying document.
+- Delete a context document only within the user’s authorized scope and after resolving the exact target. Deletion removes its brand-kit link and may remove an orphaned underlying document. Ask only when the target or removal intent is unclear.
 - Predefined context types are singletons. Update the existing document instead of creating a duplicate.
 - Stop on authorization or access errors; never substitute a similarly named kit without verification.
 
 ## Workflow
 
 1. Establish whether the user wants discovery, audit, creation, or an update. Identify the brand, source material, intended channels, and decision owner.
-2. Call `api_listBrandKits`, using search when a title is known. If multiple kits match, present the choices rather than guessing.
+2. Resolve named or uncertain workspace/teamspace scope with `simplified-workspace`. Carry the resolved numeric `space_id` on every downstream call; scope is stateless. Call `api_listBrandKits`, using `search` when a title is known. If multiple kits match, present the choices rather than guessing.
 3. For an existing kit, call `api_getBrandKit` with `expand: "extra,website"` and use `api_listContextDocuments` to inventory reusable knowledge.
 4. Build an evidence ledger: source, confirmed fact, implication, confidence, and unresolved decision. Separate what the brand is from what the marketer proposes.
 5. Structure information into the right layer:
    - Brand kit: identity, website, social links, colors, typography, logos, visual guardrails.
-   - Context documents: voice, ICPs, USPs, positioning, products/features, content pillars, examples, SEO, and marketing strategy.
+   - Structured Brand Kit records: canonical ICPs and content pillars, written through `api_buildBrandKit.icps` and `api_buildBrandKit.content_pillars`.
+   - Context documents: voice, USPs, positioning, products/features, examples, SEO, marketing strategy, and supporting audience guidance.
 6. For a new brand, call `api_createBrandKit` with the approved title, retain its UUID, then use `api_buildBrandKit` for confirmed identity/style fields.
-7. For reusable strategic knowledge, use `api_createContextDocument` only when that canonical type does not exist. Otherwise retrieve it with `api_getContextDocumentByType` and update it with `api_updateContextDocument`.
+7. Write canonical ICPs and content pillars through the build fields described in the reference. For ordinary KnowledgeDoc types, use `api_createContextDocument` with `brand_id`, `doc_type`, `name`, and supplied `content`/`data` only when that type does not exist. Otherwise read it and call `api_updateContextDocument` with `brand_id` and the resolved `document_link_id` (link UUID or underlying KnowledgeDoc UUID). `api_getContextDocumentByType` takes `context_type`. Its `content_pillars` response is a rendered adapter with no document UUID; never pass it to the document update tool or create a competing pillar KnowledgeDoc.
 8. Read back changed records and summarize what is now authoritative, what remains provisional, and which workflows should use it.
 
 ## Brand asset handoff
@@ -34,11 +35,12 @@ Turn approved brand evidence into a durable operating system for consistent mark
 - Treat logo and reference-image `asset_id` values as the durable identity. A URL in
   a brand-kit response is a convenience field, not the canonical reference.
 - When handing a brand asset to image generation, resolve its UUID with
-  `api_getAsset`, require `status: 4`, and pass the returned current `file_url` only
-  when the live model schema expects a URL.
+  `api_getAsset`, require `status: 4`, and prefer the UUID in normalized
+  `parameters.reference_images`. Use a fresh URL only for an operation whose
+  schema requires one.
 - Preserve the complete query string on signed URLs. Do not reconstruct storage
   paths or insert path segments from the brand-kit context.
-- Generated output returns a new permanent `asset_id`; carry that ID into social
+- Successful generation with `storage: "asset"` returns a new permanent `asset_id`; carry that ID into social
   drafts and publishing workflows rather than its preview URL.
 
 Read [references/brand-system.md](references/brand-system.md) before creating or restructuring a brand kit.

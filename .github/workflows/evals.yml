@@ -24,6 +24,10 @@ jobs:
           python-version: "3.11"
       - name: Validate marketer skills and hosted inventory
         run: python3 evals/run_skill_evals.py
+      - name: Test MCP harness behavior without credentials
+        run: python3 -m unittest discover -s evals -p test_run_evals.py
+      - name: Build hosted-connector skill bundle
+        run: python3 bin/build-codex-skills.py --out dist/codex
       - name: Validate JSON manifests and eval fixtures
         run: |
           python3 -m json.tool .codex-plugin/plugin.json >/dev/null

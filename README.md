@@ -1,360 +1,78 @@
-<p align="center">
-  <img src="assets/simplified-logo.png" alt="Simplified" width="120" />
-</p>
+<p align="center"><img src="assets/simplified-logo.png" alt="Simplified" width="120" /></p>
 
-<h1 align="center">Simplified for AI</h1>
+# Simplified for AI
 
-<p align="center">
-  <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License: MIT" />
-  <img src="https://img.shields.io/badge/clients-Claude%20Code%20%7C%20Codex-7C3AED.svg" alt="Clients: Claude Code | Codex" />
-  <img src="https://img.shields.io/badge/MCP-hosted%20connector-FFAD00.svg" alt="MCP: hosted connector" />
-  <img src="https://img.shields.io/badge/auth-OAuth-brightgreen.svg" alt="Auth: OAuth" />
-</p>
+Use Simplified from Claude, ChatGPT, Codex, Cursor, or another compatible MCP client. Find uploaded assets, generate images and videos, create social drafts, manage brand context and projects, and schedule approved content.
 
-Bring AI social media management and on-brand content creation into your assistant
-with **Simplified**. Create images and videos, manage brand kits and marketing
-projects, plan content calendars, schedule and analyze social posts across 13
-platforms, and run client approval workflows through shared skills for Claude,
-ChatGPT, Codex, and Cursor.
+This repository provides **skills**: instructions that teach an assistant how to use Simplified. The hosted **MCP connector** supplies the actual tools. A skill installation and a connector connection are separate: you need an authorized connector to run the workflows.
 
-Under the hood it's a **Model Context Protocol (MCP)** connector. This repo ships
-the **plugin** — a curated, safety-railed front-end over that connector, with guided
-skills for brand, projects, tasks, video, and social. The same hosted MCP can be
-wired into any MCP-capable client directly for the full raw tool surface — every
-individual tool, including media editing and transcription primitives, for
-clients that don't use Skills.
+## Start here
 
-> **TL;DR** — Want a guided experience? Install the **plugin** (below). Want raw
-> tools in your own client? Point it at `https://apikit.simplified.com/mcp`. Want
-> every individual tool — media editing, transcription, and more — or a client
-> that doesn't use Skills? See
-> [the full MCP toolkit](#the-full-platform--simplified-apikit) and
-> [docs/MCP.md](docs/MCP.md).
+1. [Connect your assistant](docs/CLIENTS.md) and complete Simplified sign-in.
+2. Ask “Which Simplified workspace am I connected to?” to check scope.
+3. Try an asset search or create an image with one of the prompts below.
 
----
+| Your goal | Start with |
+|---|---|
+| Find/import/upload media, or reuse an existing asset | [Manage assets](skills/manage-assets/SKILL.md) |
+| Create or edit an image from text or references | [Generate image](skills/generate-image/SKILL.md) |
+| Animate an image or create a video | [Generate video](skills/generate-video/SKILL.md) |
+| Create social drafts or schedule approved posts | [Simplified social](skills/simplified-social/SKILL.md) |
+| Plan campaigns, review drafts, manage brands/projects, analyze results | [Skill catalog](SKILL_TREE.md) |
 
-## Two ways in
+For a step-by-step walkthrough, see [Assets, images, and videos](docs/MEDIA.md). For integration details and profiles, see [MCP reference](docs/MCP.md).
 
-| | **Plugin (this repo)** | **MCP connector (direct)** |
-|---|---|---|
-| **What it is** | Curated [Skills](https://docs.claude.com/en/docs/agents-and-tools) that teach the assistant *how* to use the tools — sequencing, terminology, safety rails | The raw tool surface, callable by any MCP client |
-| **Best for** | Marketer workflows: plan, create, repurpose, review, publish, and improve—with guardrails | Power users, automations, and clients that don't use Skills |
-| **Setup** | One-line install (Claude Code / Codex) | Add one URL to your MCP config |
-| **Guided workflows** | 16 skills: 8 platform operators + 8 marketer workflows | Hosted connector: 105 live tools verified July 15, 2026. Full local toolkit: 106 tools |
-| **Auth** | OAuth via the connector | OAuth via the connector |
+## Prompts to try
 
-Both run on the **same hosted connector** — `https://apikit.simplified.com/mcp`.
-The plugin just adds the workflow knowledge on top.
+- “Find uploaded images with ‘car’ in their name or tags and use them to create social drafts.”
+- “Create a vertical product image and save it in my Asset Library.”
+- “Use this asset ID to make a poster, keeping the product unchanged.”
+- “Animate this uploaded product image into a short video and save it for reuse.”
+- “Create two image variations for review; do not publish them.”
 
----
+Asset search is name/tag matching, not visual search. A folder name does not select its contents: named-folder browsing is not exposed by the current asset-list tool. A file attached to a chat is not automatically uploaded to Simplified.
 
-## What you can do
+## Install skills
 
-**🎨 Generate images** — text-to-image and image-to-image across Flux, Google
-(Gemini / Imagen), OpenAI GPT Image, Ideogram, Recraft, Stable Diffusion, Qwen, and
-Seedream. Saved as a reusable **asset** you can drop straight into a post.
+### Claude Code plugin
 
-**🎬 Generate videos** — discover current model capabilities, create text- or
-reference-guided motion, poll real render completion, and retain reusable assets.
-
-**🧭 Manage brand context** — structure approved identity, voice, audiences,
-positioning, proof, content pillars, and visual rules as reusable brand knowledge.
-
-**✅ Run content operations** — turn approved plans into projects, accountable
-deliverables, review gates, comments, assignments, and controlled exports.
-
-**📣 Run social** — draft, schedule, queue, publish, update, and delete posts across
-**Facebook, Instagram, TikTok, YouTube, LinkedIn, Pinterest, Threads, Bluesky,
-X/Twitter, Google Business, Mastodon, Reddit, and Telegram**. Add timed
-auto-comments for patterns such as “link in first comment,” manage drafts and tags,
-bundle drafts into a shareable **review link**, and pull **analytics** (time-series,
-per-post, aggregated KPIs, and audience demographics).
-
-**🗓️ Plan content** — turn goals, audiences, offers, and key dates into practical
-weekly or monthly calendars with channel-aware content pillars and cadence.
-
-**🚀 Run campaigns** — adapt one launch or promotion across channels, generate
-reusable campaign assets, create drafts, and package them for stakeholder review.
-
-**🤝 Run agency approvals** — isolate each client by workspace/teamspace, assemble
-only that client's selected drafts, and create a separate shareable review bundle
-and approval link per client and campaign. An explicit “bundle all drafts” request
-collects every draft in that client scope and presents the link with a completeness
-manifest.
-
-**♻️ Repurpose content** — turn articles, announcements, transcripts, case studies,
-and events into distinct channel-native posts without inventing claims.
-
-**🌱 Build evergreen programs** — create durable territories, recurring franchises,
-a content bank, and explicit refresh and retirement rules.
-
-**📍 Grow local businesses** — coordinate verified location content and Google
-Business drafts around visits, calls, bookings, directions, and timely demand.
-
-**🧪 Test creative** — design controlled hook, proof, format, visual, and CTA tests
-with decision metrics and reusable learning—not random variations.
-
-**📊 Improve performance** — combine account KPIs, trends, post-level results, and
-audience data into prioritized actions and measurable next experiments.
-
-The workflows compose: plan or repurpose content → generate reusable assets → create
-channel-native drafts → review → confirm → schedule or queue → analyze results.
-
-> **Live verification.** On July 15, 2026, an authenticated Codex initialization
-> exposed 105 hosted tools. Workspace/teamspace discovery, model discovery, credits,
-> brand kits, projects, social accounts, analytics, image generation, and social
-> draft updates all passed live smoke tests. A complete draft-to-image flow was also
-> verified across Simplified's LinkedIn, Facebook, Google Business, and X/Twitter
-> accounts without publishing. The local `full` profile exposes 106 tools; the
-> hosted profile is currently one operation smaller.
-
----
-
-## Install
-
-### Claude Code
-```
+```text
 /plugin marketplace add celeryhq/simplified-ai
 /plugin install simplified-ai@simplified-ai
 ```
 
-### Any agent (via [skills.sh](https://skills.sh))
+The plugin declares the hosted connector in [`.mcp.json`](.mcp.json). Complete its OAuth authorization in the client.
 
-Install from the repository and let the CLI detect your available agents:
+### Compatible local agents
 
-```
+```bash
 npx skills add celeryhq/simplified-ai
 ```
 
-Useful installation variants:
+Select the skills and agent supported by your installed skills CLI. Run `npx skills --help` for current install/update options. Installing skills alone does not configure or authenticate MCP: follow [client setup](docs/CLIENTS.md).
+
+### ChatGPT and Claude web/desktop
+
+Connect Simplified through the client's app/connector interface. Use the listed Simplified app where available, or an authorized custom MCP connection when your account supports it. You do not paste CLI commands into a normal chat. The client may use tools without loading this repository's skills; use the [walkthrough](docs/MEDIA.md) as a human guide. Details and limitations are in [client setup](docs/CLIENTS.md).
+
+## What to expect
+
+- Asset IDs are reusable. File/thumbnail URLs can expire, even for saved assets.
+- Image references accept asset IDs or absolute HTTP(S) URLs; video reference slots require asset IDs.
+- Image/video generation spends credits. Explicit generation requests authorize the requested job; clarify significant ambiguity before spending.
+- Current generation tools wait for a result. If they return a pending/timeout response, retain the identifiers and continue the existing job where supported; do not submit a duplicate.
+- Creating media or drafts is separate from authorizing social publication. Preview drafts and obtain explicit publishing authorization before scheduling or queueing.
+- Hosted tools, model availability, and client permissions change independently of these files. Check the tools exposed in the current connection. Old inventory snapshots are historical evidence, not a current capability guarantee.
+
+## Contributing and validation
+
+Canonical skill instructions live under `skills/`; `agents/openai.yaml` adds client metadata. Contributor checks:
 
 ```bash
-# Preview the available skills without installing
-npx skills add celeryhq/simplified-ai --list
-
-# Install selected skills
-npx skills add celeryhq/simplified-ai \
-  --skill generate-image \
-  --skill simplified-social
-
-# Install every skill for Codex and Claude Code
-npx skills add celeryhq/simplified-ai \
-  --skill '*' \
-  --agent codex \
-  --agent claude-code
-
-# Install globally so the skills are available in every project
-npx skills add celeryhq/simplified-ai --all --global
+python3 evals/run_skill_evals.py
+python3 bin/build-codex-skills.py --out /tmp/simplified-ai-skills
 ```
 
-See [SKILL_TREE.md](SKILL_TREE.md) for the complete marketer-focused catalog.
+See [evals](evals/README.md) for the difference between document checks, agent evaluations, and live tool tests. Packaging success does not prove a hosted deployment works. The ChatGPT skill bundle omits CLI-only and automation-only skills whose tools are unavailable on the declared connector.
 
-#### Update an existing skills.sh installation
-
-The CLI records the source and can refresh installed skills when this repository
-changes:
-
-```bash
-# Update all installed project or global skills (interactive scope selection)
-npx skills update
-
-# Update only project-scoped or global skills
-npx skills update --project
-npx skills update --global
-
-# Update one or more Simplified skills by name
-npx skills update generate-image simplified-social
-
-# Non-interactive update; project scope inside a project, otherwise global
-npx skills update --yes
-
-# Confirm what is installed afterward
-npx skills list
-```
-
-Project installs are the default and can be committed with the project. Use
-`--global` when the skills should be available across projects. The skills.sh CLI
-supports Codex, Claude Code, Cursor, and other compatible agents; use repeated
-`--agent <name>` flags to target specific clients.
-
-### ChatGPT (Apps)
-Enable the **Simplified** app — it's backed by the hosted MCP connector, so there's
-nothing to install. *(Submission in progress — see [Status](#status).)*
-
-### Claude.ai / Claude Desktop (Custom Connector)
-Add a Custom Connector pointing at `https://apikit.simplified.com/mcp` and complete
-the OAuth flow. No API key.
-
-### Codex / Cursor / any MCP client
-Add the connector to your client's MCP config:
-
-```json
-{
-  "mcpServers": {
-    "simplified": { "type": "http", "url": "https://apikit.simplified.com/mcp" }
-  }
-}
-```
-
-On first use the client walks the OAuth flow; tokens refresh automatically. (Codex
-also supports a plugin install — see [Status](#status) for verification state.)
-
----
-
-## The MCP behind the plugin
-
-Everything in this repo is a front-end over one hosted MCP server.
-
-### Hosted connector — `apikit.simplified.com/mcp`
-
-- **Public, OAuth-secured, zero-install.** OAuth 2.0 Authorization Code + PKCE with
-  Dynamic Client Registration; no API key to manage, tokens refresh on expiry.
-- **Expanded hosted tool set.** An authenticated Codex initialization on July 15,
-  2026 exposed **105 tools**, including workspace/teamspace discovery, assets, AI
-  image and video generation, brand kits and context documents, marketing projects,
-  social publishing and review, and analytics. See [docs/MCP.md](docs/MCP.md) for the
-  namespace and profile breakdown.
-- This is what the **plugin**, the **ChatGPT App**, and **Claude.ai Custom
-  Connectors** all talk to.
-
-### The full platform — `simplified-apikit`
-
-The hosted connector is the public, zero-install path to a near-complete Simplified
-tool surface. The distributable platform toolkit lives in **`simplified-apikit`**,
-which is *three things in one package*:
-
-- **`smp`** — a CLI that drives Simplified from your terminal
-- **`smp serve`** — a local MCP server (stdio or HTTP) for Claude Desktop, Cursor,
-  Cline, or any MCP host
-- the agent toolkit powering Simplified's own assistants
-
-Its default (`full`) profile exposes **106 tools across 5 namespaces**:
-
-| Namespace | Tools | What it covers |
-|---|---:|---|
-| **`pm`** | 29 | **Project management** — boards, statuses, tasks, subtasks, dependencies, assignees, tags, custom fields, search |
-| **`api`** | 39 | **Brand kits** (V2 build + context documents), **projects & items**, **AI image + video** generation, **credits**, **text-to-speech**, **assets**, **long-form documents**, comments |
-| **`social`** | 16 | The full social + analytics suite; the local full profile currently has one additional operation beyond the hosted profile |
-| **`media`** | 21 | **Image editing** (bg removal, upscale, outpaint, inpaint, restore, convert), **video editing** (merge, trim, speed, reverse, B-roll, text/script-to-video), **transcription** |
-| **`notify`** | 1 | Agent notifications |
-
-The `full` toolkit (the `simplified-apikit` CLI) is distributed to Simplified
-workspaces. The hosted connector above is the public, zero-install path. Profiles,
-the per-namespace tool catalog, and connect-from-any-client instructions are in
-**[docs/MCP.md](docs/MCP.md)**.
-
----
-
-## Connector & auth
-
-The connector is declared in [`.mcp.json`](.mcp.json):
-
-```json
-{ "mcpServers": { "simplified": { "type": "http", "url": "https://apikit.simplified.com/mcp" } } }
-```
-
-OAuth-secured — the client walks the OAuth flow on first use; there's no API key to
-set. The server uses stateless OAuth validation and emits the standard
-`WWW-Authenticate` challenge when a token must be refreshed. Fresh and concurrent
-Codex sessions were verified successfully on July 15, 2026.
-
----
-
-## Key behavior (see [AGENTS.md](AGENTS.md))
-
-- **Confirm before spending credits** (image/video generation) or **publishing** (social).
-- **Draft → confirm → publish** for social posts; never publish without confirmation.
-- **"Post now" → `add_to_queue`** — the `action` enum is `schedule | add_to_queue | draft`.
-- **First comments use post-relative delays** — convert “after X minutes” to
-  `comments[0].delay = X * 60` seconds and preview the text and delay before publishing.
-- **Carry the `asset_id`, not the URL** — generated-image URLs are signed and expire;
-  the asset id is permanent and is what the social `media` field accepts.
-- **Resolve workspace scope first** — when a workspace or teamspace is named or
-  uncertain, resolve its exact ID and carry that scope through downstream calls.
-- **Show returned URLs as links, never embeds** — signed asset and review URLs should
-  remain clickable instead of being fetched inline by the client.
-- **Stop if not connected** — if no social accounts are returned, ask the user to
-  connect one rather than attempting to post.
-
----
-
-## Repo layout
-
-```
-simplified-ai/
-├── .claude-plugin/
-│   ├── marketplace.json         ← Claude Code marketplace catalog
-│   └── plugin.json              ← Claude Code plugin manifest
-├── .codex-plugin/plugin.json    ← Codex / ChatGPT Apps manifest
-├── .codex/config.toml           ← Codex workspace MCP configuration
-├── .agents/plugins/             ← Codex marketplace catalog
-├── .github/workflows/evals.yml  ← deterministic contract and fixture checks
-├── .mcp.json                    ← hosted MCP connector (OAuth) — shared by all clients
-├── AGENTS.md                    ← agent behavior & safety conventions
-├── SKILL_TREE.md                ← index of skills
-├── docs/
-│   └── MCP.md                   ← full MCP reference (toolkit, profiles, tool catalog)
-├── skills/
-│   ├── generate-image/          ← text-to-image workflow  (api_generateImage)
-│   ├── generate-video/          ← model-aware AI video generation
-│   ├── simplified-workspace/    ← whoami + workspace/teamspace resolution
-│   ├── simplified-social/       ← social operations + platform rules  (social_*)
-│   ├── manage-brand/            ← brand kits + reusable context
-│   ├── manage-projects/         ← projects + content operations
-│   ├── simplified-project-management/ ← boards, tasks, dependencies
-│   ├── simplified-cli/          ← the `smp` command line
-│   ├── social-content-planner/  ← goal-led calendars and draft plans
-│   ├── cross-platform-campaign/ ← coordinated multi-channel rollouts
-│   ├── content-repurposer/      ← source content → channel-native posts
-│   ├── evergreen-content-engine/ ← durable content program + renewal loop
-│   ├── local-business-marketing/ ← local and Google Business workflows
-│   ├── creative-testing/        ← controlled creative experiments
-│   ├── social-performance-analyst/ ← metrics → decisions and experiments
-│   └── campaign-review/         ← stakeholder review bundles and revisions
-├── assets/                      ← brand icon + logo
-├── evals/                       ← contributor QA harness (not installed)
-└── LICENSE
-```
-
----
-
-## Status
-
-- [x] Hosted connector live: `apikit.simplified.com/mcp` (OAuth + token refresh).
-- [x] Stateless OAuth verified across fresh and concurrent Codex sessions; no
-  `SessionExpired404` observed after the backend fix.
-- [x] Expanded hosted profile live: 105 tools observed in authenticated discovery.
-- [x] Live operator smoke tests passed for workspace/teamspaces, model fields,
-  credits, brand kits, projects, social accounts, and analytics.
-- [x] End-to-end image-to-social flow verified on four Simplified main accounts;
-  drafts were updated with media and nothing was published.
-- [x] Works as a Claude.ai / Desktop **Custom Connector**.
-- [x] Claude Code plugin verified end-to-end (marketplace + plugin + MCP).
-- [x] `action` semantics verified against backend (`add_to_queue` = publish ASAP).
-- [x] Codex plugin manifest valid; installs and enables at v1.4.0 (verified with
-  `codex plugin add` against a local marketplace).
-- [ ] Codex local marketplace entry: `.agents/plugins/marketplace.json` sets
-  `source.path` to `./`, which Codex cannot resolve — a plugin must live in a
-  subdirectory of the marketplace root. Hosted/directory install is unaffected.
-- [ ] Codex legacy migration: existing `simplified-for-ai` installations need a
-  one-time remove/reinstall path to move to the canonical `simplified-ai` identity.
-- [ ] ChatGPT App submission (v1 submitted 2026-07-16, rejected on reviewer
-  sign-in; resubmission in progress with v1.4.0).
-- [ ] Claude Connectors Directory listing live (pending Anthropic review).
-- [ ] Cursor plugin install.
-
----
-
-## Contributing
-
-Skills follow the [Agent Skills](https://docs.claude.com/en/docs/agents-and-tools)
-spec — a `SKILL.md` per directory plus optional `agents/openai.yaml` (Codex metadata)
-and `references/` for deep detail. The [`evals/`](evals/) harness holds test cases and
-a runnable I/O check (not shipped with the plugin).
-
-When an AI agent commits to this repo, include a `Co-Authored-By:` line naming the
-model.
-
-## License
-
-See [LICENSE](LICENSE).
+AI-authored commits should include a `Co-Authored-By:` line naming the model. Licensed under [MIT](LICENSE).

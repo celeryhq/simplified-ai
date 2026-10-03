@@ -80,7 +80,8 @@ current task state or post-write verification.
 Proceed without an extra confirmation when the user explicitly requested an
 ordinary create or edit and the target is unambiguous.
 
-Get explicit confirmation immediately before:
+Confirm the exact resource and effect before the following actions when the
+user has not already explicitly authorized that effect:
 
 - deleting a board, status, or task;
 - removing a task dependency;
@@ -88,21 +89,26 @@ Get explicit confirmation immediately before:
 - cloning a board with its statuses and tasks;
 - performing a bulk or ambiguous change.
 
-State the exact resource and effect in the confirmation. Do not treat a request
-to inspect or plan a change as permission to execute it.
+Do not ask again when explicit authorization already covers that exact resource
+and effect. Do not treat a request to inspect or plan as permission to execute.
 
 ### 4. Write precisely
 
 - Pass plain text in task `description`; do not construct `rich_description`.
 - Use ISO 8601 date-time values for `start_date` and `due_date`.
 - Use `pm_updateTaskAssignees` or `assignees_add` / `assignees_remove` for
-  assignment changes. Resolve integer member IDs first.
-- Use `pm_updateTaskTags` or `tags_add` / `tags_remove` for tag changes.
-- Use uppercase `BLOCKS`, `RELATES_TO`, or `DUPLICATES` for dependencies.
+  assignment changes. Resolve integer user IDs from
+  `pm_listWorkspaceMembers.options[].value` first, not membership-record IDs.
+- Use `pm_updateTaskTags` with `add` / `remove` arrays of tag names, or
+  `tags_add` / `tags_remove` with tag names for task updates. Assignee focused
+  writes use `add` / `remove` arrays of integer user IDs.
+- Set dependency `relation_type` to uppercase `BLOCKS`, `RELATES_TO`, or
+  `DUPLICATES`.
 - Use `api_addComment` with `content_type: "task"` and the task UUID as
   `object_pk`. Use an integer comment ID as `parent` for a reply.
 - Use `pm_updateStatus(order=...)` to reorder a column. Use `pm_moveStatus` only
-  to move all tasks out of one or more statuses and retire those statuses.
+  to move all tasks from one source status into a destination. Source deletion
+  is a separate `pm_deleteStatus` operation after verifying it is empty.
 
 ### 5. Verify the result
 
@@ -120,6 +126,10 @@ returned, explain the uncertainty and ask before attempting another create.
 
 Scope `pm_searchTasks` by board and status whenever possible. For a whole-board
 search, list statuses and query each column, paginate, and deduplicate task IDs.
+Search excludes subtasks by default. Pass `include_subtasks:true` when the
+request covers subtasks/all tickets or an expected task is absent.
+`task_type:"SUBTASK"` implies inclusion unless `include_subtasks` explicitly
+overrides it. Fetch a known task directly by ID/slug before declaring it absent.
 Keep `page_size` at or below 100. Treat search as eventually consistent after a
 write; use direct `get` tools for verification.
 

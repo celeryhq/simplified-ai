@@ -11,6 +11,11 @@ with the returned UUID or slug.
 Full-text search covers title, description, tags, and comments. Scope searches
 by board and status, then inspect title and description when relevance matters.
 
+Search excludes subtasks by default. Pass `include_subtasks:true` to include
+them; `task_type:"SUBTASK"` implies inclusion unless explicitly overridden.
+A missing search row does not prove a task is absent: use direct `pm_getTask`
+when its UUID or slug is known.
+
 Search results may omit exact creation timestamps and expanded relationships.
 Read candidate tasks directly when those fields matter.
 
@@ -46,8 +51,10 @@ response contains a Delta, read the text from its `ops[*].insert` values.
 ## Board-specific identifiers
 
 Status UUIDs belong to one board. Resolve statuses from the target board before
-creating or moving tasks. Member IDs and tags also belong to the authenticated
-workspace; discover them rather than carrying IDs across users or workspaces.
+creating or moving tasks. Assignee user IDs come from `pm_listWorkspaceMembers.options[].value`.
+Tags are passed by name in create/update arrays and focused `add` / `remove`
+mutations. Resolve these values in the authenticated workspace rather than
+carrying mappings across users or workspaces.
 
 When agent memory is available, cache these mappings under the authenticated
 workspace and teamspace. Revalidate a cached mapping after a workspace switch,

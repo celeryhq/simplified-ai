@@ -3,8 +3,9 @@
 Paste these into the OpenAI Codex plugin submission form (fields: **Scenario**,
 **User prompt**, **Tool triggered**, **Expected output**). At least 5 are required;
 6 are provided here for focused coverage of the two published skills plus the
-cross-skill flow. The broader ChatGPT App portal copy lives in
-[`../submission/chatgpt-app-submission.json`](../submission/chatgpt-app-submission.json).
+cross-skill flow. The broader ChatGPT App portal copy is maintained separately in the private,
+ignored `submission/chatgpt-app-submission.json` file; it is not included in a
+fresh checkout.
 
 ## Prerequisites for the review account
 - **AI credits** available (cases 1, 2, 6 consume credits — image generation).

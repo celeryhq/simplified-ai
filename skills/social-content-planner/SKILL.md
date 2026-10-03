@@ -16,6 +16,10 @@ Turn business goals into a practical, channel-aware content calendar. Use the Si
 - Stop on `401` or an empty account list and explain how to connect Simplified.
 - Present returned URLs as links, never as embedded images.
 
+## Workspace and handoff
+
+Before connected operations, use `simplified-workspace` when the client/workspace/teamspace is named or uncertain. Resolve the exact numeric teamspace and carry its `space_id` on every related account, analytics, asset, generation, draft, tag, review, and continuation call. Re-list scoped resources after switching clients; stop on access failures rather than falling back to another space. Pass the resolved context to every delegated skill.
+
 ## Workflow
 
 1. Establish the planning frame: business goal, audience, offer or topic, date range, channels, cadence, key dates, and desired call to action. Ask only for information that materially changes the plan; otherwise state reasonable assumptions.
@@ -25,7 +29,7 @@ Turn business goals into a practical, channel-aware content calendar. Use the Si
 5. Assign each post a date, channel, pillar, objective, format, hook, core message, CTA, and asset requirement. Adapt the idea to each channel instead of copying identical text everywhere.
 6. Present the calendar in chronological order and flag missing source material or media.
 7. If remote drafts were requested, create each with `social_createSocialMediaPost` and `action: "draft"`. Include required platform-specific `additional` fields from `../simplified-social/references/platform-settings.md`.
-8. If scheduling was requested, create or show drafts first, then wait for explicit approval before scheduling.
+8. If scheduling was requested, create or show drafts first, then obtain explicit approval of the final account/date/media matrix before scheduling. Existing approval of that unchanged concrete matrix is sufficient.
 
 ## Planning Heuristics
 
@@ -34,6 +38,12 @@ Turn business goals into a practical, channel-aware content calendar. Use the Si
 - Build sequences around launches and events: setup, reveal, proof, reminder, last call, and follow-up.
 - For small businesses, prioritize offers, local relevance, customer proof, FAQs, behind-the-scenes content, events, and Google Business updates where appropriate.
 - Reuse a campaign idea across channels, but rewrite the hook, length, CTA, hashtags, and format for each audience context.
+
+## Media and write results
+
+Use `manage-assets` to find existing library media before generating copies. Resolve names/tags through exposed asset discovery, preserve pagination and scope, import accessible remote files, and require ready assets before generation or attaching media. Check byte access and HTTP PUT capability before signing a local/chat attachment upload; if unavailable, ask for a Simplified asset ID or downloadable URL. Pass permanent UUIDs into drafts. A missing required visual remains a stated production gap; do not report a media-ready post without it.
+
+For a batch of drafts, retain each successful returned ID and report created, pending, and failed items. Continue only unfinished items; do not recreate successful drafts after a later failure. A plan or test design alone does not authorize remote writes.
 
 ## Output
 

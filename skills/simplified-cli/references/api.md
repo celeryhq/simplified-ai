@@ -1,103 +1,50 @@
-# `smp api` — Assets API Reference
+# `smp api` reference
 
-Workspaces, brand kits (V2), projects and project items, AI image generation,
-assets, context documents, brand books, and agents.
+Use live command help for installed-version details. `resourcetype` selects a project model (`Project` or `AdCreativeProject`); `primary_type` is a free-form category, not the polymorphic selector.
 
-## Capabilities at a Glance
-
-- **Workspace** — `get-workspace`
-- **Brand Kits** — list, create, build (canonical doc), get-V2, get-brand-book,
-  import modules
-- **Projects** — list, create, get, update, delete (soft), assign-agent-to-item
-- **Project Items** — create, get, list, reorder, delete (soft), export
-- **Context Documents** — list, create, update, delete, get-by-type
-- **Documents** — `create-document` (long-form rendered)
-- **AI Image Generation** — `generate-image`
-- **Image Conversion** — `convert-image-format`
-- **Assets** — `create-asset` (persistent workspace asset)
-- **Async Task Results** — `get-task-result`
-
-## Common Patterns
-
-### Workspace info
+## Assets and generation
 
 ```bash
-smp api get-workspace
+smp api:list-assets --search product --asset-type 0 --page 1
+smp api:get-asset --id <asset-uuid>
+smp api:create-asset --url "https://example.com/product.png" --name "Product"
+smp api:list-image-models
+smp api:generate-image --help
+smp api:generate-video --help
 ```
 
-### Brand kits
+Generate with a discovered model, explicit storage, and nested JSON `--parameters`; do not pass `--prompt` at the command top level. Example template:
 
 ```bash
-smp api list-brand-kits
-smp api create-brand-kit --title "Acme" --website "https://acme.com"
-smp api get-brand-kit-v2 --brand-kit-id <uuid>            # canonical V2 document
-smp api get-brand-book --brand-kit-id <uuid>              # rendered brand book
+smp api:generate-image --model <discovered-model-id> --storage asset --parameters '{"prompt":"A studio product photo","aspect_ratio":"4:5","count":1}'
 ```
 
-The `build-brand-kit` endpoint accepts a canonical BrandKitDocument body — the
-same shape `get-brand-kit-v2` returns.
+Image `parameters.reference_images` accepts workspace asset IDs or URLs; video input slots take asset IDs. Check readiness before reuse. Follow [manage-assets](../../manage-assets/SKILL.md) for client byte-upload capability and persistence rules, and the generation skills for completion handling.
 
-### Projects and project items
+## Brand kits and knowledge
 
 ```bash
-smp api create-project --primary-type ASSET --title "Q1 launch"
-smp api list-projects --primary-type ASSET
-smp api list-project-items --project-id <uuid>
-smp api reorder-project-item --project-item-id <uuid> --order 3
-smp api export-project-items --payload '{"project_item_ids": ["..."]}'
+smp api:list-brand-kits --search Acme
+smp api:create-brand-kit --title Acme
+smp api:get-brand-kit --brand-id <brand-uuid>
+smp api:build-brand-kit --brand-id <brand-uuid> --brand '{"description":"Approved brand description","website":"https://example.com"}'
+smp api:list-context-documents --brand-id <brand-uuid>
+smp api:get-context-document-by-type --brand-id <brand-uuid> --context-type brand_voice
+smp api:create-context-document --brand-id <brand-uuid> --doc-type brand_voice --name "Brand voice" --content "Approved voice guidance"
+smp api:update-context-document --brand-id <brand-uuid> --document-link-id <link-uuid> --content "Updated approved guidance"
 ```
 
-`primary-type` discriminates project polymorphism (e.g. `ASSET`, `DOCUMENT`).
+Creating a duplicate predefined context type fails; retrieve/update its existing **document-link ID** rather than assuming create is an upsert. Canonical content pillars and ICPs use structured `build-brand-kit` fields; the content-pillars context adapter is a read view, not a KnowledgeDoc write target. See [manage-brand](../../manage-brand/SKILL.md).
 
-### Context documents
-
-Context documents are typed knowledge attached to a brand kit (e.g.
-`brand_voice`, `icps`, `usps`, `content_pillars`, `marketing_strategy`,
-`competitor_analysis`).
+## Marketing projects
 
 ```bash
-smp api list-context-documents --brand-kit-id <uuid>
-smp api get-context-document-by-type \
-  --brand-kit-id <uuid> --canonical-key brand_voice
-smp api create-context-document \
-  --brand-kit-id <uuid> --canonical-key brand_voice --content "..."
-smp api update-context-document --context-document-id <uuid> --content "..."
+smp api:list-projects --resourcetype Project --search Launch
+smp api:create-project --resourcetype Project --title Launch --primary-type campaign
+smp api:list-project-items --resourcetype Project --parent-lookup-project-id <project-uuid>
+smp api:create-project-item --resourcetype Project --parent-lookup-project-id <project-uuid> --title "Hero image" --data '{"assets":[],"flags":{}}'
+smp api:reorder-project-item --resourcetype Project --parent-lookup-project-id <project-uuid> --id <item-uuid> --position 3
+smp api:export-project-items --resourcetype Project --id <project-uuid> --partner-id <verified-partner-id> --item-ids '["<item-uuid>"]'
 ```
 
-Each canonical key is a singleton per brand kit — creating a second one with
-the same key updates the existing record (and bumps its version).
-
-### AI image generation
-
-```bash
-smp api generate-image --prompt "sunset over mountains, oil painting"
-```
-
-This returns a `task_id`; the middleware auto-polls until the result is ready.
-
-### Task results
-
-```bash
-smp api get-task-result --task-id <task_uuid>
-```
-
-Used when manual polling is necessary (e.g. after a timeout). The middleware
-already calls this for you on most async endpoints, so direct use is rare.
-
-## Gotchas
-
-**`primary-type` is required on project create/list** — use the same value on
-both create and list so you don't get an empty page.
-
-**Soft delete** — `delete-project` and `delete-project-item` are soft deletes,
-not hard. The records remain queryable with the right flags.
-
-**Context document singleton** — one document per `canonical_key` per brand kit.
-A second create against the same key updates the existing one.
-
-## Discovering Commands
-
-```bash
-smp api --help
-smp api <command> --help
-```
+Keep the same model selector on list/get/create/update/delete. Read current project/item data and merge intended changes before sending a replacement data object. Export and execution-agent assignment have external consequences and need a concrete user-authorized target. See [manage-projects](../../manage-projects/SKILL.md).

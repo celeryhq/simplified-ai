@@ -1,241 +1,217 @@
 #!/usr/bin/env python3
-"""I/O eval harness for the Simplified Codex Plugin.
+"""Exercise the hosted MCP connector, including middleware and tool validation.
 
-Exercises the hosted-connector tools through the raw djapp API and asserts the
-response shapes the skills depend on. This validates the *backend* half of each
-test case in cases.md (the "expected output"); the agent/tool-routing half is
-checked separately in Codex.
-
-Auth: set SMP_ACCESS_TOKEN to a valid OAuth access token (see README.md for how to
-mint one via DCR + PKCE). Base URL defaults to production.
-
-Usage:
-    export SMP_ACCESS_TOKEN=...          # required
-    python run_evals.py                  # read-only + draft cases (no credit spend)
-    python run_evals.py --with-image     # also run image-gen cases (consume credits)
-    python run_evals.py --keep-drafts    # don't delete the drafts created by C4/C6
-
-Exit code is non-zero if any run case fails.
+Default: read-only account, asset-discovery, model and analytics checks.
+--with-drafts creates accountless drafts and deletes only returned draft/group IDs.
+--with-image spends credits, requires --model, and also stores a generated asset.
+Use the apikit Python environment (fastmcp), SMP_ACCESS_TOKEN, and optional
+SMP_MCP_URL (default https://apikit.simplified.com/mcp). Never publishes posts.
 """
 from __future__ import annotations
-
 import argparse
+import asyncio
 import json
 import os
 import sys
 import time
-import urllib.error
-import urllib.parse
-import urllib.request
-from dataclasses import dataclass
-from datetime import date
-
-BASE = os.environ.get("SMP_BASE", "https://api.simplified.com").rstrip("/")
-TOKEN = os.environ.get("SMP_ACCESS_TOKEN", "")
-CHEAP_MODEL = os.environ.get("SMP_EVAL_MODEL", "flux.flux-schnell")  # 8 credits
+from datetime import date, timedelta
 
 
-@dataclass
-class Result:
-    name: str
-    passed: bool
-    msg: str
-    skipped: bool = False
+class EvalFailure(RuntimeError):
+    pass
 
 
-def _request(method: str, path: str, *, body: dict | None = None,
-             params: dict | None = None) -> tuple[int, object]:
-    url = f"{BASE}{path}"
-    if params:
-        url += "?" + urllib.parse.urlencode(params)
-    data = json.dumps(body).encode() if body is not None else None
-    req = urllib.request.Request(url, data=data, method=method)
-    req.add_header("Authorization", f"Bearer {TOKEN}")
-    if data is not None:
-        req.add_header("Content-Type", "application/json")
-    try:
-        with urllib.request.urlopen(req, timeout=60) as r:
-            raw = r.read().decode()
-            return r.status, (json.loads(raw) if raw else {})
-    except urllib.error.HTTPError as e:
-        raw = e.read().decode()
-        try:
-            return e.code, json.loads(raw)
-        except json.JSONDecodeError:
-            return e.code, raw
+def previous_month(today):
+    end = today.replace(day=1) - timedelta(days=1)
+    return end.replace(day=1).isoformat(), end.isoformat()
 
 
-def poll_task(task_id: str, timeout: int = 180) -> dict:
-    """Poll GET /api/v1/tasks/{id} until terminal. Returns the final envelope."""
-    deadline = time.time() + timeout
-    while time.time() < deadline:
-        status, body = _request("GET", f"/api/v1/tasks/{task_id}")
-        st = body.get("status") if isinstance(body, dict) else None
-        if st in ("SUCCESS", "FAILURE", "REVOKED"):
-            return body
-        time.sleep(4)
-    return {"status": "TIMEOUT"}
+class Evaluator:
+    def __init__(self, client, space_id=None, timeout=300):
+        self.client = client
+        self.scope = {} if space_id is None else {'space_id': space_id}
+        self.timeout = timeout
+        self.poll_interval = 4
 
+    async def call(self, name, arguments):
+        result = await self.client.call_tool(name, {**arguments, **self.scope}, raise_on_error=False)
+        if result.is_error:
+            # Avoid dumping potentially signed URLs, credentials or customer records.
+            raise EvalFailure(f'{name} returned an MCP error')
+        payload = result.structured_content
+        if payload is None:
+            for block in result.content:
+                if getattr(block, 'type', None) == 'text':
+                    try:
+                        payload = json.loads(block.text)
+                        break
+                    except (ValueError, TypeError):
+                        continue
+        if not isinstance(payload, (dict, list)):
+            raise EvalFailure(f'{name} returned no JSON payload')
+        if isinstance(payload, dict) and payload.get('error'):
+            task = payload.get('task_id')
+            hint = f'; retain task_id={task} for follow-up, do not regenerate' if task else ''
+            raise EvalFailure(f'{name} returned an application error{hint}')
+        return payload
 
-def _result_list(envelope: dict) -> list:
-    detail = envelope.get("detail") or envelope.get("info") or {}
-    return detail.get("result") or []
+    async def image(self, model, parameters, storage):
+        final = await self.call('api_generateImage', {
+            'model': model, 'capability': 'prompt', 'storage': storage,
+            'parameters': parameters})
+        deadline = time.monotonic() + self.timeout
+        while isinstance(final, dict) and final.get('status') in {'PENDING', 'STARTED', 'RETRY', 'PROGRESS'}:
+            task_id = final.get('task_id')
+            if not task_id or time.monotonic() >= deadline:
+                raise EvalFailure('Generation pending; retain its task ID rather than regenerate')
+            await asyncio.sleep(self.poll_interval)
+            polled = await self.call('api_getTaskResult', {'task_id': task_id})
+            final = {**polled, 'task_id': task_id}
+        if not isinstance(final, dict) or final.get('status') != 'SUCCESS':
+            raise EvalFailure('Generation did not return SUCCESS')
+        detail = final.get('detail') or final.get('info') or {}
+        results = detail.get('result', []) if isinstance(detail, dict) else []
+        if not results:
+            raise EvalFailure('Generation returned no images')
+        item = results[0]
+        if storage == 'asset':
+            if not isinstance(item, dict) or not item.get('asset_id') or not item.get('url'):
+                raise EvalFailure('Asset generation did not return asset_id and URL')
+        elif not isinstance(item, str) or not item.startswith(('https://', 'http://')):
+            raise EvalFailure('Transient generation did not return a URL')
+        return item
 
-
-# --------------------------------------------------------------------------- #
-# Cases
-# --------------------------------------------------------------------------- #
-
-def case_image(name: str, model: str, params: dict, storage: str) -> Result:
-    status, body = _request(
-        "POST", "/api/v1/ai/image/ai-generate-image-v2",
-        body={"model": model, "capability": "prompt", "storage": storage,
-              "parameters": params},
-    )
-    if status not in (200, 201, 202) or not isinstance(body, dict):
-        return Result(name, False, f"generate returned {status}: {body}")
-    task_id = body.get("task_id")
-    if not task_id:
-        return Result(name, False, f"no task_id in {body}")
-    final = poll_task(task_id)
-    if final.get("status") != "SUCCESS":
-        return Result(name, False, f"task ended {final.get('status')}: {final}")
-    results = _result_list(final)
-    if not results:
-        return Result(name, False, "empty result list")
-    item = results[0]
-    if storage == "asset":
-        if not (isinstance(item, dict) and item.get("asset_id") and item.get("url")):
-            return Result(name, False, f"asset mode: expected {{asset_id,url}}, got {item}")
-        return Result(name, True, f"asset_id={item['asset_id']}")
-    # transient → result[0] is a URL string
-    if not (isinstance(item, str) and item.startswith("http")):
-        return Result(name, False, f"transient mode: expected URL string, got {type(item).__name__}")
-    return Result(name, True, f"url={item[:60]}…")
-
-
-def case_accounts() -> tuple[Result, list]:
-    status, body = _request("GET", "/api/v1/service/social-media/get-accounts")
-    if status != 200 or not isinstance(body, dict):
-        return Result("C3 accounts", False, f"{status}: {body}"), []
-    accounts = body.get("accounts") if isinstance(body.get("accounts"), list) else body.get("results", [])
-    if not accounts:
-        return Result("C3 accounts", True, "0 connected (valid empty state)", skipped=False), []
-    a = accounts[0]
-    ok = all(k in a for k in ("id", "name", "type"))
-    return Result("C3 accounts", ok, f"{len(accounts)} accounts; first id={a.get('id')} type={a.get('type')}"), accounts
-
-
-def case_analytics(accounts: list) -> Result:
-    if not accounts:
-        return Result("C5 analytics", False, "no connected account to query", skipped=True)
-    acct = accounts[0]["id"]
-    today = date.today()
-    first_this = today.replace(day=1)
-    # previous calendar month
-    if first_this.month == 1:
-        date_from = date(first_this.year - 1, 12, 1)
-    else:
-        date_from = date(first_this.year, first_this.month - 1, 1)
-    date_to = min(first_this, today)  # start of this month, never future
-    status, body = _request(
-        "GET", "/api/v1/service/social-media/analytics/aggregated",
-        params={"account_id": acct, "date_from": date_from.isoformat(),
-                "date_to": date_to.isoformat()},
-    )
-    if status != 200 or not isinstance(body, dict):
-        return Result("C5 analytics", False, f"{status}: {body}")
-    baseline = body.get("baseLine") or {}
-    expected = {"impressions_aggregated", "engagement_aggregated",
-                "followers_aggregated", "publishing_aggregated"}
-    missing = expected - set(baseline)
-    if missing:
-        return Result("C5 analytics", False, f"baseLine missing KPIs: {missing}")
-    return Result("C5 analytics", True, f"acct={acct} KPIs present")
-
-
-def case_draft(keep: bool, media: list | None = None, tag: str = "C4 draft") -> Result:
-    msg = "Eval draft — announcing our new AI image feature. (safe to delete)"
-    body = {"message": msg, "action": "draft"}
-    if media:
-        body["media"] = media
-        body["additional"] = {"instagram": {"postType": {"value": "post"},
-                                            "channel": {"value": "direct"}}}
-    status, resp = _request("POST", "/api/v1/service/social-media/create", body=body)
-    if status not in (200, 201) or not isinstance(resp, dict):
-        return Result(tag, False, f"create returned {status}: {resp}")
-    # best-effort cleanup
-    if not keep:
-        ids = []
-        for key in ("id", "group_id", "draft_id"):
-            if resp.get(key):
-                ids.append(str(resp[key]))
-        try:
-            if ids:
-                _request("POST", "/api/v1/service/social-media/delete-draft",
-                         body={"draft_ids": ids})
-        except Exception:
-            pass  # cleanup is best-effort; never fail the case on it
-    return Result(tag, True, f"draft created (action=draft); cleanup={'kept' if keep else 'attempted'}")
-
-
-def main() -> int:
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--with-image", action="store_true", help="run image-gen cases (consume credits)")
-    ap.add_argument("--keep-drafts", action="store_true", help="don't delete created drafts")
-    args = ap.parse_args()
-
-    if not TOKEN:
-        print("ERROR: set SMP_ACCESS_TOKEN (see README.md to mint one).", file=sys.stderr)
-        return 2
-
-    results: list[Result] = []
-
-    if args.with_image:
-        results.append(case_image("C1 image (transient)", CHEAP_MODEL,
-                                   {"prompt": "a white ceramic coffee cup on a white background",
-                                    "aspect_ratio": "1:1", "count": 1}, "transient"))
-        results.append(case_image("C2 image (16:9 text)", "ideogram.ideogram-v3-turbo",
-                                   {"prompt": 'a promo banner that says "Summer Sale" in bold modern type',
-                                    "aspect_ratio": "16:9"}, "transient"))
-    else:
-        results.append(Result("C1/C2 image", False, "skipped (pass --with-image to run; consumes credits)", skipped=True))
-
-    acct_result, accounts = case_accounts()
-    results.append(acct_result)
-    results.append(case_analytics(accounts))
-    results.append(case_draft(args.keep_drafts))
-
-    # C6 cross-skill: generate an asset, then draft a post that references it
-    if args.with_image:
-        img = case_image("C6 image (asset)", CHEAP_MODEL,
-                         {"prompt": "a product photo of a sneaker on white",
-                          "aspect_ratio": "1:1", "count": 1}, "asset")
-        results.append(img)
-        if img.passed:
-            asset_id = img.msg.split("asset_id=")[-1]
-            results.append(case_draft(args.keep_drafts, media=[asset_id], tag="C6 draft+media"))
+    async def draft(self, keep=False, media=None):
+        args = {'message': 'Simplified connector eval draft (safe to delete)', 'action': 'draft'}
+        if media:
+            args['media'] = media
+        response = await self.call('social_createSocialMediaPost', args)
+        if not isinstance(response, dict):
+            raise EvalFailure('Draft create returned an unexpected payload; inspect before cleanup')
+        if response.get('draft_id'):
+            cleanup = {'draft_ids': [str(response['draft_id'])]}
+        elif response.get('group_id'):
+            cleanup = {'group_id': str(response['group_id'])}
         else:
-            results.append(Result("C6 draft+media", False, "skipped (asset gen failed)", skipped=True))
-    else:
-        results.append(Result("C6 cross-skill", False, "skipped (needs --with-image)", skipped=True))
+            raise EvalFailure('Draft created but no typed draft/group ID returned; inspect manually, do not guess cleanup IDs')
+        if not keep:
+            try:
+                await self.call('social_deleteSocialMediaDraft', cleanup)
+            except Exception as exc:
+                raise EvalFailure(f'Cleanup failed; manually remove eval draft using {cleanup}') from exc
+        return cleanup
 
-    print(f"\nSimplified Codex Plugin — eval run @ {BASE}\n" + "-" * 60)
+    async def analytics(self, accounts):
+        if not accounts:
+            return 'SKIP: no connected accounts'
+        start, end = previous_month(date.today())
+        response = await self.call('social_getSocialMediaAnalyticsAggregated', {
+            'account_id': int(accounts[0]['id']), 'date_from': start, 'date_to': end})
+        baseline = response.get('baseLine') if isinstance(response, dict) else None
+        if not isinstance(baseline, dict):
+            raise EvalFailure('Analytics returned no baseLine')
+        expected = {'impressions_aggregated', 'engagement_aggregated', 'followers_aggregated', 'publishing_aggregated'}
+        if expected - baseline.keys():
+            raise EvalFailure('Analytics baseline missing requested KPI envelopes')
+        return 'KPI envelopes present; availability/value interpretation requires account-specific review'
+
+
+async def run(args, client):
+    runner = Evaluator(client, args.space_id, args.timeout)
     failed = 0
-    for r in results:
-        if r.skipped:
-            tag = "SKIP"
-        elif r.passed:
-            tag = "PASS"
-        else:
-            tag = "FAIL"
+    async def check(name, operation):
+        nonlocal failed
+        try:
+            value = await operation()
+            print(f'PASS {name}')
+            return value
+        except Exception as exc:
             failed += 1
-        print(f"[{tag}] {r.name:24} {r.msg}")
-    print("-" * 60)
-    print(f"{sum(1 for r in results if r.passed and not r.skipped)} passed, "
-          f"{failed} failed, {sum(1 for r in results if r.skipped)} skipped")
-    return 1 if failed else 0
+            # Transport errors may contain request details, so print only type.
+            detail = str(exc) if isinstance(exc, EvalFailure) else type(exc).__name__
+            print(f'FAIL {name}: {detail}')
+            return None
+    async def accounts_check():
+        response = await runner.call('social_getSocialMediaAccounts', {})
+        accounts = response.get('accounts', response.get('results')) if isinstance(response, dict) else response
+        if not isinstance(accounts, list) or any(not isinstance(a, dict) or 'id' not in a for a in accounts):
+            raise EvalFailure('Invalid accounts envelope')
+        return accounts
+    accounts = await check('C3 accounts', accounts_check)
+    async def assets_check():
+        response = await runner.call('api_listAssets', {'page': 1, 'page_size': 1})
+        if not isinstance(response, dict) or not isinstance(response.get('results'), list):
+            raise EvalFailure('Invalid paginated asset-discovery envelope')
+    await check('asset discovery', assets_check)
+    await check('image model catalog', lambda: runner.call('api_listImageModels', {'capability': 'prompt'}))
+    await check('video model catalog', lambda: runner.call('api_listVideoModels', {'capability': 'prompt'}))
+    if accounts:
+        await check('C5 analytics', lambda: runner.analytics(accounts))
+    else:
+        print('SKIP C5 analytics: no available account')
+    if args.with_drafts:
+        await check('C4 accountless draft + cleanup', lambda: runner.draft(args.keep_drafts))
+    if args.with_image:
+        fields = await check('current selected model fields', lambda: runner.call('api_getImageModelFields', {'model_id': args.model, 'capability': 'prompt'}))
+        if fields is not None:
+            # Model-specific required defaults; no stale count/aspect-ratio assumptions.
+            definitions = fields.get('fields', {})
+            parameters = {'prompt': 'a white ceramic coffee cup on a white background'}
+            if not isinstance(definitions, dict) or 'prompt' not in definitions:
+                raise EvalFailure('Model field response has no prompt schema')
+            for key, field in definitions.items():
+                if key != 'prompt' and field.get('required'):
+                    if 'default_value' not in field:
+                        raise EvalFailure(f'Model requires {key}; supply a model with defaults for this smoke test')
+                    parameters[key] = field['default_value']
+            await check('C1 transient image', lambda: runner.image(args.model, parameters, 'transient'))
+            asset = await check('C6 persistent image', lambda: runner.image(args.model, parameters, 'asset'))
+            if asset and args.with_drafts:
+                async def asset_draft():
+                    details = await runner.call('api_getAsset', {'id': asset['asset_id']})
+                    if details.get('status') != 4:
+                        raise EvalFailure('Generated asset not ready; retained for follow-up without creating a draft')
+                    return await runner.draft(args.keep_drafts, [asset['asset_id']])
+                await check('C6 asset-to-draft + cleanup', asset_draft)
+            if asset:
+                print(f'Generated asset retained: {asset["asset_id"]}')
+    print(f'{failed} failed; skipped/opt-in cases are not evidence of live success')
+    return int(bool(failed))
 
 
-if __name__ == "__main__":
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--with-drafts', action='store_true')
+    parser.add_argument('--with-image', action='store_true')
+    parser.add_argument('--model', default=os.environ.get('SMP_EVAL_MODEL'))
+    parser.add_argument('--keep-drafts', action='store_true')
+    parser.add_argument('--space-id', type=int)
+    parser.add_argument('--timeout', type=int, default=300)
+    args = parser.parse_args()
+    if args.with_image and not args.model:
+        parser.error('--with-image requires --model (select from the live catalog; consumes credits)')
+    if args.keep_drafts and not args.with_drafts:
+        parser.error('--keep-drafts requires --with-drafts')
+    token = os.environ.get('SMP_ACCESS_TOKEN')
+    if not token:
+        print('ERROR: set SMP_ACCESS_TOKEN privately for authenticated MCP checks.', file=sys.stderr)
+        return 2
+    try:
+        from fastmcp import Client
+        from fastmcp.client.transports import StreamableHttpTransport
+    except ImportError:
+        print('ERROR: run with the simplified-apikit Python environment (fastmcp).', file=sys.stderr)
+        return 2
+    async def connected():
+        transport = StreamableHttpTransport(os.environ.get('SMP_MCP_URL', 'https://apikit.simplified.com/mcp'), headers={'Authorization': f'Bearer {token}'})
+        async with Client(transport, timeout=args.timeout) as client:
+            return await run(args, client)
+    try:
+        return asyncio.run(connected())
+    except Exception as exc:
+        print(f'ERROR: connector run stopped ({type(exc).__name__}).', file=sys.stderr)
+        return 1
+
+
+if __name__ == '__main__':
     raise SystemExit(main())

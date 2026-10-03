@@ -1,159 +1,63 @@
 ---
 name: simplified-cli
-description: >
-  Entry point for the Simplified CLI (`smp MODULE COMMAND`) — covers Project Manager,
-  Media (image/video AI), Assets API (brand kits, projects, assets), Social Media,
-  and the MCP server (`smp serve`). Trigger on any request to use the `smp` CLI,
-  manage Simplified PM boards/tasks, generate or process images/videos, manage
-  brand kits or assets, schedule social media posts, or expose Simplified as MCP
-  tools to Claude Desktop / Cursor / Cline.
+description: Use when the user explicitly wants the smp command line, shell scripts, JSON pipelines, local Simplified API automation, or a local smp serve MCP server. For conversational tasks through a hosted connector, use the relevant platform skill instead.
 ---
 
-# Simplified CLI (`smp`) — Module Index
+# Simplified CLI
 
-`smp` is the unified CLI for the Simplified API, distributed as the
-`simplified-apikit` pip/pipx package. It exposes 4 functional modules plus an
-MCP server, all auto-generated from OpenAPI specs.
+`smp` is supplied by the Python `simplified-apikit` package. It generates commands from the same OpenAPI specs and runs them through MCP middleware, so request validation and hooks apply across CLI and connector calls. It is different from the npm `simplified` CLI; do not mix their commands or credentials.
 
-## Installation
+## Setup and scope
 
-```bash
-pipx install simplified-apikit \
-  --index-url "https://gitlab.com/api/v4/projects/70495826/packages/pypi/simple" \
-  --pip-args="--extra-index-url https://pypi.org/simple"
-```
-
-## Authentication
-
-Auth is read from environment variables — set once, use everywhere:
+Use your team's supported package source to install `simplified-apikit`. Confirm `smp --version` and command help before scripting. Local CLI calls require configured credentials; hosted app OAuth does not automatically populate local CLI environment variables.
 
 ```bash
-export SMP_TOKEN=your_api_token             # API key (sQL00kSs.xxx) or DRF token
-export SMP_WORKSPACE=270                    # required for DRF tokens; inferred for API keys
-export SMP_SPACE=42                         # optional, for space-scoped resources
-export SMP_URL=https://api.simplified.com   # default; omit for prod
+smp --version
+smp --help
+smp api --help
 ```
 
-Or pass per-call: `smp --token xxx --workspace 270 pm list-boards`
+Set `SMP_TOKEN` privately in the environment. API keys use their bound workspace; DRF tokens also require numeric `SMP_WORKSPACE`. Set numeric `SMP_SPACE` only after resolving the user's chosen teamspace. Omit `SMP_URL` for production; use overrides only for an explicitly selected environment. Never print credentials or put them into user-facing commands/logs.
 
-## Command Syntax
-
-Subcommands use **space separation**: `smp pm list-boards`. The legacy colon form
-(`smp pm:list-boards`) also works for back-compat.
-
-## Modules
-
-The CLI is organised by module. Pick the right one for the task:
-
-### `smp pm` — Project Manager
-Boards, statuses, tasks, subtasks, assignees, tags, dependencies, comments, activity.
-The most stateful module — has a memory-cache discipline for board/status/user IDs.
-
-→ See [references/pm.md](references/pm.md) for full guide.
+Root options such as `--space`, `--workspace`, and `--raw` precede the namespace. Both `smp api list-assets` and `smp api:list-assets` work. JSON options take a single shell-quoted JSON value.
 
 ```bash
-smp pm list-boards
-smp pm create-task --status <uuid> --title "Fix login" --assignees '[196]'
-smp pm search-tasks --board <id> --status <id> --search "login"
-smp pm add-task-dependency --task-id <a> --target-task-id <b> --relation-type BLOCKS
+smp --raw api:list-assets --search car --asset-type 0 --page 1
+smp api:get-workspace-info
+smp api:list-teamspaces
 ```
 
-### `smp media` — Image & Video AI Tools
-Background removal, upscaling, generative fill, outpainting, inpainting, format
-conversion, video merging, B-roll, text/script to video. Mostly async — middleware
-auto-polls for results.
+Use the same resolved scope throughout. Do not guess tenant IDs or select the first board/account/member just to make a script run.
 
-→ See [references/media.md](references/media.md) for full guide.
+## Choose the namespace
+
+| Namespace | Use | Reference |
+|---|---|---|
+| `api` | Workspace, brand context, assets, AI generation, marketing projects, comments | [API](references/api.md) |
+| `pm` | Boards, statuses, tasks, dependencies, assignments | [PM](references/pm.md) |
+| `social` | Accounts, drafts, scheduling, reviews, analytics | [Social](references/social.md) |
+| `media` | Image/video editing and transcription | [Media](references/media.md) |
+| `flows`, `agents` | Workflow and agent automation | Current namespace help and the matching automation skill |
+| `notify` | Requested notifications | Current command help |
+
+Comments are `smp api:list-comments` / `smp api:add-comment`, not a separate comments namespace. See [comments](references/comments.md).
+
+## Execute and verify
+
+Read the target state, resolve IDs, then execute the user-authorized operation. Use `--help` for the exact required flags. Keep returned IDs for follow-up; verify writes using direct reads. For partial batches, report successful IDs and failed steps without repeating successful creates.
+
+Current image/video generation waits for completion. Pending/timeout responses require continuation using the actual job identifiers, not a duplicate paid request. Video submission task IDs do not establish render completion. Other tools may have different task-result contracts.
+
+Default output is formatted JSON; root `--raw` makes it suitable for JSON parsers. Read the actual envelope before writing a jq/path expression. Pagination limits and defaults vary by endpoint; retain filters/scope and follow returned pagination metadata.
+
+Generation consumes credits and social scheduling/queueing can publish content. Preserve explicit authorization already given for the concrete operation. Planning is not permission to run it.
+
+## Local MCP server
 
 ```bash
-smp media remove-background --image-url "https://..."
-smp media upscale-image --image-url "https://..." --scale 4
-smp media merge-videos --video-urls '["https://a.mp4","https://b.mp4"]'
-smp media text-to-video --payload '{"title":"Sunset timelapse","tone":"calm"}'
+smp serve
+smp serve --profile public
+smp serve --transport http --port 9000 --profile social
 ```
 
-### `smp api` — Assets API
-Workspaces, brand kits (V2), projects and project items, AI image generation,
-assets, context documents, brand books, agents.
-
-→ See [references/api.md](references/api.md) for full guide.
-
-```bash
-smp api get-workspace
-smp api list-brand-kits
-smp api generate-image --prompt "sunset over mountains"
-smp api create-project --primary-type ASSET --title "Q1 launch"
-```
-
-### `smp social` — Social Media
-Connected accounts, posts (publish/draft/schedule), tags, and analytics
-(range, posts, aggregated, audience).
-
-→ See [references/social.md](references/social.md) for full guide.
-
-```bash
-smp social get-social-media-accounts
-smp social create-social-media-post --payload '{"caption":"Hello","accounts":[...]}'
-smp social get-social-media-analytics-aggregated --account-id <id>
-```
-
-### `smp comments` — Comments
-Threaded comments on any commentable Simplified resource. Currently supports
-tasks; will grow to other types. Generic by design — addressed by
-`content_type` + `object_pk` rather than a resource-specific shortcut.
-
-→ See [references/comments.md](references/comments.md) for full guide.
-
-```bash
-smp comments list-comments --content-type task --object-pk <task_uuid>
-smp comments add-comment --content-type task --object-pk <task_uuid> --comment "LGTM"
-```
-
-### `smp serve` — MCP Server
-Exposes every module command above as an MCP tool. Use from Claude Desktop,
-Cursor, Cline, or any MCP host.
-
-```bash
-smp serve                              # stdio (default — for Claude Desktop/Cursor)
-smp serve --transport http --port 9000 # HTTP transport
-```
-
-The middleware handles pre/post hooks (e.g. inline assignees on `pm create-task`,
-auto Quill-Delta description conversion), response normalization, and async task
-polling — so MCP clients get the same ergonomic interface as the CLI.
-
-## Discovering Commands
-
-Don't rely on a static table. The CLI is auto-generated from OpenAPI specs and
-`--help` is always current:
-
-```bash
-smp --help                          # list modules
-smp pm --help                       # list pm commands
-smp pm create-task --help           # full options for a single command
-```
-
-## Output
-
-By default `smp` pretty-prints JSON. Pass `--raw` for unformatted output (useful
-when piping into `jq` / `python3 -c`):
-
-```bash
-smp --raw pm list-boards | jq '.results[].id'
-```
-
-## Cross-cutting Patterns
-
-**Async tasks.** Several endpoints (`media/*`, `api generate-image`, some video ops)
-return a `task_id`. The middleware polls `GET /api/v1/tasks/{task_id}` automatically
-and returns the final result. Default polling is ~3.75 min — video generation may
-need longer. If it times out you'll get the `task_id` to poll manually.
-
-**Composite fields.** `pm create-task` / `pm update-task` accept assignees and tags
-inline; the toolkit makes follow-up sub-resource calls automatically.
-
-**JSON args.** Array/object options need single quotes around JSON:
-`--assignees '[196, 200]'`, `--payload '{"title":"..."}'`.
-
-**Pagination.** List endpoints default to `page_size=10`. Add `--page-size 100` to
-get more.
+`full` is the default local profile. Hosted connector tools/profile are deployed separately; local full access does not prove a hosted client has the same tools. `flows`, `agents`, and the generic passthrough require an automation/full surface. See [client setup](../../docs/CLIENTS.md).
