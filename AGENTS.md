@@ -25,6 +25,10 @@ simplified-ai/
 ├── skills/                   # SKILL.md workflows (Agent Skills spec)
 │   ├── manage-assets/
 │   ├── generate-image/
+│   ├── edit-image/
+│   ├── transcribe-media/
+│   ├── generate-voiceover/
+│   ├── repurpose-video/
 │   ├── generate-video/
 │   ├── simplified-workspace/
 │   ├── simplified-social/
@@ -52,6 +56,10 @@ simplified-ai/
 | [manage-assets](skills/manage-assets/SKILL.md) | Search/list, import/upload, inspect, and reuse workspace media | `api_listAssets`, `api_getAsset`, intake tools |
 | [generate-image](skills/generate-image/SKILL.md) | Text-to-image generation (Flux, Gemini/Imagen, GPT Image, Ideogram, …); saves as a reusable asset | `api_generateImage` |
 | [generate-video](skills/generate-video/SKILL.md) | Model-aware AI video generation and completion handling | `api_getModelFields`, `api_generateVideo`, `api_getVideoVariation` |
+| [edit-image](skills/edit-image/SKILL.md) | Background removal/replacement, restoration, upscaling, masked edits, and output verification | image-processing media tools |
+| [transcribe-media](skills/transcribe-media/SKILL.md) | Evidence-led transcription and SRT/VTT exports | transcription media tools |
+| [generate-voiceover](skills/generate-voiceover/SKILL.md) | Locale-aware voice discovery and reusable narration | voice media tools |
+| [repurpose-video](skills/repurpose-video/SKILL.md) | Render source-grounded highlights/custom excerpts, preserve timestamps, and prepare drafts | repurpose project and clip tools |
 | [simplified-workspace](skills/simplified-workspace/SKILL.md) | Authenticated identity, workspace settings, and safe teamspace discovery | workspace and teamspace tools |
 | [simplified-social](skills/simplified-social/SKILL.md) | Draft / schedule / queue posts, timed auto-comments, and analytics across 13 platforms | `social_*` |
 | [manage-brand](skills/manage-brand/SKILL.md) | Evidence-led brand kits and reusable brand context | brand-kit and context-document tools |

@@ -93,6 +93,10 @@ CONTRACT_TERMS = {
 }
 
 PLATFORM_CONTRACT_TERMS = {
+    "edit-image": ["api_getasset", "media_removebackground", "api_gettaskresult", "space_id", "mask", "status: 4"],
+    "transcribe-media": ["media_transcribevideo", "media_gettranscription", "media_downloadtranscriptionfile", "milliseconds", "non-terminal", "raw subtitle", "space_id"],
+    "generate-voiceover": ["api_listvoices", "api_generateaudio", "language", "supports_instructions", "space_id", "approved"],
+    "repurpose-video": ["media_createrepurposeproject", "media_getrepurposeproject", "media_listrepurposeclips", "media_createrepurposeclip", "media_getrepurposeclip", "whole source seconds", "no clip-count parameter", "every results page", "space_id", 'action: "draft"'],
     "manage-assets": [
         "api_listassets", "api_getasset", "api_createasset",
         "api_signassetupload", "api_registerasset", "space_id",

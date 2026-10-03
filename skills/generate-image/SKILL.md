@@ -5,6 +5,8 @@ description: Use when the user asks to create, generate, draw, design, or edit a
 
 # Generate Image
 
+For background removal/replacement, restoration, upscaling, masked edits, or format conversion, use `edit-image`. Continue here for prompt/reference-guided generation.
+
 Create or edit an image with Simplified and retain an asset ID when the result will be reused. Use the current generation tool schema as the request contract; model catalogs describe availability and limits, not a reason to substitute provider-specific field names.
 
 ## Workflow
