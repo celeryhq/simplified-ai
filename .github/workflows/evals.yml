@@ -10,6 +10,7 @@ on:
       - ".claude-plugin/**"
       - "skills/**"
       - "evals/**"
+      - "bin/**"
 
 permissions:
   contents: read
@@ -22,10 +23,14 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - name: Validate marketer skills and hosted inventory
+      - name: Install structural validation dependency
+        run: python3 -m pip install -r evals/requirements.txt
+      - name: Validate all skill structures and client metadata
+        run: python3 bin/validate_skills.py
+      - name: Validate marketer skills and inventory
         run: python3 evals/run_skill_evals.py
-      - name: Test MCP harness behavior without credentials
-        run: python3 -m unittest discover -s evals -p test_run_evals.py
+      - name: Test structural validator, trace grader and MCP harness
+        run: python3 -m unittest discover -s evals -p 'test_*.py'
       - name: Build hosted-connector skill bundle
         run: python3 bin/build-codex-skills.py --out dist/codex
       - name: Validate JSON manifests and eval fixtures
@@ -36,6 +41,7 @@ jobs:
           python3 -m json.tool evals/skill-cases.json >/dev/null
           python3 -m json.tool evals/hosted-tool-inventory.json >/dev/null
           python3 -m json.tool evals/source-profile-tool-inventory.json >/dev/null
+          python3 -m json.tool evals/current-source-tool-inventory.json >/dev/null
           python3 -m json.tool evals/fixtures/sample-skill-traces.json >/dev/null
           python3 -m json.tool evals/fixtures/live-routing-smoke-2026-07-14.json >/dev/null
       - name: Grade sample agent trace

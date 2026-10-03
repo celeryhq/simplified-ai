@@ -112,13 +112,8 @@ client refreshes its token automatically (server emits the standard challenge).
   “first comment after X minutes” to `X * 60`, and include the comment text and
   delay in the publication plan the user authorizes.
 - **Prefer asset IDs for Simplified media.** Generated file URLs can expire. Social media accepts asset UUIDs, supported URLs, or URL/thumbnail objects. Posting `account_ids` is string[], while analytics `account_id` is integer; do not conflate these identifiers.
-- **Show returned URLs as links — never embed them.** Any URL a tool or skill
-  returns (image results, asset URLs, review-bundle links, exports) must be shown as
-  a plain URL or a Markdown link — **never** Markdown image syntax (`![alt](url)`)
-  and never anything that makes the client fetch/render the asset inline. The user
-  clicks the link; the agent does not render it. Inline rendering breaks on signed/
-  expiring URLs and produces poor UX (e.g. Codex trying to display the image instead
-  of showing a clickable URL).
+- **Present media using client capabilities.** Use a native media preview when the client supports it and the user wants to review the result. Otherwise show a usable link. Refresh expired asset URLs; do not download remote media merely to bypass client display restrictions. Review bundles and other web pages remain links.
+
 - **Accountless drafts are supported.** If connected accounts are empty, continue an authorized `action: "draft"` request without `account_ids`. Scheduling, queueing, and account-specific analytics require the relevant connected accounts.
 
 ## Commit attribution

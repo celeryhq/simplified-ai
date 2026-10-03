@@ -9,12 +9,14 @@ Design a compounding content program in which durable ideas become repeatable fr
 
 ## Guardrails
 
+Existing explicit authorization for unchanged content, accounts, timing, media, and comments is sufficient; ask only when that authorization is missing or the proposed effects change.
+
 - Do not label time-sensitive offers, statistics, platform features, event dates, seasonal advice, or changing regulations as evergreen.
 - Treat brand claims, customer proof, prices, outcomes, and quotations as source-dependent. Never manufacture authority or testimonials.
 - Separate planning, remote draft creation, scheduling, and publishing authorization.
 - Create remote posts only with `action: "draft"` unless the user explicitly approves a final schedule or queue action.
 - Do not automate indefinite recycling. Every reusable asset needs a review date, fatigue signal, and retirement rule.
-- Stop when Simplified is unauthorized or required accounts are not connected.
+- Pause affected connected operations when Simplified is unauthorized. Planning and requested accountless drafts can proceed without connected accounts; publishing and account analytics require suitable accounts.
 
 ## Workspace and handoff
 

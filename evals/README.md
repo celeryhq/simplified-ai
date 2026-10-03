@@ -10,13 +10,12 @@ contributors. Safe to ignore if you're just installing the skills.
   Paste into the form.
 - [cases.md](cases.md) — canonical definitions: expected tool sequence, argument
   contract, and assertions for each case (agent layer + I/O layer).
-- [skill-cases.json](skill-cases.json) — 38 machine-readable routing scenarios:
-  26 marketer cases (at least three per workflow) plus 12 source-profile cases for AI
-  video, brand management, marketing projects, and workspace/teamspace context.
+- [skill-cases.json](skill-cases.json) — 70 machine-readable routing scenarios covering all 22 skills (at least three per skill), including failure, continuation, scope, authorization and handoff cases. Catalog coverage is not evidence of executed agent runs.
 - [hosted-tool-inventory.json](hosted-tool-inventory.json) — authenticated snapshot
   of the live hosted tool names and critical input schemas.
 - [source-profile-tool-inventory.json](source-profile-tool-inventory.json) — generated
   historical inventory of the older local `simplified-apikit` `mcp` profile. It does not represent today's source profiles or hosted deployment.
+- [current-source-tool-inventory.json](current-source-tool-inventory.json) — declared operations across local API profiles plus the client shell tool for CLI scenarios. Source provenance is recorded; this is not a hosted discovery snapshot.
 - [run_skill_evals.py](run_skill_evals.py) — zero-credential contract validator and
   optional agent-trace grader for routing, tool order, arguments, handoffs, and safety.
 - [fixtures/sample-skill-traces.json](fixtures/sample-skill-traces.json) — example
@@ -40,8 +39,7 @@ contributors. Safe to ignore if you're just installing the skills.
 
 ## Run skill and agent evals
 
-The contract suite has no third-party dependencies, credentials, network calls, or
-live mutations. It also rejects eval cases that reference tools absent from the
+The catalog/contract runner has no third-party dependencies, credentials, network calls, or live mutations. The structural validator uses PyYAML: install the pinned eval requirements first. It also rejects eval cases that reference tools absent from the
 selected inventory snapshot. A historical snapshot can pass these checks while
 missing new tools or carrying outdated schemas.
 
@@ -162,3 +160,23 @@ Run the source checker using the Python environment that has apikit dependencies
 It compares canonical tool names and literal smp command names/options/required fields/top-level enums against that checkout, without dispatching API calls. It does not validate arbitrary prose, all nested payload semantics, deployment availability, or live behavior. `--root` can point it at another skills tree. Use generated schemas and realistic traces to verify those remaining dimensions.
 
 New image editing, transcription, narration and video-clipping operators have [static pressure scenarios](new-media-scenarios.md). Their document contracts are checked locally; no live media jobs or agent tool traces are implied.
+
+## Structural and grading regressions
+
+```bash
+python3 -m pip install -r evals/requirements.txt
+python3 bin/validate_skills.py
+python3 -m unittest discover -s evals -p 'test_*.py'
+```
+
+The structural validator checks every discovered skill for valid frontmatter,
+matching names, concise description limits, UI metadata, invocation policy types,
+icons and local references. It does not judge prose quality or execute APIs.
+The trace grader rejects omitted-vs-null argument mistakes and duplicate submissions
+when a scenario specifies maximum call counts. Unit tests use simulated traces,
+not captured agent execution. July inventories remain unchanged historical snapshots.
+
+The October guidance update removes accountless-draft conflicts, preserves unchanged
+publication authorization, makes media presentation client-aware, and moves social
+operation details/examples into references. Static independent scenario review
+compared the original and revised guidance; it did not execute live writes.

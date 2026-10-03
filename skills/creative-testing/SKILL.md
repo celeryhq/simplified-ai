@@ -9,6 +9,8 @@ Create tests that isolate a meaningful decision and produce learning the team ca
 
 ## Guardrails
 
+Existing explicit authorization for unchanged content, accounts, timing, media, and comments is sufficient; ask only when that authorization is missing or the proposed effects change.
+
 - Do not claim statistical significance from ordinary organic social comparisons, small samples, unequal delivery, or platform-reported totals without a valid experiment design.
 - Hold audience, offer, placement, timing, and CTA constant when testing a creative variable unless one of those is the declared variable.
 - Preserve factual claims and required disclaimers across variants. Never make a test “stronger” by inventing proof or urgency.

@@ -1,6 +1,6 @@
 ---
 name: generate-image
-description: Use when the user asks to create, generate, draw, design, or edit an image with Simplified, including product photos, social graphics, logos, posters, banners, illustrations, or compositions guided by one or more reference images.
+description: Create images or broad prompt/reference-guided transformations with Simplified. Use for new photos, graphics, illustrations, posters, and compositions. For background removal/replacement, restoration, upscaling, masked edits, or format conversion, use edit-image.
 ---
 
 # Generate Image
@@ -54,7 +54,7 @@ For ordinary social graphics, select a currently available general model; for de
 
 Read the returned envelope rather than assuming all clients return identical wrappers. Common successful image results are in `detail.result`; entries can be URL strings (transient) or objects containing `asset_id` and `url` (asset). Keep every returned output when generating multiple images.
 
-Show the result as a clickable link and include the permanent `asset_id` when present. Signed file URLs may expire even for saved assets. Refresh them with `api_getAsset`. If the user later wants to reuse a transient image, import its accessible URL with `api_createAsset` instead of generating again.
+Present the result using the client’s supported preview or a usable link and include the permanent `asset_id` when present. Signed file URLs may expire even for saved assets. Refresh them with `api_getAsset`. If the user later wants to reuse a transient image, import its accessible URL with `api_createAsset` instead of generating again.
 
 For social drafts, hand off actual IDs to `simplified-social.media`; generation is not permission to publish.
 

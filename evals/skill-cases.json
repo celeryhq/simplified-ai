@@ -485,6 +485,852 @@
         "forbidden_tools": ["api_createAsset", "social_createSocialMediaPost"],
         "required_output_any": [["using", "teamspace"], ["scope", "space"]]
       }
+    },
+    {
+      "id": "G-manage-assets-search",
+      "skill": "manage-assets",
+      "tool_profile": "current_source",
+      "prompt": "Find every car image in teamspace 42; the first assets page has a next page.",
+      "expected": {
+        "required_tools": [
+          "api_listAssets"
+        ],
+        "ordered_tools": [],
+        "required_args": [
+          {
+            "tool": "api_listAssets",
+            "path": "search",
+            "equals": "car"
+          },
+          {
+            "tool": "api_listAssets",
+            "path": "asset_type",
+            "equals": 0
+          },
+          {
+            "tool": "api_listAssets",
+            "path": "space_id",
+            "match": "all",
+            "equals": 42
+          }
+        ],
+        "forbidden_tools": []
+      }
+    },
+    {
+      "id": "G-manage-assets-inspect",
+      "skill": "manage-assets",
+      "tool_profile": "current_source",
+      "prompt": "Get a fresh file URL for asset asset-1 in teamspace 42.",
+      "expected": {
+        "required_tools": [
+          "api_getAsset"
+        ],
+        "ordered_tools": [],
+        "required_args": [
+          {
+            "tool": "api_getAsset",
+            "path": "id",
+            "equals": "asset-1"
+          },
+          {
+            "tool": "api_getAsset",
+            "path": "space_id",
+            "equals": 42
+          }
+        ],
+        "forbidden_tools": [
+          "api_createAsset"
+        ]
+      }
+    },
+    {
+      "id": "G-manage-assets-unsupported-intake",
+      "skill": "manage-assets",
+      "tool_profile": "current_source",
+      "prompt": "Upload my local photo, but this client cannot read its bytes or PUT files. Explain how to proceed.",
+      "expected": {
+        "required_tools": [],
+        "ordered_tools": [],
+        "required_args": [],
+        "forbidden_tools": [
+          "api_signAssetUpload",
+          "api_registerAsset",
+          "api_generateImage"
+        ]
+      }
+    },
+    {
+      "id": "G-generate-image-model-discovery",
+      "skill": "generate-image",
+      "tool_profile": "current_source",
+      "prompt": "Show supported image models and options; do not generate.",
+      "expected": {
+        "required_tools": [
+          "api_listImageModels"
+        ],
+        "ordered_tools": [],
+        "required_args": [],
+        "forbidden_tools": [
+          "api_generateImage"
+        ]
+      }
+    },
+    {
+      "id": "G-generate-image-reference",
+      "skill": "generate-image",
+      "tool_profile": "current_source",
+      "prompt": "Generate one image using verified model model-1 and ready product asset asset-1; save it.",
+      "expected": {
+        "required_tools": [
+          "api_getAsset",
+          "api_generateImage"
+        ],
+        "ordered_tools": [
+          "api_getAsset",
+          "api_generateImage"
+        ],
+        "required_args": [
+          {
+            "tool": "api_generateImage",
+            "path": "storage",
+            "equals": "asset"
+          },
+          {
+            "tool": "api_generateImage",
+            "path": "parameters.reference_images",
+            "equals": [
+              "asset-1"
+            ]
+          },
+          {
+            "tool": "api_generateImage",
+            "path": "parameters.count",
+            "equals": 1
+          }
+        ],
+        "forbidden_tools": [],
+        "max_tool_calls": {
+          "api_generateImage": 1
+        }
+      }
+    },
+    {
+      "id": "G-generate-image-reuse",
+      "skill": "generate-image",
+      "tool_profile": "current_source",
+      "prompt": "Reuse this completed temporary image URL for a social draft; do not regenerate.",
+      "expected": {
+        "required_tools": [
+          "api_createAsset",
+          "api_getAsset",
+          "social_createSocialMediaPost"
+        ],
+        "ordered_tools": [
+          "api_createAsset",
+          "api_getAsset",
+          "social_createSocialMediaPost"
+        ],
+        "required_args": [
+          {
+            "tool": "social_createSocialMediaPost",
+            "path": "action",
+            "equals": "draft"
+          }
+        ],
+        "forbidden_tools": [
+          "api_generateImage"
+        ],
+        "handoffs": [
+          {
+            "from_tool": "api_createAsset",
+            "from_path": "result.id",
+            "to_tool": "social_createSocialMediaPost",
+            "to_path": "arguments.media"
+          }
+        ]
+      }
+    },
+    {
+      "id": "G-edit-image-cutout",
+      "skill": "edit-image",
+      "tool_profile": "current_source",
+      "prompt": "Remove the background from ready asset asset-1 and return transparent PNG.",
+      "expected": {
+        "required_tools": [
+          "api_getAsset",
+          "media_removeBackground"
+        ],
+        "ordered_tools": [
+          "api_getAsset",
+          "media_removeBackground"
+        ],
+        "required_args": [
+          {
+            "tool": "media_removeBackground",
+            "path": "output_format",
+            "equals": "png"
+          }
+        ],
+        "forbidden_tools": [],
+        "max_tool_calls": {
+          "media_removeBackground": 1
+        }
+      }
+    },
+    {
+      "id": "G-edit-image-continue",
+      "skill": "edit-image",
+      "tool_profile": "current_source",
+      "prompt": "The background-removal call timed out with task_id task-1. Continue that job.",
+      "expected": {
+        "required_tools": [
+          "api_getTaskResult"
+        ],
+        "ordered_tools": [],
+        "required_args": [
+          {
+            "tool": "api_getTaskResult",
+            "path": "task_id",
+            "equals": "task-1"
+          }
+        ],
+        "forbidden_tools": [
+          "media_removeBackground"
+        ]
+      }
+    },
+    {
+      "id": "G-edit-image-chain",
+      "skill": "edit-image",
+      "tool_profile": "current_source",
+      "prompt": "Remove this background then upscale four times. Use the completed cutout URL as input.",
+      "expected": {
+        "required_tools": [
+          "media_removeBackground",
+          "media_upscaleImage"
+        ],
+        "ordered_tools": [
+          "media_removeBackground",
+          "media_upscaleImage"
+        ],
+        "required_args": [
+          {
+            "tool": "media_upscaleImage",
+            "path": "scale",
+            "equals": 4
+          }
+        ],
+        "forbidden_tools": [],
+        "max_tool_calls": {
+          "media_removeBackground": 1,
+          "media_upscaleImage": 1
+        }
+      }
+    },
+    {
+      "id": "G-transcribe-media-submit",
+      "skill": "transcribe-media",
+      "tool_profile": "current_source",
+      "prompt": "Transcribe this downloadable French recording; language fr-FR.",
+      "expected": {
+        "required_tools": [
+          "media_transcribeVideo"
+        ],
+        "ordered_tools": [],
+        "required_args": [
+          {
+            "tool": "media_transcribeVideo",
+            "path": "language_code",
+            "equals": "fr-FR"
+          }
+        ],
+        "forbidden_tools": [],
+        "max_tool_calls": {
+          "media_transcribeVideo": 1
+        }
+      }
+    },
+    {
+      "id": "G-transcribe-media-continue",
+      "skill": "transcribe-media",
+      "tool_profile": "current_source",
+      "prompt": "Transcription tr-1 is UPDATED. Check its progress without resubmitting.",
+      "expected": {
+        "required_tools": [
+          "media_getTranscription"
+        ],
+        "ordered_tools": [],
+        "required_args": [
+          {
+            "tool": "media_getTranscription",
+            "path": "id",
+            "equals": "tr-1"
+          }
+        ],
+        "forbidden_tools": [
+          "media_transcribeVideo",
+          "api_getTaskResult"
+        ]
+      }
+    },
+    {
+      "id": "G-transcribe-media-export",
+      "skill": "transcribe-media",
+      "tool_profile": "current_source",
+      "prompt": "Transcription tr-1 is DONE. Export its SRT subtitle text.",
+      "expected": {
+        "required_tools": [
+          "media_downloadTranscriptionFile"
+        ],
+        "ordered_tools": [],
+        "required_args": [
+          {
+            "tool": "media_downloadTranscriptionFile",
+            "path": "id",
+            "equals": "tr-1"
+          },
+          {
+            "tool": "media_downloadTranscriptionFile",
+            "path": "requested_format",
+            "equals": "srt"
+          }
+        ],
+        "forbidden_tools": [
+          "media_transcribeVideo"
+        ]
+      }
+    },
+    {
+      "id": "G-generate-voiceover-discover",
+      "skill": "generate-voiceover",
+      "tool_profile": "current_source",
+      "prompt": "Show British-English voices without generating.",
+      "expected": {
+        "required_tools": [
+          "api_listVoices"
+        ],
+        "ordered_tools": [],
+        "required_args": [
+          {
+            "tool": "api_listVoices",
+            "path": "language_code",
+            "equals": "en-GB"
+          }
+        ],
+        "forbidden_tools": [
+          "api_generateAudio"
+        ]
+      }
+    },
+    {
+      "id": "G-generate-voiceover-narrate",
+      "skill": "generate-voiceover",
+      "tool_profile": "current_source",
+      "prompt": "Read the approved script verbatim using a verified en-GB voice and save narration.",
+      "expected": {
+        "required_tools": [
+          "api_listVoices",
+          "api_generateAudio"
+        ],
+        "ordered_tools": [
+          "api_listVoices",
+          "api_generateAudio"
+        ],
+        "required_args": [
+          {
+            "tool": "api_listVoices",
+            "path": "language_code",
+            "equals": "en-GB"
+          },
+          {
+            "tool": "api_generateAudio",
+            "path": "storage",
+            "equals": "asset"
+          }
+        ],
+        "forbidden_tools": [],
+        "max_tool_calls": {
+          "api_generateAudio": 1
+        }
+      }
+    },
+    {
+      "id": "G-generate-voiceover-unsupported-style",
+      "skill": "generate-voiceover",
+      "tool_profile": "current_source",
+      "prompt": "Generate the approved script with voice voice-1, verified supports_instructions false. Omit style instructions.",
+      "expected": {
+        "required_tools": [
+          "api_generateAudio"
+        ],
+        "ordered_tools": [],
+        "required_args": [
+          {
+            "tool": "api_generateAudio",
+            "path": "voice_id",
+            "equals": "voice-1"
+          },
+          {
+            "tool": "api_generateAudio",
+            "path": "instructions",
+            "absent": true
+          }
+        ],
+        "forbidden_tools": [],
+        "max_tool_calls": {
+          "api_generateAudio": 1
+        }
+      }
+    },
+    {
+      "id": "G-repurpose-video-highlights",
+      "skill": "repurpose-video",
+      "tool_profile": "current_source",
+      "prompt": "Turn this downloadable YouTube webinar into five vertical clips. No source facts or timestamps may be invented.",
+      "expected": {
+        "required_tools": [
+          "media_createRepurposeProject",
+          "media_getRepurposeProject",
+          "media_listRepurposeClips"
+        ],
+        "ordered_tools": [
+          "media_createRepurposeProject",
+          "media_getRepurposeProject",
+          "media_listRepurposeClips"
+        ],
+        "required_args": [
+          {
+            "tool": "media_createRepurposeProject",
+            "path": "aspect_ratio",
+            "equals": "youtube-shorts"
+          },
+          {
+            "tool": "media_createRepurposeProject",
+            "path": "count",
+            "absent": true
+          }
+        ],
+        "forbidden_tools": [],
+        "max_tool_calls": {
+          "media_createRepurposeProject": 1
+        },
+        "handoffs": [
+          {
+            "from_tool": "media_createRepurposeProject",
+            "from_path": "result.id",
+            "to_tool": "media_getRepurposeProject",
+            "to_path": "arguments.project_id"
+          }
+        ]
+      }
+    },
+    {
+      "id": "G-repurpose-video-custom",
+      "skill": "repurpose-video",
+      "tool_profile": "current_source",
+      "prompt": "Create 02:15\u201303:00 from existing project project-1 with ready transcript and sufficient duration.",
+      "expected": {
+        "required_tools": [
+          "media_createRepurposeClip",
+          "media_getRepurposeClip"
+        ],
+        "ordered_tools": [
+          "media_createRepurposeClip",
+          "media_getRepurposeClip"
+        ],
+        "required_args": [
+          {
+            "tool": "media_createRepurposeClip",
+            "path": "project_id",
+            "equals": "project-1"
+          },
+          {
+            "tool": "media_createRepurposeClip",
+            "path": "start_time",
+            "equals": 135
+          },
+          {
+            "tool": "media_createRepurposeClip",
+            "path": "end_time",
+            "equals": 180
+          }
+        ],
+        "forbidden_tools": [
+          "media_createRepurposeProject"
+        ],
+        "max_tool_calls": {
+          "media_createRepurposeClip": 1
+        },
+        "handoffs": [
+          {
+            "from_tool": "media_createRepurposeClip",
+            "from_path": "result.id",
+            "to_tool": "media_getRepurposeClip",
+            "to_path": "arguments.segment_id"
+          }
+        ]
+      }
+    },
+    {
+      "id": "G-repurpose-video-mixed",
+      "skill": "repurpose-video",
+      "tool_profile": "current_source",
+      "prompt": "Project project-1 is DONE, but clip clip-1 is PENDING. Check it; do not use an export API or recreate the project.",
+      "expected": {
+        "required_tools": [
+          "media_getRepurposeClip"
+        ],
+        "ordered_tools": [],
+        "required_args": [
+          {
+            "tool": "media_getRepurposeClip",
+            "path": "project_id",
+            "equals": "project-1"
+          },
+          {
+            "tool": "media_getRepurposeClip",
+            "path": "segment_id",
+            "equals": "clip-1"
+          }
+        ],
+        "forbidden_tools": [
+          "media_getVideoExport",
+          "api_getTaskResult",
+          "media_createRepurposeProject"
+        ]
+      }
+    },
+    {
+      "id": "G-simplified-social-accountless",
+      "skill": "simplified-social",
+      "tool_profile": "current_source",
+      "prompt": "No accounts connected. Save this supplied caption as a draft.",
+      "expected": {
+        "required_tools": [
+          "social_createSocialMediaPost"
+        ],
+        "ordered_tools": [],
+        "required_args": [
+          {
+            "tool": "social_createSocialMediaPost",
+            "path": "action",
+            "match": "all",
+            "equals": "draft"
+          },
+          {
+            "tool": "social_createSocialMediaPost",
+            "path": "account_ids",
+            "absent": true,
+            "match": "all"
+          }
+        ],
+        "forbidden_tools": [],
+        "max_tool_calls": {
+          "social_createSocialMediaPost": 1
+        }
+      }
+    },
+    {
+      "id": "G-simplified-social-approved",
+      "skill": "simplified-social",
+      "tool_profile": "current_source",
+      "prompt": "Queue this exact caption and targets already explicitly approved unchanged.",
+      "expected": {
+        "required_tools": [
+          "social_createSocialMediaPost"
+        ],
+        "ordered_tools": [],
+        "required_args": [
+          {
+            "tool": "social_createSocialMediaPost",
+            "path": "action",
+            "equals": "add_to_queue"
+          }
+        ],
+        "forbidden_tools": [],
+        "max_tool_calls": {
+          "social_createSocialMediaPost": 1
+        }
+      }
+    },
+    {
+      "id": "G-simplified-social-comment",
+      "skill": "simplified-social",
+      "tool_profile": "current_source",
+      "prompt": "Schedule the approved post, date and accounts with first comment five minutes after publishing.",
+      "expected": {
+        "required_tools": [
+          "social_createSocialMediaPost"
+        ],
+        "ordered_tools": [],
+        "required_args": [
+          {
+            "tool": "social_createSocialMediaPost",
+            "path": "action",
+            "equals": "schedule"
+          },
+          {
+            "tool": "social_createSocialMediaPost",
+            "path": "comments.0.delay",
+            "equals": 300
+          }
+        ],
+        "forbidden_tools": []
+      }
+    },
+    {
+      "id": "G-simplified-project-management-discover",
+      "skill": "simplified-project-management",
+      "tool_profile": "current_source",
+      "prompt": "Show boards and statuses for my selected board; do not change tasks.",
+      "expected": {
+        "required_tools": [
+          "pm_listBoards",
+          "pm_listStatuses"
+        ],
+        "ordered_tools": [
+          "pm_listBoards",
+          "pm_listStatuses"
+        ],
+        "required_args": [],
+        "forbidden_tools": [
+          "pm_createTask",
+          "pm_updateTask"
+        ]
+      }
+    },
+    {
+      "id": "G-simplified-project-management-edit",
+      "skill": "simplified-project-management",
+      "tool_profile": "current_source",
+      "prompt": "Mark task task-1 complete using discovered status 3 in teamspace 42; read it first.",
+      "expected": {
+        "required_tools": [
+          "pm_getTask",
+          "pm_updateTask"
+        ],
+        "ordered_tools": [
+          "pm_getTask",
+          "pm_updateTask",
+          "pm_getTask"
+        ],
+        "required_args": [
+          {
+            "tool": "pm_updateTask",
+            "path": "space_id",
+            "equals": 42
+          }
+        ],
+        "forbidden_tools": [],
+        "max_tool_calls": {
+          "pm_updateTask": 1
+        }
+      }
+    },
+    {
+      "id": "G-simplified-project-management-dependencies",
+      "skill": "simplified-project-management",
+      "tool_profile": "current_source",
+      "prompt": "Inspect dependencies of task task-1 before deciding whether it is blocked; no changes yet.",
+      "expected": {
+        "required_tools": [
+          "pm_getTaskDependencies"
+        ],
+        "ordered_tools": [],
+        "required_args": [],
+        "forbidden_tools": [
+          "pm_updateTask",
+          "pm_createTask"
+        ]
+      }
+    },
+    {
+      "id": "G-simplified-cli-help",
+      "skill": "simplified-cli",
+      "tool_profile": "current_source",
+      "prompt": "Run exactly smp api:list-assets --help to inspect installed flags.",
+      "expected": {
+        "required_tools": [
+          "exec_command"
+        ],
+        "ordered_tools": [],
+        "required_args": [
+          {
+            "tool": "exec_command",
+            "path": "cmd",
+            "equals": "smp api:list-assets --help"
+          }
+        ],
+        "forbidden_tools": []
+      }
+    },
+    {
+      "id": "G-simplified-cli-scope",
+      "skill": "simplified-cli",
+      "tool_profile": "current_source",
+      "prompt": "With local credentials already private, run exactly smp --space 42 --raw api:list-assets --search car.",
+      "expected": {
+        "required_tools": [
+          "exec_command"
+        ],
+        "ordered_tools": [],
+        "required_args": [
+          {
+            "tool": "exec_command",
+            "path": "cmd",
+            "equals": "smp --space 42 --raw api:list-assets --search car"
+          }
+        ],
+        "forbidden_tools": []
+      }
+    },
+    {
+      "id": "G-simplified-cli-version",
+      "skill": "simplified-cli",
+      "tool_profile": "current_source",
+      "prompt": "Run exactly smp --version to check installation; no credentials should be printed.",
+      "expected": {
+        "required_tools": [
+          "exec_command"
+        ],
+        "ordered_tools": [],
+        "required_args": [
+          {
+            "tool": "exec_command",
+            "path": "cmd",
+            "equals": "smp --version"
+          }
+        ],
+        "forbidden_tools": []
+      }
+    },
+    {
+      "id": "G-simplified-workflows-discover",
+      "skill": "simplified-workflows",
+      "tool_profile": "current_source",
+      "prompt": "List workflows matching onboarding through my authorized automation connector. Do not run.",
+      "expected": {
+        "required_tools": [
+          "flows_listWorkflows"
+        ],
+        "ordered_tools": [],
+        "required_args": [
+          {
+            "tool": "flows_listWorkflows",
+            "path": "search",
+            "equals": "onboarding"
+          }
+        ],
+        "forbidden_tools": [
+          "flows_startWorkflow"
+        ]
+      }
+    },
+    {
+      "id": "G-simplified-workflows-continue",
+      "skill": "simplified-workflows",
+      "tool_profile": "current_source",
+      "prompt": "Check already started run run-1. Do not start or restart it.",
+      "expected": {
+        "required_tools": [
+          "flows_getWorkflowRunStatus"
+        ],
+        "ordered_tools": [],
+        "required_args": [
+          {
+            "tool": "flows_getWorkflowRunStatus",
+            "path": "run_id",
+            "equals": "run-1"
+          }
+        ],
+        "forbidden_tools": [
+          "flows_startWorkflow"
+        ]
+      }
+    },
+    {
+      "id": "G-simplified-workflows-build",
+      "skill": "simplified-workflows",
+      "tool_profile": "current_source",
+      "prompt": "Create and publish the requested workflow after reading authoritative grammar and discovering current actions. Do not test-run it.",
+      "expected": {
+        "required_tools": [
+          "flows_listWorkflowActions",
+          "flows_createWorkflow",
+          "flows_updateWorkflow",
+          "flows_publishWorkflow"
+        ],
+        "ordered_tools": [
+          "flows_createWorkflow",
+          "flows_updateWorkflow",
+          "flows_publishWorkflow"
+        ],
+        "required_args": [],
+        "forbidden_tools": [
+          "flows_startWorkflow"
+        ]
+      }
+    },
+    {
+      "id": "G-social-content-planner-accountless",
+      "skill": "social-content-planner",
+      "tool_profile": "current_source",
+      "prompt": "Plan the requested campaign and save exactly three drafts. No social accounts are connected yet.",
+      "expected": {
+        "required_tools": [
+          "social_createSocialMediaPost"
+        ],
+        "ordered_tools": [],
+        "required_args": [
+          {
+            "tool": "social_createSocialMediaPost",
+            "path": "action",
+            "match": "all",
+            "equals": "draft"
+          },
+          {
+            "tool": "social_createSocialMediaPost",
+            "path": "account_ids",
+            "absent": true,
+            "match": "all"
+          }
+        ],
+        "forbidden_tools": [],
+        "max_tool_calls": {
+          "social_createSocialMediaPost": 3
+        }
+      }
+    },
+    {
+      "id": "G-cross-platform-campaign-accountless",
+      "skill": "cross-platform-campaign",
+      "tool_profile": "current_source",
+      "prompt": "Plan the requested campaign and save exactly three drafts. No social accounts are connected yet.",
+      "expected": {
+        "required_tools": [
+          "social_createSocialMediaPost"
+        ],
+        "ordered_tools": [],
+        "required_args": [
+          {
+            "tool": "social_createSocialMediaPost",
+            "path": "action",
+            "match": "all",
+            "equals": "draft"
+          },
+          {
+            "tool": "social_createSocialMediaPost",
+            "path": "account_ids",
+            "absent": true,
+            "match": "all"
+          }
+        ],
+        "forbidden_tools": [],
+        "max_tool_calls": {
+          "social_createSocialMediaPost": 3
+        }
+      }
     }
   ]
 }

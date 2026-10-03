@@ -9,12 +9,14 @@ Build one coherent campaign while respecting how each social channel works. Comp
 
 ## Guardrails
 
+Existing explicit authorization for unchanged content, accounts, timing, media, and comments is sufficient; ask only when that authorization is missing or the proposed effects change.
+
 - Do not publish or schedule without explicit approval of the final campaign matrix.
 - Create safe previews with `action: "draft"` when the user asks to prepare the campaign.
 - Image generation spends credits. Proceed when the image request is explicit; confirm first when visual generation is ambiguous.
 - Carry a generated image's permanent `asset_id` into social `media`; never rely on its expiring signed URL.
-- Stop on authorization failure or when no target accounts are connected.
-- Present all returned URLs as clickable links, never inline images.
+- Pause affected connected operations on authorization failure. Continue planning or requested accountless drafts when no accounts are connected; omit `account_ids`. Scheduling, queueing, and account analytics require suitable connected accounts.
+- Use a native media preview when the client supports it and the user wants to review the result. Otherwise show a usable link. Refresh expired asset URLs; do not download remote media merely to bypass client display restrictions. Review bundles and other web pages remain links.
 
 ## Workspace and handoff
 
@@ -32,7 +34,7 @@ Before connected operations, use `simplified-workspace` when the client/workspac
 6. Show a campaign matrix containing phase, date, account, copy, media, objective, and CTA.
 7. When drafts are authorized, call `social_createSocialMediaPost` with `action: "draft"` for each post. Pass generated asset UUIDs in `media` and use `../simplified-social/references/platform-settings.md` for `additional` fields.
 8. Offer a stakeholder review package via `$campaign-review` when several drafts need approval.
-9. Schedule or queue only after the user explicitly approves the final matrix. `add_to_queue` means publish as soon as possible.
+9. Schedule or queue only after the user explicitly approves the final matrix. `add_to_queue` requests queueing; report service-returned timing rather than guaranteeing immediate delivery.
 
 ## Quality Bar
 

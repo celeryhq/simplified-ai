@@ -53,6 +53,6 @@ Use one readable visual beat for a short clip. Preserve product geometry, packag
 
 ## Handoff
 
-Use a clickable video link; preserve any thumbnail link and permanent asset UUID. Signed URLs can expire. `default` gallery storage is not a guarantee of a standalone reusable asset; `transient` may supply only a temporary URL. If no asset ID exists and the user wants reuse, import the downloadable output using `api_createAsset`. Never invent an asset ID from an art or variation ID.
+Use the client’s supported video preview or a usable link; preserve any thumbnail link and permanent asset UUID. Signed URLs can expire. `default` gallery storage is not a guarantee of a standalone reusable asset; `transient` may supply only a temporary URL. If no asset ID exists and the user wants reuse, import the downloadable output using `api_createAsset`. Never invent an asset ID from an art or variation ID.
 
 Pass confirmed assets to `simplified-social` for drafts when requested. Generating a video does not authorize publishing. Report failures directly and avoid duplicate paid submissions after a timeout.

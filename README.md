@@ -76,6 +76,8 @@ Connect Simplified through the client's app/connector interface. Use the listed 
 Canonical skill instructions live under `skills/`; `agents/openai.yaml` adds client metadata. Contributor checks:
 
 ```bash
+python3 -m pip install -r evals/requirements.txt
+python3 bin/validate_skills.py
 python3 evals/run_skill_evals.py
 python3 bin/build-codex-skills.py --out /tmp/simplified-ai-skills
 ```

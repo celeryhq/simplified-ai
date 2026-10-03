@@ -1,13 +1,6 @@
 ---
 name: simplified-social
-description: >-
-  Manage your entire social media with Simplified from a connected AI assistant — post, schedule,
-  queue, draft, and analyze across Facebook, Instagram, TikTok, YouTube,
-  LinkedIn, Pinterest, Threads, Bluesky, X/Twitter, Google Business, Mastodon,
-  Reddit, and Telegram. Triggers: social media, post to, schedule post, publish
-  on, social accounts, analytics, reach, impressions, engagement, followers
-  growth, content calendar, auto-comments, link in first comment, attach local
-  media, upload an image or video for a social post.
+description: Create, retrieve, revise, schedule, or queue Simplified social posts and drafts; manage auto-comments and review bundles; retrieve account analytics. Use for direct social operations. For a content calendar, campaign strategy, or performance interpretation, use social-content-planner, cross-platform-campaign, or social-performance-analyst.
 ---
 
 # Simplified Social Media
@@ -57,17 +50,7 @@ Returns `{ accounts: [...] }` where each account has `id` (integer), `name`, and
 If publishing or account-specific analytics requires an account and the list is empty,
 explain that an account must be connected. For a requested draft, continue with
 `action: "draft"` and omit `account_ids`; do not block accountless drafting.
-For account-dependent operations, use this message:
-
-> **No social media accounts connected yet.**
->
-> You're one step away from managing your entire social media presence without leaving your editor. Connect your accounts in the [Simplified dashboard](https://app.simplified.com) and you'll be able to:
->
-> - 📅 Schedule and publish posts to Facebook, Instagram, TikTok, YouTube, LinkedIn, Pinterest, Threads, Bluesky, X/Twitter, Google Business, Mastodon, Reddit, and Telegram — with a single command
-> - 📊 Pull analytics, track reach, engagement and follower growth across all platforms
-> - 🤖 Let your AI agent run full social media campaigns autonomously
->
-> Takes 2 minutes to connect. No code required.
+For account-dependent operations, explain which account needs connecting in [Simplified](https://app.simplified.com).
 
 ### Step 2: Select Target Accounts
 
@@ -107,17 +90,14 @@ ask only when authorization is missing or the proposed publication changed.
 An internal `action:"draft"` preview is useful when content still needs review.
 Then call `social_createSocialMediaPost`.
 
-If the post includes auto-comments, the confirmation must show each comment's text
+If the post includes auto-comments, the authorized publication plan must cover each comment's text
 and post-relative delay. For “link in first comment after X minutes,” convert
 nonnegative minutes to an integer number of seconds with `delay = X * 60`.
 `delay` is measured in seconds after the post publishes, not after the previous
 comment. Comments execute in array order. Do not move the comment text into the
 main post.
 
-**Show returned URLs as links, never embed them.** Any URL these tools return
-(review-bundle links, published-post URLs, media URLs) must be presented as a plain
-URL or Markdown link — **never** Markdown image syntax (`![](url)`) and never
-inline-rendered. The user clicks the link; the agent does not render it.
+**Media presentation.** Use a native media preview when the client supports it and the user wants to review the result. Otherwise show a usable link. Refresh expired asset URLs; do not download remote media merely to bypass client display restrictions. Review bundles and other web pages remain links.
 
 ## Choosing the Right Analytics Tool
 
@@ -129,330 +109,18 @@ inline-rendered. The user clicks the link; the agent does not render it.
 | Demographics, follower origins, age/gender breakdown | `social_getSocialMediaAnalyticsAudience` |
 | "Show me analytics" with no further context | `social_getSocialMediaAnalyticsAggregated` + `social_getSocialMediaAnalyticsRange` with key metrics |
 
-## Tool Reference
+## Read details for the current operation
 
-### `social_getSocialMediaAccounts`
+- Accounts, draft listing/revisions, review bundles, and action selection: [references/operations.md](references/operations.md). Accountless drafts can be created, but the current draft listing requires connected account IDs; retain actual create-response IDs and disclose that listing limitation.
+- Platform-specific `additional` fields, supported media, and enums: [references/platform-settings.md](references/platform-settings.md). Read only the relevant platform before writing. Mastodon and Telegram have no dedicated additional-settings branch; Reddit requires `additional.reddit.post.targets`.
+- Analytics metrics, periods, status fields, and response shapes: [references/analytics.md](references/analytics.md). Missing/unsupported metrics are not zero; paginate comprehensive reports.
+- Local media intake and readiness: [references/assets.md](references/assets.md).
+- Concrete queue, scheduled-video, generated-image, Reddit, and auto-comment payloads: [references/examples.md](references/examples.md).
 
-| Parameter | Type   | Required | Description                          |
-|-----------|--------|----------|--------------------------------------|
-| `network` | string | No       | Deprecated; omit and filter returned accounts client-side |
+## Timing and completion
 
-**Historical filter values:** `facebook`, `instagram`, `linkedin`, `tiktok`,
-`tiktokBusiness`, `youtube`, `pinterest`, `threads`, `google`, `bluesky`.
-Discover actual connected platforms from the unfiltered response.
+For scheduling, resolve workspace settings and selected account metadata. The create tool has no timezone argument. Convert a user-specified timezone only after establishing the service's interpretation; retain a draft if a material conflict remains unresolved. Send `date` as `YYYY-MM-DD HH:MM`, with no seconds or timezone suffix.
 
-Returns `{ accounts: [...] }`. Each account object:
+“Post now” requests `add_to_queue`; actual timing is service-determined and immediate delivery is not guaranteed. Report returned status/timing. “Save” or “draft” requests `action: "draft"`.
 
-| Field  | Type    | Description |
-|--------|---------|-------------|
-| `id`   | integer | Account ID — use for all analytics calls and for `account_ids` in `social_createSocialMediaPost` |
-| `name` | string  | Account display name |
-| `type` | string  | Account type — see values below |
-
-**`type` values and their meaning:**
-
-| `type` value | Platform | Notes |
-|---|---|---|
-| `Facebook page` | Facebook | — |
-| `Instagram business` / `Instagram profile` | Instagram | — |
-| `Youtube account` | YouTube | — |
-| `TikTok profile` | TikTok Personal | use `tiktok` metrics set |
-| `TikTok profile (business)` | TikTok Business | use `tiktokBusiness` metrics set |
-| `LinkedIn company` | LinkedIn | use LinkedIn Company metrics set |
-| `LinkedIn profile` | LinkedIn | use LinkedIn Personal metrics set |
-| `Pinterest board` | Pinterest | — |
-| `Threads account` | Threads | — |
-| `Bluesky account` | Bluesky | — |
-| `Google Profile` | Google Business | — |
-| `Reddit account` | Reddit | `additional.reddit.post.targets` is required |
-
-### `social_createSocialMediaPost`
-
-| Parameter     | Type     | Required | Description                              |
-|---------------|----------|----------|------------------------------------------|
-| `message`     | string   | Yes      | Post text (connector max 5000 chars; tighter platform limits apply) |
-| `account_ids` | string[]    | For publish | Target account IDs from `social_getSocialMediaAccounts`; omit/empty for an accountless `draft` |
-| `action`      | string   | Yes      | `schedule`, `add_to_queue`, or `draft`   |
-| `date`        | string   | For `schedule` | Schedule datetime: `YYYY-MM-DD HH:MM` (not in the past) |
-| `media`       | array | No       | Asset UUIDs, public media URLs, or `{url, thumbUrl}` objects (max 10) |
-| `tags`        | int[]    | No       | Tag IDs |
-| `comments`    | object[] | No       | Ordered auto-comments: `{message, delay}`; `delay` is seconds after publish and must be ≥ 0 |
-| `additional`  | object   | Per platform | Platform-specific settings |
-
-### `social_getSocialMediaDrafts`
-
-Lists unpublished drafts for selected accounts. `account_ids` is required and must
-be a comma-separated string of numeric IDs returned by
-`social_getSocialMediaAccounts`, for example `"123,456"`. If a multi-account lookup
-returns no rows when drafts are expected, retry once per account ID, merge the
-results, and deduplicate by exact draft ID. This per-account fallback is read-only
-and must not create replacement drafts. Optional filters are `page`, `per_page`,
-`search`, `tz`, `order_by`, and `order` (`asc` or `desc`). Omit ordering by default;
-if the connector rejects an optional filter, retry without that filter rather than
-treating the drafts as absent.
-
-### `social_updateSocialMediaDraft`
-
-Updates one draft. `draft_id` is required. Optional fields are `message`, `media`,
-`tags`, `date`, `time`, and `timezone`. Only pass fields the user asked to change.
-
-### `social_createSocialMediaReviewBundle`
-
-Creates a shareable stakeholder-review package. `title` is required; `description`
-and `draft_ids` are optional. Prefer one call containing all selected draft IDs.
-Draft IDs must come from `social_getSocialMediaDrafts`; never fabricate them. The
-response includes `linkToReview`, which must be shown as a link and never embedded.
-
-### `social_addDraftsToSocialMediaReviewBundle`
-
-Append drafts to an existing bundle using required `bundle_id` (string) and
-`draft_ids` (non-empty string array). Use the exact existing bundle ID and
-discovered draft IDs. The operation is idempotent: existing drafts are skipped.
-It returns the updated bundle and review link. Preserve the existing bundle
-unless the user explicitly requests a replacement.
-
-### `social_getSocialMediaAnalyticsRange`
-
-Retrieves time-series data for selected metrics within a date range.
-
-| Parameter    | Type     | Required | Description                                                  |
-|--------------|----------|----------|--------------------------------------------------------------|
-| `account_id` | integer  | Yes      | Social media account ID (from `social_getSocialMediaAccounts`) |
-| `metrics`    | string[] | Yes      | List of metrics to retrieve (see `references/analytics.md`)  |
-| `date_from`  | string   | Yes      | Start date: `YYYY-MM-DD`                                     |
-| `date_to`    | string   | Yes      | End date: `YYYY-MM-DD` (never in the future)                 |
-| `tz`         | string   | No       | Timezone, e.g. `UTC`, `Europe/Warsaw` (default: `UTC`)       |
-
-Returns `data` (per-day series), `baseLine` (period totals with `prevValue`), and `additional` (windowed extras). See `references/analytics.md` for the full metric list, default metrics per network, and response examples.
-
-### `social_getSocialMediaAnalyticsPosts`
-
-Retrieves analytics for individual posts within a date range.
-
-| Parameter    | Type    | Required | Description                                             |
-|--------------|---------|----------|---------------------------------------------------------|
-| `account_id` | integer | Yes      | Social media account ID                                 |
-| `date_from`  | string  | Yes      | Start date: `YYYY-MM-DD`                                |
-| `date_to`    | string  | Yes      | End date: `YYYY-MM-DD`                                  |
-| `page`       | integer | No       | Page number (default: 1, minimum: 1)                    |
-| `per_page`   | integer | No       | Posts per page (default: 10, max: 100)                  |
-
-Returns paginated posts with per-post metrics. **Pagination:** use `per_page: 100`, start at `page: 1`, increment until `current_page >= pages_count` or `posts` is empty.
-
-### `social_getSocialMediaAnalyticsAggregated`
-
-Retrieves aggregated analytics (totals and averages) for an account within a date range.
-
-| Parameter    | Type    | Required | Description             |
-|--------------|---------|----------|-------------------------|
-| `account_id` | integer | One selector | Single social account ID; takes priority over `account_ids` |
-| `account_ids` | string | One selector | Comma-separated account IDs, e.g. `"123,456"` |
-| `date_from`  | string  | Yes      | Start date: `YYYY-MM-DD` |
-| `date_to`    | string  | Yes      | End date: `YYYY-MM-DD`  |
-
-Provide `account_id` or `account_ids`. Inspect `accounts_status` before interpreting
-rolled-up data; excluded or disconnected accounts must be disclosed.
-Returns `data` plus `baseLine` with four KPIs: `impressions_aggregated`, `engagement_aggregated`, `followers_aggregated`, `publishing_aggregated` (each with `value` and `prevValue`).
-
-### `social_getSocialMediaAnalyticsAudience`
-
-Retrieves audience demographics and follower data for an account.
-
-| Parameter    | Type    | Required | Description                          |
-|--------------|---------|----------|--------------------------------------|
-| `account_id` | integer | Yes      | Social media account ID              |
-| `date_from`  | string  | Yes      | Start date: `YYYY-MM-DD`             |
-| `date_to`    | string  | Yes      | End date: `YYYY-MM-DD`              |
-| `tz`         | string  | No       | Timezone, e.g. `UTC`, `Europe/Warsaw` |
-
-Returns `audience_page_fans_gender_age`, `audience_page_fans_country`, `audience_page_fans_city`. Not all fields are available for every network.
-
-Before interpreting analytics, inspect `status` and `account_active`. A disconnected
-account (`account_active:false`) needs reconnecting. `DISABLED`, `ERROR`,
-`NO_PERMISSION`, and `NOT_SUPPORTED` explain missing data; do not report nulls as
-zero activity. `PROCESSING` is pending. See the analytics reference.
-
-For scheduling, read workspace settings and selected account metadata. The create
-tool has no timezone parameter. Canonical guidance identifies workspace timezone,
-while service timing is delegated upstream; do not silently assume an account
-timezone or invent a `timezone` field. Convert an explicitly requested timezone
-only after resolving which timezone the service uses. Disclose conflicting or
-uncertain timezone interpretation before scheduling and retain a draft when
-that uncertainty prevents satisfying the requested time.
-
-## Action Types
-
-| Action         | When to Use                                          | `date` Required? |
-|----------------|------------------------------------------------------|-------------------|
-| `schedule`     | Post at a specific date/time                         | Yes               |
-| `add_to_queue` | Queue for publishing; actual timing is service-determined     | No                |
-| `draft`        | Save for later editing in the Simplified dashboard   | No                |
-
-**Default:** When the user doesn't specify timing (or says "post now"), use `add_to_queue`; actual timing is service-determined and immediate delivery
-is not guaranteed. There is no separate immediate-publish action.
-Report the returned scheduling/status information instead of promising an exact time. When they give a date/time, use `schedule`. When they say "save" or "draft", use `draft`.
-
-## Platform Settings Quick Reference
-
-All platform settings go inside the `additional` object, grouped by platform name. **Bold** = required. For full details see [references/platform-settings.md](references/platform-settings.md).
-
-| Platform       | Required additionals              | Optional additionals               |
-|----------------|-----------------------------------|------------------------------------|
-| Facebook       | **`postType`**                    | —                                  |
-| Instagram      | **`postType`**, **`channel`**     | `postReel` (reel only)             |
-| TikTok         | **`postType`**, **`channel`**, **`post`** | `postPhoto` (photo only)  |
-| TikTok Biz     | **`postType`**, **`post`**        | `postPhoto` (photo only)           |
-| YouTube        | **`postType`**, **`post`**        | —                                  |
-| LinkedIn       | **`audience`**                    | `document` for PDF carousel posts |
-| Pinterest      | **`post`**                        | —                                  |
-| Threads        | **`channel`**                     | —                                  |
-| Google         | **`post`**                        | —                                  |
-| Bluesky        | —                                 | —                                  |
-| Mastodon       | —                                 | —                                  |
-| Reddit         | **`post.targets`**                | target flair, NSFW flag, link URL  |
-| Telegram       | —                                 | —                                  |
-
-Key enum values:
-
-| Platform   | Field              | Values                              |
-|------------|--------------------|-------------------------------------|
-| Facebook   | `postType.value`   | `post`\*, `reel`, `story`           |
-| Instagram  | `postType.value`   | `post`\*, `reel`, `story`           |
-| Instagram  | `channel.value`    | `direct`\*, `reminder`              |
-| TikTok     | `postType.value`   | `video`\*, `photo`                  |
-| TikTok     | `channel.value`    | `direct`\*, `reminder`              |
-| TikTok     | `post.privacyStatus` | `PUBLIC_TO_EVERYONE`\*, `MUTUAL_FOLLOW_FRIENDS`, `FOLLOWER_OF_CREATOR`, `SELF_ONLY` |
-| YouTube    | `postType.value`   | `video`\*, `short`                  |
-| YouTube    | `post.privacyStatus` | `""`, `public`, `private`, `unlisted` |
-| LinkedIn   | `audience.value`   | `PUBLIC`\*, `CONNECTIONS`, `LOGGED_IN` |
-| Threads    | `channel.value`    | `direct`\*, `reminder`              |
-| Google     | `post.topicType`   | `STANDARD`\*, `EVENT`, `OFFER`      |
-| Reddit     | `post.targets[].type` | `self`, `link`                    |
-
-\* = default
-
-## Example Workflows
-
-### Simple Queue Post
-
-```
-1. social_getSocialMediaAccounts({})
-2. social_createSocialMediaPost({
-     message: "Check out our new feature! 🚀",
-     account_ids: ["123"],
-     action: "add_to_queue",
-     media: ["https://cdn.example.com/image.jpg"],
-     additional: {
-       instagram: { postType: { value: "post" }, channel: { value: "direct" } }
-     }
-   })
-```
-
-### Scheduled YouTube Short
-
-```
-1. social_getSocialMediaAccounts({})
-2. social_createSocialMediaPost({
-     message: "Quick tip: how to use our API",
-     account_ids: ["456"],
-     action: "schedule",
-     date: "2027-06-10 14:00",
-     media: ["https://cdn.example.com/video.mp4"],
-     additional: {
-       youtube: { postType: { value: "short" },
-         post: { title: "API Quick Tip", privacyStatus: "public", selfDeclaredMadeForKids: "no" } }
-     }
-   })
-```
-
-### Post a freshly generated image
-
-```
-1. (generate-image skill) → asset_id "11111111-1111-4111-8111-111111111111"
-2. social_getSocialMediaAccounts({})
-3. social_createSocialMediaPost({
-     message: "Meet the new drop 👟",
-     account_ids: ["123"],
-     action: "draft",
-     media: ["11111111-1111-4111-8111-111111111111"],                       // asset UUID from generate-image
-     additional: { instagram: { postType: { value: "post" }, channel: { value: "direct" } } }
-   })
-```
-
-### Reddit draft
-
-```
-1. social_getSocialMediaAccounts({})
-2. social_createSocialMediaPost({
-     message: "What we learned from shipping our new workflow",
-     account_ids: ["789"],
-     action: "draft",
-     additional: {
-       reddit: {
-         post: {
-           targets: [{
-             subreddit: "devtestsmp",
-             title: "What we learned from shipping our new workflow",
-             type: "self",
-             flairId: null,
-             flairText: null,
-             nsfw: false,
-             url: null
-           }]
-         }
-       }
-     }
-   })
-```
-
-### Link in the first comment after 5 minutes
-
-```
-1. Preview and confirm both the main post and:
-   first comment: "Read the full guide: https://example.com/guide"
-   delay: 5 minutes after the post publishes
-2. social_createSocialMediaPost({
-     message: "We published a practical guide to better campaign reviews.",
-     account_ids: ["123"],
-     action: "schedule",
-     date: "2027-06-10 14:00",
-     comments: [{
-       message: "Read the full guide: https://example.com/guide",
-       delay: 300
-     }]
-   })
-```
-
-### Analytics: Account Overview
-
-```
-1. social_getSocialMediaAccounts({})
-2. social_getSocialMediaAnalyticsAggregated({ account_id: 789, date_from: "2026-05-01", date_to: "2026-05-31" })
-```
-
-## Gotchas
-
-- **Analytics `account_id` is an integer** — use the numeric `id` from `social_getSocialMediaAccounts`.
-- **Analytics date format** is `YYYY-MM-DD` (no time component, unlike post scheduling); never set `date_to` in the future.
-- **Metric names must belong to the tool enum**; unknown names are rejected by
-  connector validation. Known metric names unsupported by the selected network
-  may be ignored. Check `references/analytics.md`.
-- **Audience data availability varies** — `social_getSocialMediaAnalyticsAudience` may return partial or empty data depending on the network.
-- **Post `date` format** must be `YYYY-MM-DD HH:MM` (24-hour, no seconds, no timezone — timezone interpretation must be resolved before scheduling).
-- **Media** must be a Simplified asset UUID (from `generate-image` with `storage:"asset"`) or a publicly accessible URL — localhost does not work.
-- **Local media** uses `api_signAssetUpload` → direct storage PUT →
-  `api_registerAsset`; never send a local path to the hosted connector.
-- **`date` is required** when `action` is `schedule` — omit it for `add_to_queue` and `draft`.
-- **Platform character limits** — see `references/platform-settings.md`.
-- **Auto-comments** — `comments[].delay` is measured in seconds after the post
-  publishes. For X minutes use `X * 60`; the delay is not relative to the previous
-  comment, and comments do not support media.
-- **Reddit targets are required** — include at least one entry in
-  `additional.reddit.post.targets`; omit the `r/` prefix from `subreddit`.
-- **Instagram always requires `channel`** — include `channel: { value: "direct" }` for every Instagram post.
-- **TikTok `postType`** values are `video` and `photo` (not `image`); **channel** values are `direct` and `reminder` (not `business`).
-- **LinkedIn audience** value is `LOGGED_IN` (not `LOGGED_IN_MEMBERS`).
-- **Google `topicType`** only has `STANDARD`, `EVENT`, `OFFER` (no `PRODUCT`).
-- **Instagram story** — message must be empty (`""`), max 1 photo.
-- **Reels and Shorts require video** — Instagram reel, Facebook reel, YouTube short all require a video file in `media`; images are not allowed.
-- **YouTube always requires `post.title`** — include `additional.youtube.post` with a `title` for every YouTube video or short.
+For batches, retain each successful typed draft/group ID and continue only unfinished items. A successful call must still be inspected for actual output; do not invent IDs or duplicate successful drafts after a later failure. Publication and review-bundle approval remain separate.

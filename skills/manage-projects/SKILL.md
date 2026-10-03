@@ -1,6 +1,6 @@
 ---
 name: manage-projects
-description: Organize marketing work in Simplified projects and project items. Use when the user asks to create or inspect a marketing project, campaign workspace, creative deliverable collection, launch checklist, editorial pipeline, or deliverable list; add, retrieve, prioritize, reorder, assign, export, or remove project items; or turn an approved content plan into trackable work.
+description: Organize creative marketing projects and their deliverable items in Simplified, including collections, ordering, asset handoffs, assignments, and exports. Use for marketing project/item records. For Kanban boards, tasks, subtasks, statuses, and native dependencies, use simplified-project-management.
 ---
 
 # Manage Projects
