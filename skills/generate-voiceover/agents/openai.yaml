@@ -1,0 +1,13 @@
+interface:
+  display_name: "Generate Voiceover"
+  short_description: "Discover voices and create reusable narration."
+  default_prompt: "Use $generate-voiceover to find a British-English voice for my approved script and save its narration."
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "simplified"
+      description: "Simplified hosted MCP connector for media and assets."
+      transport: "http"
+      url: "https://apikit.simplified.com/mcp"
+policy:
+  allow_implicit_invocation: true

@@ -5,6 +5,8 @@ description: Use when the user asks Simplified to generate an AI video, animate 
 
 # Generate Video
 
+For a long recording cut into actual short clips, use `repurpose-video`. For standalone scripted narration, use `generate-voiceover`; an audio result does not establish that it was muxed into a video.
+
 Create one clear motion asset using a compatible model, ready workspace references, and the current tool's nested parameters.
 
 ## Workflow

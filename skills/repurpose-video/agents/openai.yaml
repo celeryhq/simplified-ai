@@ -1,0 +1,13 @@
+interface:
+  display_name: "Repurpose Video"
+  short_description: "Turn long recordings into ready social video clips."
+  default_prompt: "Use $repurpose-video to turn this webinar into five vertical clips and save social drafts with source timestamps."
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "simplified"
+      description: "Simplified hosted MCP connector for media, assets, and social drafts."
+      transport: "http"
+      url: "https://apikit.simplified.com/mcp"
+policy:
+  allow_implicit_invocation: true

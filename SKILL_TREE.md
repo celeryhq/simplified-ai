@@ -1,7 +1,7 @@
 # Skill Tree
 
 The plugin ships every folder under `skills/`. The workflows documented below are
-the supported skills, split between Simplified platform operators and marketer
+the 22 supported skills, split between Simplified platform operators and marketer
 workflows.
 
 Each top-level folder contains a canonical `SKILL.md`. Skills surfaced in Codex
@@ -14,6 +14,10 @@ the separate automation connection and is excluded from that bundle as well.
 skills/
 ├── manage-assets/                  # find/import/upload → ready asset UUIDs
 ├── generate-image/                 # model discovery → reusable image asset
+├── edit-image/                     # processing → verified reusable images
+├── transcribe-media/               # speech → transcript and subtitle exports
+├── generate-voiceover/             # locale/voice discovery → narration
+├── repurpose-video/                # long recording → rendered clips and drafts
 ├── generate-video/                 # model discovery → reusable video asset
 ├── simplified-workspace/           # whoami + workspace/teamspace resolution
 ├── simplified-social/              # 13 platforms, auto-comments, reviews, analytics
@@ -34,6 +38,8 @@ skills/
 
 ## Platform operators
 
+Fourteen operators provide the platform primitives.
+
 ### `simplified-workspace`
 
 Identify the authenticated user and workspace, read workspace defaults, resolve
@@ -52,6 +58,27 @@ references, and return a permanent asset ID when the result will be reused.
 
 Discover current video models and capabilities, generate text/image/video-guided
 motion, wait for completion and continue a non-terminal variation when needed, and preserve reusable video assets.
+
+### `edit-image`
+
+Remove or replace backgrounds, restore/upscale, make masked or semantic edits,
+and verify completed outputs before reuse.
+
+### `transcribe-media`
+
+Transcribe speech with supported timestamps and speaker labels; export actual
+SRT/VTT text without inventing download URLs or source facts.
+
+### `generate-voiceover`
+
+Discover voices by exact locale, preserve approved scripts, use only supported
+voice instructions, and save narration for reuse.
+
+### `repurpose-video`
+
+Render highlights or custom excerpts from downloadable recordings. Track project
+and individual clip states, enumerate every page, preserve source timestamps,
+and pass ready asset IDs to social drafts.
 
 ### `simplified-social`
 
@@ -138,7 +165,9 @@ source / goal / offer / local need / test hypothesis
                     ↓
 planner / campaign / repurposer / evergreen / local / creative-testing
                     ↓
-generate-image / generate-video → permanent asset IDs
+generate-image / generate-video / edit-image / generate-voiceover → permanent asset IDs
+recording → repurpose-video → rendered clips → permanent asset IDs
+recording → transcribe-media → source transcript → content-repurposer
                     ↓
 simplified-social → drafts → campaign-review → explicit approval → publish
                     ↓

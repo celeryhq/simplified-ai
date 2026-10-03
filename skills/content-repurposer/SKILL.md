@@ -5,6 +5,8 @@ description: Transform one source asset into multiple channel-native social post
 
 # Content Repurposer
 
+For rendered video highlights, Reels, Shorts, or source-time excerpts, use `repurpose-video`; this skill handles source-grounded channel copy. Use `transcribe-media` first when a recording needs an actual transcript or subtitle export. Never call written clip concepts completed video files.
+
 Extract the strongest ideas from supplied source material and reshape them for the intended channels without inventing facts.
 
 ## Guardrails

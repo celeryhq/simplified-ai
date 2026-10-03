@@ -160,3 +160,5 @@ Run the source checker using the Python environment that has apikit dependencies
 ```
 
 It compares canonical tool names and literal smp command names/options/required fields/top-level enums against that checkout, without dispatching API calls. It does not validate arbitrary prose, all nested payload semantics, deployment availability, or live behavior. `--root` can point it at another skills tree. Use generated schemas and realistic traces to verify those remaining dimensions.
+
+New image editing, transcription, narration and video-clipping operators have [static pressure scenarios](new-media-scenarios.md). Their document contracts are checked locally; no live media jobs or agent tool traces are implied.

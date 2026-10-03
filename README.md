@@ -15,7 +15,11 @@ This repository provides **skills**: instructions that teach an assistant how to
 | Your goal | Start with |
 |---|---|
 | Find/import/upload media, or reuse an existing asset | [Manage assets](skills/manage-assets/SKILL.md) |
-| Create or edit an image from text or references | [Generate image](skills/generate-image/SKILL.md) |
+| Generate an image from text or references | [Generate image](skills/generate-image/SKILL.md) |
+| Remove/replace backgrounds, restore/upscale, or make masked image edits | [Edit image](skills/edit-image/SKILL.md) |
+| Transcribe a recording or export subtitles | [Transcribe media](skills/transcribe-media/SKILL.md) |
+| Create narration from an approved script | [Generate voiceover](skills/generate-voiceover/SKILL.md) |
+| Turn a webinar, interview, or podcast into rendered clips and drafts | [Repurpose video](skills/repurpose-video/SKILL.md) |
 | Animate an image or create a video | [Generate video](skills/generate-video/SKILL.md) |
 | Create social drafts or schedule approved posts | [Simplified social](skills/simplified-social/SKILL.md) |
 | Plan campaigns, review drafts, manage brands/projects, analyze results | [Skill catalog](SKILL_TREE.md) |
@@ -29,6 +33,9 @@ For a step-by-step walkthrough, see [Assets, images, and videos](docs/MEDIA.md).
 - “Use this asset ID to make a poster, keeping the product unchanged.”
 - “Animate this uploaded product image into a short video and save it for reuse.”
 - “Create two image variations for review; do not publish them.”
+- “Turn this YouTube webinar into five vertical clips, preserve source timestamps, and save social drafts.”
+- “Export an SRT transcript for this recording.”
+- “Use a British-English voice for this approved narration script.”
 
 Asset search is name/tag matching, not visual search. A folder name does not select its contents: named-folder browsing is not exposed by the current asset-list tool. A file attached to a chat is not automatically uploaded to Simplified.
 

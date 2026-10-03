@@ -1,0 +1,13 @@
+interface:
+  display_name: "Edit Image"
+  short_description: "Edit and prepare existing Simplified images."
+  default_prompt: "Use $edit-image to remove the background from my product asset, preserve its framing, and save a transparent result."
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "simplified"
+      description: "Simplified hosted MCP connector for media and assets."
+      transport: "http"
+      url: "https://apikit.simplified.com/mcp"
+policy:
+  allow_implicit_invocation: true
