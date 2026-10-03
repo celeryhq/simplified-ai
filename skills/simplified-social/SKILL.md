@@ -1,13 +1,6 @@
 ---
 name: simplified-social
-description: >-
-  Manage your entire social media with Simplified from a connected AI assistant — post, schedule,
-  queue, draft, and analyze across Facebook, Instagram, TikTok, YouTube,
-  LinkedIn, Pinterest, Threads, Bluesky, X/Twitter, Google Business, Mastodon,
-  Reddit, and Telegram. Triggers: social media, post to, schedule post, publish
-  on, social accounts, analytics, reach, impressions, engagement, followers
-  growth, content calendar, auto-comments, link in first comment, attach local
-  media, upload an image or video for a social post.
+description: Create, retrieve, revise, schedule, or queue Simplified social posts and drafts; manage auto-comments and review bundles; retrieve account analytics. Use for direct social operations. For a content calendar, campaign strategy, or performance interpretation, use social-content-planner, cross-platform-campaign, or social-performance-analyst.
 ---
 
 # Simplified Social Media
@@ -107,17 +100,14 @@ ask only when authorization is missing or the proposed publication changed.
 An internal `action:"draft"` preview is useful when content still needs review.
 Then call `social_createSocialMediaPost`.
 
-If the post includes auto-comments, the confirmation must show each comment's text
+If the post includes auto-comments, the authorized publication plan must cover each comment's text
 and post-relative delay. For “link in first comment after X minutes,” convert
 nonnegative minutes to an integer number of seconds with `delay = X * 60`.
 `delay` is measured in seconds after the post publishes, not after the previous
 comment. Comments execute in array order. Do not move the comment text into the
 main post.
 
-**Show returned URLs as links, never embed them.** Any URL these tools return
-(review-bundle links, published-post URLs, media URLs) must be presented as a plain
-URL or Markdown link — **never** Markdown image syntax (`![](url)`) and never
-inline-rendered. The user clicks the link; the agent does not render it.
+**Media presentation.** Use a native media preview when the client supports it and the user wants to review the result. Otherwise show a usable link. Refresh expired asset URLs; do not download remote media merely to bypass client display restrictions. Review bundles and other web pages remain links.
 
 ## Choosing the Right Analytics Tool
 
@@ -408,7 +398,7 @@ Key enum values:
 ### Link in the first comment after 5 minutes
 
 ```
-1. Preview and confirm both the main post and:
+1. If not already approved unchanged, preview and obtain authorization for the main post and:
    first comment: "Read the full guide: https://example.com/guide"
    delay: 5 minutes after the post publishes
 2. social_createSocialMediaPost({

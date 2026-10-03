@@ -12,9 +12,9 @@ Turn business goals into a practical, channel-aware content calendar. Use the Si
 - Treat planning, drafting, and publishing as separate levels of authorization.
 - Return a plan in conversation when the user asks only for a plan. Do not create remote drafts unless requested.
 - Use `action: "draft"` when the user asks to create or save the planned content.
-- Before any `schedule` or `add_to_queue` call, show the final posts, accounts, dates, media, and platform settings and obtain explicit confirmation.
-- Stop on `401` or an empty account list and explain how to connect Simplified.
-- Present returned URLs as links, never as embedded images.
+- Before `schedule` or `add_to_queue`, verify that explicit authorization covers the final posts, accounts, dates, media, settings, and comments. Reuse unchanged existing authorization; show the concrete plan and ask only for missing approval.
+- On `401`, pause affected connected operations and explain how to authorize Simplified. An empty account list does not block planning or requested accountless drafts; omit `account_ids`. Scheduling, queueing, and account analytics require suitable connected accounts.
+- Use a native media preview when the client supports it and the user wants to review the result. Otherwise show a usable link. Refresh expired asset URLs; do not download remote media merely to bypass client display restrictions. Review bundles and other web pages remain links.
 
 ## Workspace and handoff
 

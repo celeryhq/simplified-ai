@@ -1,6 +1,6 @@
 ---
 name: content-repurposer
-description: Transform one source asset into multiple channel-native social posts and a reusable content sequence. Use when the user asks to repurpose a blog post, video, transcript, webinar, newsletter, announcement, product page, testimonial, case study, podcast, or existing social post into content for LinkedIn, Instagram, Facebook, TikTok, YouTube, Threads, Bluesky, Pinterest, or Google Business.
+description: Adapt source material into channel-specific written posts and content sequences with Simplified. Use for captions, summaries, carousels, and clip concepts from articles, transcripts, interviews, webinars, or podcasts. For rendered video clips or source-time excerpts, use repurpose-video; for transcripts/subtitles, use transcribe-media.
 ---
 
 # Content Repurposer
@@ -15,8 +15,8 @@ Extract the strongest ideas from supplied source material and reshape them for t
 - Clearly label any interpretation that is not directly supported by the source.
 - Return copy in conversation unless the user asks to save drafts.
 - Create remote content with `action: "draft"`; require explicit approval before scheduling or queueing.
-- Stop on MCP authorization failure or when required accounts are not connected.
-- Present returned URLs as links, never as embedded media.
+- Pause affected connected operations on authorization failure. Continue source-grounded copy or requested accountless drafts without connected accounts; omit `account_ids`. Publishing and account analytics require suitable connected accounts.
+- Use a native media preview when the client supports it and the user wants to review the result. Otherwise show a usable link. Refresh expired asset URLs; do not download remote media merely to bypass client display restrictions. Review bundles and other web pages remain links.
 
 ## Workspace and handoff
 

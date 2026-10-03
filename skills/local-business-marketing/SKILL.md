@@ -9,12 +9,14 @@ Turn local relevance, operational truth, community proof, and timely offers into
 
 ## Guardrails
 
+Existing explicit authorization for unchanged content, accounts, timing, media, and comments is sufficient; ask only when that authorization is missing or the proposed effects change.
+
 - Verify business name, locations or service area, hours, availability, prices, offer terms, event dates, phone/booking destination, and required disclaimers before publishing them.
 - Never fabricate reviews, customer identities, local partnerships, awards, scarcity, neighborhood knowledge, or “near me” relevance.
 - Treat regulated services, health claims, financial claims, age restrictions, and before/after results conservatively; surface required approvals.
 - Do not publish the same generic promotional caption to every location or platform.
 - Create drafts first. Obtain explicit approval of location, offer terms, CTA destination, date, account, and media before scheduling or queueing.
-- Stop on authorization failure or when the requested local account is not connected.
+- Pause affected connected operations on authorization failure. If a local account is missing, continue planning or requested accountless drafts and state that publishing to that location requires its verified connected account.
 
 ## Workspace and handoff
 
