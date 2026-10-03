@@ -32,7 +32,7 @@ CONTRACT_TERMS = {
     "social-content-planner": [
         "social_getsocialmediaaccounts",
         'action: "draft"',
-        "explicit confirmation",
+        "explicit authorization",
         "planning, drafting, and publishing",
     ],
     "cross-platform-campaign": [
@@ -156,7 +156,7 @@ PLATFORM_CONTRACT_TERMS = {
 }
 
 REQUIRED_REFERENCES = {
-    "simplified-social": ["references/assets.md"],
+    "simplified-social": ["references/assets.md", "references/operations.md", "references/examples.md", "references/platform-settings.md", "references/analytics.md"],
     "generate-video": ["references/models-and-polling.md"],
     "manage-brand": ["references/brand-system.md"],
     "manage-projects": ["references/project-operations.md"],
@@ -172,7 +172,7 @@ SOURCE_PROFILE_CASE_SKILLS = {
     "manage-projects",
     "simplified-workspace",
 }
-ROUTING_SKILLS = set(CONTRACT_TERMS) | SOURCE_PROFILE_CASE_SKILLS
+ROUTING_SKILLS = {p.parent.name for p in (ROOT / "skills").glob("*/SKILL.md")}
 
 
 @dataclass
@@ -220,7 +220,7 @@ def validate_contracts(
             catalog_errors.append("case missing string id")
         if case.get("skill") not in ROUTING_SKILLS:
             catalog_errors.append(f"{cid}: unknown skill")
-        if case.get("tool_profile", "live") not in ("live", "source"):
+        if case.get("tool_profile", "live") not in ("live", "source", "current_source"):
             catalog_errors.append(f"{cid}: invalid tool_profile")
         if not isinstance(case.get("prompt"), str) or not case["prompt"].strip():
             catalog_errors.append(f"{cid}: missing prompt")
@@ -232,8 +232,11 @@ def validate_contracts(
         if required & forbidden:
             catalog_errors.append(f"{cid}: tools both required and forbidden: {sorted(required & forbidden)}")
         for rule in expected.get("required_args", []):
-            if not all(field in rule for field in ("tool", "path")) or not ({"equals", "nonempty"} & set(rule)):
+            if not all(field in rule for field in ("tool", "path")) or not ({"equals", "nonempty", "absent"} & set(rule)):
                 catalog_errors.append(f"{cid}: malformed required_args rule")
+        maximums = expected.get("max_tool_calls", {})
+        if not isinstance(maximums, dict) or any(not isinstance(n, int) or isinstance(n, bool) or n < 0 for n in maximums.values()):
+            catalog_errors.append(f"{cid}: invalid max_tool_calls")
         for rule in expected.get("forbidden_args", []):
             if not all(field in rule for field in ("tool", "path", "equals")):
                 catalog_errors.append(f"{cid}: malformed forbidden_args rule")
@@ -251,6 +254,7 @@ def validate_contracts(
         referenced: set[str] = set()
         for case in selected_cases:
             expected = case["expected"]
+            referenced.update(expected.get("max_tool_calls", {}))
             for key in ("required_tools", "forbidden_tools", "ordered_tools"):
                 referenced.update(expected.get(key, []))
             for key in ("required_args", "forbidden_args"):
@@ -279,6 +283,9 @@ def validate_contracts(
     source_cases = [case for case in cases if case.get("tool_profile") == "source"]
     checks.append(inventory_check("hosted tool inventory", live_cases, inventory))
     checks.append(inventory_check("source profile inventory", source_cases, source_inventory))
+    current_inventory = load_json_or_jsonl(ROOT / "evals/current-source-tool-inventory.json")
+    checks.append(inventory_check("current source inventory (not hosted)",
+        [case for case in cases if case.get("tool_profile") == "current_source"], current_inventory))
 
     manifest_errors: list[str] = []
     prompts: list[Any] = []
@@ -373,6 +380,13 @@ def is_subsequence(expected: list[str], actual: list[str]) -> bool:
 def rule_matches(call: dict[str, Any], rule: dict[str, Any]) -> bool:
     if call["name"] != rule["tool"]:
         return False
+    if rule.get("absent") is True:
+        current = call["arguments"]
+        for part in rule["path"].split("."):
+            if not isinstance(current, dict) or part not in current:
+                return True
+            current = current[part]
+        return False
     value = get_path(call["arguments"], rule["path"])
     if rule.get("nonempty") is True:
         return bool(value)
@@ -399,6 +413,10 @@ def grade_trace(case: dict[str, Any], trace: dict[str, Any]) -> Check:
     ordered = expected.get("ordered_tools", [])
     if ordered and not is_subsequence(ordered, names):
         errors.append(f"tool order expected {ordered}, got {names}")
+
+    for name, maximum in expected.get("max_tool_calls", {}).items():
+        if names.count(name) > maximum:
+            errors.append(f"too many {name} calls: {names.count(name)} > {maximum}")
 
     for rule in expected.get("required_args", []):
         matching_tool_calls = [call for call in calls if call["name"] == rule["tool"]]

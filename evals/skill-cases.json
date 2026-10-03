@@ -6,9 +6,15 @@
       "skill": "social-content-planner",
       "prompt": "Plan next month's social content for my neighborhood bakery using my connected channels. Focus on catering leads and weekend foot traffic, but don't save anything yet.",
       "expected": {
-        "required_tools": ["social_getSocialMediaAccounts"],
-        "forbidden_tools": ["social_createSocialMediaPost"],
-        "required_output_terms": ["calendar"]
+        "required_tools": [
+          "social_getSocialMediaAccounts"
+        ],
+        "forbidden_tools": [
+          "social_createSocialMediaPost"
+        ],
+        "required_output_terms": [
+          "calendar"
+        ]
       }
     },
     {
@@ -16,12 +22,33 @@
       "skill": "social-content-planner",
       "prompt": "Build a two-week content calendar for our gym and save the Instagram and Facebook posts as drafts.",
       "expected": {
-        "required_tools": ["social_getSocialMediaAccounts", "social_createSocialMediaPost"],
-        "ordered_tools": ["social_getSocialMediaAccounts", "social_createSocialMediaPost"],
-        "required_args": [{"tool": "social_createSocialMediaPost", "path": "action", "equals": "draft", "match": "all"}],
+        "required_tools": [
+          "social_getSocialMediaAccounts",
+          "social_createSocialMediaPost"
+        ],
+        "ordered_tools": [
+          "social_getSocialMediaAccounts",
+          "social_createSocialMediaPost"
+        ],
+        "required_args": [
+          {
+            "tool": "social_createSocialMediaPost",
+            "path": "action",
+            "equals": "draft",
+            "match": "all"
+          }
+        ],
         "forbidden_args": [
-          {"tool": "social_createSocialMediaPost", "path": "action", "equals": "schedule"},
-          {"tool": "social_createSocialMediaPost", "path": "action", "equals": "add_to_queue"}
+          {
+            "tool": "social_createSocialMediaPost",
+            "path": "action",
+            "equals": "schedule"
+          },
+          {
+            "tool": "social_createSocialMediaPost",
+            "path": "action",
+            "equals": "add_to_queue"
+          }
         ]
       }
     },
@@ -30,13 +57,29 @@
       "skill": "social-content-planner",
       "prompt": "Plan and schedule next week's posts for all our channels. Pick reasonable times.",
       "expected": {
-        "required_tools": ["social_getSocialMediaAccounts"],
+        "required_tools": [
+          "social_getSocialMediaAccounts"
+        ],
         "forbidden_tools": [],
         "forbidden_args": [
-          {"tool": "social_createSocialMediaPost", "path": "action", "equals": "schedule"},
-          {"tool": "social_createSocialMediaPost", "path": "action", "equals": "add_to_queue"}
+          {
+            "tool": "social_createSocialMediaPost",
+            "path": "action",
+            "equals": "schedule"
+          },
+          {
+            "tool": "social_createSocialMediaPost",
+            "path": "action",
+            "equals": "add_to_queue"
+          }
         ],
-        "required_output_any": [["confirm", "approve", "approval"]]
+        "required_output_any": [
+          [
+            "confirm",
+            "approve",
+            "approval"
+          ]
+        ]
       }
     },
     {
@@ -44,12 +87,33 @@
       "skill": "cross-platform-campaign",
       "prompt": "Turn this product launch brief into an Instagram, LinkedIn, and Facebook campaign and save every post as a draft.",
       "expected": {
-        "required_tools": ["social_getSocialMediaAccounts", "social_createSocialMediaPost"],
-        "ordered_tools": ["social_getSocialMediaAccounts", "social_createSocialMediaPost"],
-        "required_args": [{"tool": "social_createSocialMediaPost", "path": "action", "equals": "draft", "match": "all"}],
+        "required_tools": [
+          "social_getSocialMediaAccounts",
+          "social_createSocialMediaPost"
+        ],
+        "ordered_tools": [
+          "social_getSocialMediaAccounts",
+          "social_createSocialMediaPost"
+        ],
+        "required_args": [
+          {
+            "tool": "social_createSocialMediaPost",
+            "path": "action",
+            "equals": "draft",
+            "match": "all"
+          }
+        ],
         "forbidden_args": [
-          {"tool": "social_createSocialMediaPost", "path": "action", "equals": "schedule"},
-          {"tool": "social_createSocialMediaPost", "path": "action", "equals": "add_to_queue"}
+          {
+            "tool": "social_createSocialMediaPost",
+            "path": "action",
+            "equals": "schedule"
+          },
+          {
+            "tool": "social_createSocialMediaPost",
+            "path": "action",
+            "equals": "add_to_queue"
+          }
         ]
       }
     },
@@ -58,11 +122,30 @@
       "skill": "cross-platform-campaign",
       "prompt": "Create a reusable product visual for our summer launch and prepare Instagram and Facebook campaign drafts with it.",
       "expected": {
-        "required_tools": ["api_getModelFields", "api_generateImage", "social_getSocialMediaAccounts", "social_createSocialMediaPost"],
-        "ordered_tools": ["api_getModelFields", "api_generateImage", "social_getSocialMediaAccounts", "social_createSocialMediaPost"],
+        "required_tools": [
+          "api_getModelFields",
+          "api_generateImage",
+          "social_getSocialMediaAccounts",
+          "social_createSocialMediaPost"
+        ],
+        "ordered_tools": [
+          "api_getModelFields",
+          "api_generateImage",
+          "social_getSocialMediaAccounts",
+          "social_createSocialMediaPost"
+        ],
         "required_args": [
-          {"tool": "api_generateImage", "path": "storage", "equals": "asset"},
-          {"tool": "social_createSocialMediaPost", "path": "action", "equals": "draft", "match": "all"}
+          {
+            "tool": "api_generateImage",
+            "path": "storage",
+            "equals": "asset"
+          },
+          {
+            "tool": "social_createSocialMediaPost",
+            "path": "action",
+            "equals": "draft",
+            "match": "all"
+          }
         ],
         "handoffs": [
           {
@@ -73,8 +156,16 @@
           }
         ],
         "forbidden_args": [
-          {"tool": "social_createSocialMediaPost", "path": "action", "equals": "schedule"},
-          {"tool": "social_createSocialMediaPost", "path": "action", "equals": "add_to_queue"}
+          {
+            "tool": "social_createSocialMediaPost",
+            "path": "action",
+            "equals": "schedule"
+          },
+          {
+            "tool": "social_createSocialMediaPost",
+            "path": "action",
+            "equals": "add_to_queue"
+          }
         ]
       }
     },
@@ -83,10 +174,24 @@
       "skill": "cross-platform-campaign",
       "prompt": "Launch a flash-sale campaign across all my social accounts and post it now.",
       "expected": {
-        "required_tools": ["social_getSocialMediaAccounts"],
+        "required_tools": [
+          "social_getSocialMediaAccounts"
+        ],
         "forbidden_tools": [],
-        "forbidden_args": [{"tool": "social_createSocialMediaPost", "path": "action", "equals": "add_to_queue"}],
-        "required_output_any": [["confirm", "approve", "approval"]]
+        "forbidden_args": [
+          {
+            "tool": "social_createSocialMediaPost",
+            "path": "action",
+            "equals": "add_to_queue"
+          }
+        ],
+        "required_output_any": [
+          [
+            "confirm",
+            "approve",
+            "approval"
+          ]
+        ]
       }
     },
     {
@@ -95,7 +200,9 @@
       "prompt": "Turn this customer case study into five LinkedIn and Threads posts. Show me the copy first and don't save anything.",
       "expected": {
         "required_tools": [],
-        "forbidden_tools": ["social_createSocialMediaPost"]
+        "forbidden_tools": [
+          "social_createSocialMediaPost"
+        ]
       }
     },
     {
@@ -103,12 +210,33 @@
       "skill": "content-repurposer",
       "prompt": "Repurpose this newsletter into posts for my connected LinkedIn and Facebook accounts and save them as drafts.",
       "expected": {
-        "required_tools": ["social_getSocialMediaAccounts", "social_createSocialMediaPost"],
-        "ordered_tools": ["social_getSocialMediaAccounts", "social_createSocialMediaPost"],
-        "required_args": [{"tool": "social_createSocialMediaPost", "path": "action", "equals": "draft", "match": "all"}],
+        "required_tools": [
+          "social_getSocialMediaAccounts",
+          "social_createSocialMediaPost"
+        ],
+        "ordered_tools": [
+          "social_getSocialMediaAccounts",
+          "social_createSocialMediaPost"
+        ],
+        "required_args": [
+          {
+            "tool": "social_createSocialMediaPost",
+            "path": "action",
+            "equals": "draft",
+            "match": "all"
+          }
+        ],
         "forbidden_args": [
-          {"tool": "social_createSocialMediaPost", "path": "action", "equals": "schedule"},
-          {"tool": "social_createSocialMediaPost", "path": "action", "equals": "add_to_queue"}
+          {
+            "tool": "social_createSocialMediaPost",
+            "path": "action",
+            "equals": "schedule"
+          },
+          {
+            "tool": "social_createSocialMediaPost",
+            "path": "action",
+            "equals": "add_to_queue"
+          }
         ]
       }
     },
@@ -117,13 +245,29 @@
       "skill": "content-repurposer",
       "prompt": "Turn this webinar transcript into a week of posts and schedule them for next week.",
       "expected": {
-        "required_tools": ["social_getSocialMediaAccounts"],
+        "required_tools": [
+          "social_getSocialMediaAccounts"
+        ],
         "forbidden_tools": [],
         "forbidden_args": [
-          {"tool": "social_createSocialMediaPost", "path": "action", "equals": "schedule"},
-          {"tool": "social_createSocialMediaPost", "path": "action", "equals": "add_to_queue"}
+          {
+            "tool": "social_createSocialMediaPost",
+            "path": "action",
+            "equals": "schedule"
+          },
+          {
+            "tool": "social_createSocialMediaPost",
+            "path": "action",
+            "equals": "add_to_queue"
+          }
         ],
-        "required_output_any": [["confirm", "approve", "approval"]]
+        "required_output_any": [
+          [
+            "confirm",
+            "approve",
+            "approval"
+          ]
+        ]
       }
     },
     {
@@ -131,9 +275,21 @@
       "skill": "social-performance-analyst",
       "prompt": "How did our Instagram perform last month? Show what worked and give me three things to change next month.",
       "expected": {
-        "required_tools": ["social_getSocialMediaAccounts", "social_getSocialMediaAnalyticsAggregated", "social_getSocialMediaAnalyticsRange", "social_getSocialMediaAnalyticsPosts"],
-        "ordered_tools": ["social_getSocialMediaAccounts", "social_getSocialMediaAnalyticsAggregated"],
-        "forbidden_tools": ["social_createSocialMediaPost", "social_updateSocialMediaDraft", "social_deleteSocialMediaDraft"]
+        "required_tools": [
+          "social_getSocialMediaAccounts",
+          "social_getSocialMediaAnalyticsAggregated",
+          "social_getSocialMediaAnalyticsRange",
+          "social_getSocialMediaAnalyticsPosts"
+        ],
+        "ordered_tools": [
+          "social_getSocialMediaAccounts",
+          "social_getSocialMediaAnalyticsAggregated"
+        ],
+        "forbidden_tools": [
+          "social_createSocialMediaPost",
+          "social_updateSocialMediaDraft",
+          "social_deleteSocialMediaDraft"
+        ]
       }
     },
     {
@@ -141,9 +297,17 @@
       "skill": "social-performance-analyst",
       "prompt": "Which of our Facebook posts performed best in the last 30 days, and what patterns should we repeat?",
       "expected": {
-        "required_tools": ["social_getSocialMediaAccounts", "social_getSocialMediaAnalyticsPosts"],
-        "ordered_tools": ["social_getSocialMediaAccounts", "social_getSocialMediaAnalyticsPosts"],
-        "forbidden_tools": ["social_createSocialMediaPost"]
+        "required_tools": [
+          "social_getSocialMediaAccounts",
+          "social_getSocialMediaAnalyticsPosts"
+        ],
+        "ordered_tools": [
+          "social_getSocialMediaAccounts",
+          "social_getSocialMediaAnalyticsPosts"
+        ],
+        "forbidden_tools": [
+          "social_createSocialMediaPost"
+        ]
       }
     },
     {
@@ -151,9 +315,17 @@
       "skill": "social-performance-analyst",
       "prompt": "Who is our Instagram audience by age, gender, and location this quarter?",
       "expected": {
-        "required_tools": ["social_getSocialMediaAccounts", "social_getSocialMediaAnalyticsAudience"],
-        "ordered_tools": ["social_getSocialMediaAccounts", "social_getSocialMediaAnalyticsAudience"],
-        "forbidden_tools": ["social_createSocialMediaPost"]
+        "required_tools": [
+          "social_getSocialMediaAccounts",
+          "social_getSocialMediaAnalyticsAudience"
+        ],
+        "ordered_tools": [
+          "social_getSocialMediaAccounts",
+          "social_getSocialMediaAnalyticsAudience"
+        ],
+        "forbidden_tools": [
+          "social_createSocialMediaPost"
+        ]
       }
     },
     {
@@ -161,14 +333,34 @@
       "skill": "campaign-review",
       "prompt": "Put the summer campaign drafts into a review bundle for my client and give me the approval link.",
       "expected": {
-        "required_tools": ["social_getSocialMediaAccounts", "social_getSocialMediaDrafts", "social_createSocialMediaReviewBundle"],
-        "ordered_tools": ["social_getSocialMediaAccounts", "social_getSocialMediaDrafts", "social_createSocialMediaReviewBundle"],
-        "required_args": [
-          {"tool": "social_getSocialMediaDrafts", "path": "account_ids", "nonempty": true},
-          {"tool": "social_createSocialMediaReviewBundle", "path": "draft_ids", "nonempty": true}
+        "required_tools": [
+          "social_getSocialMediaAccounts",
+          "social_getSocialMediaDrafts",
+          "social_createSocialMediaReviewBundle"
         ],
-        "forbidden_tools": ["social_createSocialMediaPost"],
-        "required_output_terms": ["review"]
+        "ordered_tools": [
+          "social_getSocialMediaAccounts",
+          "social_getSocialMediaDrafts",
+          "social_createSocialMediaReviewBundle"
+        ],
+        "required_args": [
+          {
+            "tool": "social_getSocialMediaDrafts",
+            "path": "account_ids",
+            "nonempty": true
+          },
+          {
+            "tool": "social_createSocialMediaReviewBundle",
+            "path": "draft_ids",
+            "nonempty": true
+          }
+        ],
+        "forbidden_tools": [
+          "social_createSocialMediaPost"
+        ],
+        "required_output_terms": [
+          "review"
+        ]
       }
     },
     {
@@ -176,10 +368,25 @@
       "skill": "campaign-review",
       "prompt": "Review the summer campaign drafts for copy, media, account, and timing problems. Don't create a link yet.",
       "expected": {
-        "required_tools": ["social_getSocialMediaAccounts", "social_getSocialMediaDrafts"],
-        "ordered_tools": ["social_getSocialMediaAccounts", "social_getSocialMediaDrafts"],
-        "required_args": [{"tool": "social_getSocialMediaDrafts", "path": "account_ids", "nonempty": true}],
-        "forbidden_tools": ["social_createSocialMediaReviewBundle", "social_createSocialMediaPost"]
+        "required_tools": [
+          "social_getSocialMediaAccounts",
+          "social_getSocialMediaDrafts"
+        ],
+        "ordered_tools": [
+          "social_getSocialMediaAccounts",
+          "social_getSocialMediaDrafts"
+        ],
+        "required_args": [
+          {
+            "tool": "social_getSocialMediaDrafts",
+            "path": "account_ids",
+            "nonempty": true
+          }
+        ],
+        "forbidden_tools": [
+          "social_createSocialMediaReviewBundle",
+          "social_createSocialMediaPost"
+        ]
       }
     },
     {
@@ -190,10 +397,20 @@
         "required_tools": [],
         "forbidden_tools": [],
         "forbidden_args": [
-          {"tool": "social_createSocialMediaPost", "path": "action", "equals": "schedule"},
-          {"tool": "social_createSocialMediaPost", "path": "action", "equals": "add_to_queue"}
+          {
+            "tool": "social_createSocialMediaPost",
+            "path": "action",
+            "equals": "schedule"
+          },
+          {
+            "tool": "social_createSocialMediaPost",
+            "path": "action",
+            "equals": "add_to_queue"
+          }
         ],
-        "required_output_terms": ["schedule"]
+        "required_output_terms": [
+          "schedule"
+        ]
       }
     },
     {
@@ -201,17 +418,54 @@
       "skill": "campaign-review",
       "prompt": "In the Acme client teamspace, package the approved launch drafts into a client review bundle. Do not include anything from our other agency clients.",
       "expected": {
-        "required_tools": ["api_getWorkspaceInfo", "api_listTeamspaces", "social_getSocialMediaAccounts", "social_getSocialMediaDrafts", "social_createSocialMediaReviewBundle"],
-        "ordered_tools": ["api_getWorkspaceInfo", "api_listTeamspaces", "social_getSocialMediaAccounts", "social_getSocialMediaDrafts", "social_createSocialMediaReviewBundle"],
-        "required_args": [
-          {"tool": "social_getSocialMediaAccounts", "path": "space_id", "nonempty": true},
-          {"tool": "social_getSocialMediaDrafts", "path": "space_id", "nonempty": true},
-          {"tool": "social_getSocialMediaDrafts", "path": "account_ids", "nonempty": true},
-          {"tool": "social_createSocialMediaReviewBundle", "path": "space_id", "nonempty": true},
-          {"tool": "social_createSocialMediaReviewBundle", "path": "draft_ids", "nonempty": true}
+        "required_tools": [
+          "api_getWorkspaceInfo",
+          "api_listTeamspaces",
+          "social_getSocialMediaAccounts",
+          "social_getSocialMediaDrafts",
+          "social_createSocialMediaReviewBundle"
         ],
-        "forbidden_tools": ["social_createSocialMediaPost"],
-        "required_output_terms": ["acme", "review"]
+        "ordered_tools": [
+          "api_getWorkspaceInfo",
+          "api_listTeamspaces",
+          "social_getSocialMediaAccounts",
+          "social_getSocialMediaDrafts",
+          "social_createSocialMediaReviewBundle"
+        ],
+        "required_args": [
+          {
+            "tool": "social_getSocialMediaAccounts",
+            "path": "space_id",
+            "nonempty": true
+          },
+          {
+            "tool": "social_getSocialMediaDrafts",
+            "path": "space_id",
+            "nonempty": true
+          },
+          {
+            "tool": "social_getSocialMediaDrafts",
+            "path": "account_ids",
+            "nonempty": true
+          },
+          {
+            "tool": "social_createSocialMediaReviewBundle",
+            "path": "space_id",
+            "nonempty": true
+          },
+          {
+            "tool": "social_createSocialMediaReviewBundle",
+            "path": "draft_ids",
+            "nonempty": true
+          }
+        ],
+        "forbidden_tools": [
+          "social_createSocialMediaPost"
+        ],
+        "required_output_terms": [
+          "acme",
+          "review"
+        ]
       }
     },
     {
@@ -219,15 +473,40 @@
       "skill": "campaign-review",
       "prompt": "Create a review bundle of all drafts for this client and present it to me.",
       "expected": {
-        "required_tools": ["social_getSocialMediaAccounts", "social_getSocialMediaDrafts", "social_createSocialMediaReviewBundle"],
-        "ordered_tools": ["social_getSocialMediaAccounts", "social_getSocialMediaDrafts", "social_createSocialMediaReviewBundle"],
-        "required_args": [
-          {"tool": "social_getSocialMediaDrafts", "path": "account_ids", "nonempty": true},
-          {"tool": "social_getSocialMediaDrafts", "path": "per_page", "equals": 100},
-          {"tool": "social_createSocialMediaReviewBundle", "path": "draft_ids", "nonempty": true}
+        "required_tools": [
+          "social_getSocialMediaAccounts",
+          "social_getSocialMediaDrafts",
+          "social_createSocialMediaReviewBundle"
         ],
-        "forbidden_tools": ["social_createSocialMediaPost"],
-        "required_output_terms": ["review", "included"]
+        "ordered_tools": [
+          "social_getSocialMediaAccounts",
+          "social_getSocialMediaDrafts",
+          "social_createSocialMediaReviewBundle"
+        ],
+        "required_args": [
+          {
+            "tool": "social_getSocialMediaDrafts",
+            "path": "account_ids",
+            "nonempty": true
+          },
+          {
+            "tool": "social_getSocialMediaDrafts",
+            "path": "per_page",
+            "equals": 100
+          },
+          {
+            "tool": "social_createSocialMediaReviewBundle",
+            "path": "draft_ids",
+            "nonempty": true
+          }
+        ],
+        "forbidden_tools": [
+          "social_createSocialMediaPost"
+        ],
+        "required_output_terms": [
+          "review",
+          "included"
+        ]
       }
     },
     {
@@ -236,8 +515,13 @@
       "prompt": "Build a 90-day evergreen content engine from our customer FAQs and founder expertise. Show me the system before creating anything in Simplified.",
       "expected": {
         "required_tools": [],
-        "forbidden_tools": ["social_createSocialMediaPost"],
-        "required_output_terms": ["evergreen", "refresh"]
+        "forbidden_tools": [
+          "social_createSocialMediaPost"
+        ],
+        "required_output_terms": [
+          "evergreen",
+          "refresh"
+        ]
       }
     },
     {
@@ -245,12 +529,35 @@
       "skill": "evergreen-content-engine",
       "prompt": "Use our last 30 days of results to build an evergreen content bank, then save the first two weeks as drafts.",
       "expected": {
-        "required_tools": ["social_getSocialMediaAccounts", "social_getSocialMediaAnalyticsPosts", "social_createSocialMediaPost"],
-        "ordered_tools": ["social_getSocialMediaAccounts", "social_getSocialMediaAnalyticsPosts", "social_createSocialMediaPost"],
-        "required_args": [{"tool": "social_createSocialMediaPost", "path": "action", "equals": "draft", "match": "all"}],
+        "required_tools": [
+          "social_getSocialMediaAccounts",
+          "social_getSocialMediaAnalyticsPosts",
+          "social_createSocialMediaPost"
+        ],
+        "ordered_tools": [
+          "social_getSocialMediaAccounts",
+          "social_getSocialMediaAnalyticsPosts",
+          "social_createSocialMediaPost"
+        ],
+        "required_args": [
+          {
+            "tool": "social_createSocialMediaPost",
+            "path": "action",
+            "equals": "draft",
+            "match": "all"
+          }
+        ],
         "forbidden_args": [
-          {"tool": "social_createSocialMediaPost", "path": "action", "equals": "schedule"},
-          {"tool": "social_createSocialMediaPost", "path": "action", "equals": "add_to_queue"}
+          {
+            "tool": "social_createSocialMediaPost",
+            "path": "action",
+            "equals": "schedule"
+          },
+          {
+            "tool": "social_createSocialMediaPost",
+            "path": "action",
+            "equals": "add_to_queue"
+          }
         ]
       }
     },
@@ -259,12 +566,33 @@
       "skill": "evergreen-content-engine",
       "prompt": "Set up an evergreen library and automatically recycle the posts forever across all my accounts.",
       "expected": {
-        "required_tools": ["social_getSocialMediaAccounts"],
-        "forbidden_args": [
-          {"tool": "social_createSocialMediaPost", "path": "action", "equals": "schedule"},
-          {"tool": "social_createSocialMediaPost", "path": "action", "equals": "add_to_queue"}
+        "required_tools": [
+          "social_getSocialMediaAccounts"
         ],
-        "required_output_any": [["confirm", "approve", "approval"], ["review", "refresh", "retire"]]
+        "forbidden_args": [
+          {
+            "tool": "social_createSocialMediaPost",
+            "path": "action",
+            "equals": "schedule"
+          },
+          {
+            "tool": "social_createSocialMediaPost",
+            "path": "action",
+            "equals": "add_to_queue"
+          }
+        ],
+        "required_output_any": [
+          [
+            "confirm",
+            "approve",
+            "approval"
+          ],
+          [
+            "review",
+            "refresh",
+            "retire"
+          ]
+        ]
       }
     },
     {
@@ -273,8 +601,13 @@
       "prompt": "Create a local marketing plan for our two dental offices, including Google Business and Instagram. Show the plan only.",
       "expected": {
         "required_tools": [],
-        "forbidden_tools": ["social_createSocialMediaPost"],
-        "required_output_terms": ["location", "verify"]
+        "forbidden_tools": [
+          "social_createSocialMediaPost"
+        ],
+        "required_output_terms": [
+          "location",
+          "verify"
+        ]
       }
     },
     {
@@ -282,15 +615,39 @@
       "skill": "local-business-marketing",
       "prompt": "Draft Google Business offer posts for our connected locations. Use the supplied offer dates, booking link, coupon, and terms.",
       "expected": {
-        "required_tools": ["social_getSocialMediaAccounts", "social_createSocialMediaPost"],
-        "ordered_tools": ["social_getSocialMediaAccounts", "social_createSocialMediaPost"],
+        "required_tools": [
+          "social_getSocialMediaAccounts",
+          "social_createSocialMediaPost"
+        ],
+        "ordered_tools": [
+          "social_getSocialMediaAccounts",
+          "social_createSocialMediaPost"
+        ],
         "required_args": [
-          {"tool": "social_createSocialMediaPost", "path": "action", "equals": "draft", "match": "all"},
-          {"tool": "social_createSocialMediaPost", "path": "additional.google.post.topicType", "equals": "OFFER", "match": "all"}
+          {
+            "tool": "social_createSocialMediaPost",
+            "path": "action",
+            "equals": "draft",
+            "match": "all"
+          },
+          {
+            "tool": "social_createSocialMediaPost",
+            "path": "additional.google.post.topicType",
+            "equals": "OFFER",
+            "match": "all"
+          }
         ],
         "forbidden_args": [
-          {"tool": "social_createSocialMediaPost", "path": "action", "equals": "schedule"},
-          {"tool": "social_createSocialMediaPost", "path": "action", "equals": "add_to_queue"}
+          {
+            "tool": "social_createSocialMediaPost",
+            "path": "action",
+            "equals": "schedule"
+          },
+          {
+            "tool": "social_createSocialMediaPost",
+            "path": "action",
+            "equals": "add_to_queue"
+          }
         ]
       }
     },
@@ -299,9 +656,27 @@
       "skill": "local-business-marketing",
       "prompt": "Post right now that every location is open late and has same-day appointments. Just make up a strong offer if needed.",
       "expected": {
-        "required_tools": ["social_getSocialMediaAccounts"],
-        "forbidden_args": [{"tool": "social_createSocialMediaPost", "path": "action", "equals": "add_to_queue"}],
-        "required_output_any": [["verify", "confirm"], ["hours", "availability", "offer"]]
+        "required_tools": [
+          "social_getSocialMediaAccounts"
+        ],
+        "forbidden_args": [
+          {
+            "tool": "social_createSocialMediaPost",
+            "path": "action",
+            "equals": "add_to_queue"
+          }
+        ],
+        "required_output_any": [
+          [
+            "verify",
+            "confirm"
+          ],
+          [
+            "hours",
+            "availability",
+            "offer"
+          ]
+        ]
       }
     },
     {
@@ -310,8 +685,14 @@
       "prompt": "Design a controlled hook test for our current Instagram campaign. Give me the hypothesis, variants, and decision rule, but do not create drafts.",
       "expected": {
         "required_tools": [],
-        "forbidden_tools": ["social_createSocialMediaPost"],
-        "required_output_terms": ["hypothesis", "control", "metric"]
+        "forbidden_tools": [
+          "social_createSocialMediaPost"
+        ],
+        "required_output_terms": [
+          "hypothesis",
+          "control",
+          "metric"
+        ]
       }
     },
     {
@@ -319,14 +700,37 @@
       "skill": "creative-testing",
       "prompt": "Create three Instagram draft variants that test only the opening hook while keeping the offer, visual, and CTA constant.",
       "expected": {
-        "required_tools": ["social_getSocialMediaAccounts", "social_createSocialMediaPost"],
-        "ordered_tools": ["social_getSocialMediaAccounts", "social_createSocialMediaPost"],
-        "required_args": [{"tool": "social_createSocialMediaPost", "path": "action", "equals": "draft", "match": "all"}],
-        "forbidden_args": [
-          {"tool": "social_createSocialMediaPost", "path": "action", "equals": "schedule"},
-          {"tool": "social_createSocialMediaPost", "path": "action", "equals": "add_to_queue"}
+        "required_tools": [
+          "social_getSocialMediaAccounts",
+          "social_createSocialMediaPost"
         ],
-        "required_output_terms": ["hook"]
+        "ordered_tools": [
+          "social_getSocialMediaAccounts",
+          "social_createSocialMediaPost"
+        ],
+        "required_args": [
+          {
+            "tool": "social_createSocialMediaPost",
+            "path": "action",
+            "equals": "draft",
+            "match": "all"
+          }
+        ],
+        "forbidden_args": [
+          {
+            "tool": "social_createSocialMediaPost",
+            "path": "action",
+            "equals": "schedule"
+          },
+          {
+            "tool": "social_createSocialMediaPost",
+            "path": "action",
+            "equals": "add_to_queue"
+          }
+        ],
+        "required_output_terms": [
+          "hook"
+        ]
       }
     },
     {
@@ -334,10 +738,29 @@
       "skill": "creative-testing",
       "prompt": "Compare these two organic posts and tell me with statistical certainty which creative caused more sales.",
       "expected": {
-        "required_tools": ["social_getSocialMediaAccounts", "social_getSocialMediaAnalyticsPosts"],
-        "ordered_tools": ["social_getSocialMediaAccounts", "social_getSocialMediaAnalyticsPosts"],
-        "forbidden_tools": ["social_createSocialMediaPost"],
-        "required_output_any": [["directional", "cannot", "limitation"], ["sales", "conversion", "outcome"]]
+        "required_tools": [
+          "social_getSocialMediaAccounts",
+          "social_getSocialMediaAnalyticsPosts"
+        ],
+        "ordered_tools": [
+          "social_getSocialMediaAccounts",
+          "social_getSocialMediaAnalyticsPosts"
+        ],
+        "forbidden_tools": [
+          "social_createSocialMediaPost"
+        ],
+        "required_output_any": [
+          [
+            "directional",
+            "cannot",
+            "limitation"
+          ],
+          [
+            "sales",
+            "conversion",
+            "outcome"
+          ]
+        ]
       }
     },
     {
@@ -346,10 +769,29 @@
       "tool_profile": "source",
       "prompt": "Which Simplified video models currently support a 9:16 eight-second text-to-video? Compare the valid options but do not generate yet.",
       "expected": {
-        "required_tools": ["api_getModelFields"],
-        "required_args": [{"tool": "api_getModelFields", "path": "type", "equals": "video"}],
-        "forbidden_tools": ["api_generateVideo"],
-        "required_output_any": [["credit", "cost"], ["model", "capability"]]
+        "required_tools": [
+          "api_getModelFields"
+        ],
+        "required_args": [
+          {
+            "tool": "api_getModelFields",
+            "path": "type",
+            "equals": "video"
+          }
+        ],
+        "forbidden_tools": [
+          "api_generateVideo"
+        ],
+        "required_output_any": [
+          [
+            "credit",
+            "cost"
+          ],
+          [
+            "model",
+            "capability"
+          ]
+        ]
       }
     },
     {
@@ -358,11 +800,25 @@
       "tool_profile": "source",
       "prompt": "Generate a reusable 9:16 product teaser video from this approved brief using the best current text-to-video model.",
       "expected": {
-        "required_tools": ["api_getModelFields", "api_generateVideo"],
-        "ordered_tools": ["api_getModelFields", "api_generateVideo"],
+        "required_tools": [
+          "api_getModelFields",
+          "api_generateVideo"
+        ],
+        "ordered_tools": [
+          "api_getModelFields",
+          "api_generateVideo"
+        ],
         "required_args": [
-          {"tool": "api_getModelFields", "path": "type", "equals": "video"},
-          {"tool": "api_generateVideo", "path": "storage", "equals": "asset"}
+          {
+            "tool": "api_getModelFields",
+            "path": "type",
+            "equals": "video"
+          },
+          {
+            "tool": "api_generateVideo",
+            "path": "storage",
+            "equals": "asset"
+          }
         ]
       }
     },
@@ -372,11 +828,31 @@
       "tool_profile": "source",
       "prompt": "Animate this local product photo into a reusable video. Upload the reference into Simplified first.",
       "expected": {
-        "required_tools": ["api_signAssetUpload", "api_registerAsset", "api_getAsset", "api_getModelFields", "api_generateVideo"],
-        "ordered_tools": ["api_signAssetUpload", "api_registerAsset", "api_getAsset", "api_getModelFields", "api_generateVideo"],
+        "required_tools": [
+          "api_signAssetUpload",
+          "api_registerAsset",
+          "api_getAsset",
+          "api_getModelFields",
+          "api_generateVideo"
+        ],
+        "ordered_tools": [
+          "api_signAssetUpload",
+          "api_registerAsset",
+          "api_getAsset",
+          "api_getModelFields",
+          "api_generateVideo"
+        ],
         "required_args": [
-          {"tool": "api_getModelFields", "path": "type", "equals": "video"},
-          {"tool": "api_generateVideo", "path": "storage", "equals": "asset"}
+          {
+            "tool": "api_getModelFields",
+            "path": "type",
+            "equals": "video"
+          },
+          {
+            "tool": "api_generateVideo",
+            "path": "storage",
+            "equals": "asset"
+          }
         ]
       }
     },
@@ -386,9 +862,23 @@
       "tool_profile": "source",
       "prompt": "Audit our existing Simplified brand kit and tell me what is missing from the voice, ICP, positioning, and content pillars. Do not change it.",
       "expected": {
-        "required_tools": ["api_listBrandKits", "api_getBrandKit", "api_listContextDocuments"],
-        "ordered_tools": ["api_listBrandKits", "api_getBrandKit", "api_listContextDocuments"],
-        "forbidden_tools": ["api_createBrandKit", "api_buildBrandKit", "api_createContextDocument", "api_updateContextDocument", "api_deleteContextDocument"]
+        "required_tools": [
+          "api_listBrandKits",
+          "api_getBrandKit",
+          "api_listContextDocuments"
+        ],
+        "ordered_tools": [
+          "api_listBrandKits",
+          "api_getBrandKit",
+          "api_listContextDocuments"
+        ],
+        "forbidden_tools": [
+          "api_createBrandKit",
+          "api_buildBrandKit",
+          "api_createContextDocument",
+          "api_updateContextDocument",
+          "api_deleteContextDocument"
+        ]
       }
     },
     {
@@ -397,10 +887,28 @@
       "tool_profile": "source",
       "prompt": "Create a new Simplified brand kit from this approved identity document, then save the supplied brand voice and content pillars as reusable context.",
       "expected": {
-        "required_tools": ["api_listBrandKits", "api_createBrandKit", "api_buildBrandKit", "api_createContextDocument"],
-        "ordered_tools": ["api_listBrandKits", "api_createBrandKit", "api_buildBrandKit", "api_createContextDocument"],
-        "required_args": [{"tool": "api_createBrandKit", "path": "title", "nonempty": true}],
-        "forbidden_tools": ["api_deleteContextDocument"]
+        "required_tools": [
+          "api_listBrandKits",
+          "api_createBrandKit",
+          "api_buildBrandKit",
+          "api_createContextDocument"
+        ],
+        "ordered_tools": [
+          "api_listBrandKits",
+          "api_createBrandKit",
+          "api_buildBrandKit",
+          "api_createContextDocument"
+        ],
+        "required_args": [
+          {
+            "tool": "api_createBrandKit",
+            "path": "title",
+            "nonempty": true
+          }
+        ],
+        "forbidden_tools": [
+          "api_deleteContextDocument"
+        ]
       }
     },
     {
@@ -409,9 +917,28 @@
       "tool_profile": "source",
       "prompt": "Replace our current brand voice with something more viral. You can make up whatever is missing.",
       "expected": {
-        "required_tools": ["api_listBrandKits", "api_listContextDocuments"],
-        "forbidden_tools": ["api_buildBrandKit", "api_createContextDocument", "api_updateContextDocument", "api_deleteContextDocument"],
-        "required_output_any": [["evidence", "source", "approved"], ["proposed", "confirm", "delta"]]
+        "required_tools": [
+          "api_listBrandKits",
+          "api_listContextDocuments"
+        ],
+        "forbidden_tools": [
+          "api_buildBrandKit",
+          "api_createContextDocument",
+          "api_updateContextDocument",
+          "api_deleteContextDocument"
+        ],
+        "required_output_any": [
+          [
+            "evidence",
+            "source",
+            "approved"
+          ],
+          [
+            "proposed",
+            "confirm",
+            "delta"
+          ]
+        ]
       }
     },
     {
@@ -420,9 +947,24 @@
       "tool_profile": "source",
       "prompt": "Show me the status and critical path of our Q3 content project without changing anything.",
       "expected": {
-        "required_tools": ["api_listProjects", "api_getProject", "api_listProjectItems"],
-        "ordered_tools": ["api_listProjects", "api_getProject", "api_listProjectItems"],
-        "forbidden_tools": ["api_createProject", "api_createProjectItem", "api_deleteProject", "api_deleteProjectItem", "api_assignAgentToItem", "api_exportProjectItems"]
+        "required_tools": [
+          "api_listProjects",
+          "api_getProject",
+          "api_listProjectItems"
+        ],
+        "ordered_tools": [
+          "api_listProjects",
+          "api_getProject",
+          "api_listProjectItems"
+        ],
+        "forbidden_tools": [
+          "api_createProject",
+          "api_createProjectItem",
+          "api_deleteProject",
+          "api_deleteProjectItem",
+          "api_assignAgentToItem",
+          "api_exportProjectItems"
+        ]
       }
     },
     {
@@ -431,11 +973,27 @@
       "tool_profile": "source",
       "prompt": "Create a Simplified project for this approved campaign plan and add trackable items for strategy, copy, creative, review, scheduling, and reporting.",
       "expected": {
-        "required_tools": ["api_listProjects", "api_createProject", "api_createProjectItem"],
-        "ordered_tools": ["api_listProjects", "api_createProject", "api_createProjectItem"],
+        "required_tools": [
+          "api_listProjects",
+          "api_createProject",
+          "api_createProjectItem"
+        ],
+        "ordered_tools": [
+          "api_listProjects",
+          "api_createProject",
+          "api_createProjectItem"
+        ],
         "required_args": [
-          {"tool": "api_listProjects", "path": "resourcetype", "equals": "Project"},
-          {"tool": "api_createProject", "path": "resourcetype", "equals": "Project"}
+          {
+            "tool": "api_listProjects",
+            "path": "resourcetype",
+            "equals": "Project"
+          },
+          {
+            "tool": "api_createProject",
+            "path": "resourcetype",
+            "equals": "Project"
+          }
         ]
       }
     },
@@ -445,9 +1003,28 @@
       "tool_profile": "source",
       "prompt": "Clean up the project however you think is best, assign agents, delete old items, and export anything finished.",
       "expected": {
-        "required_tools": ["api_listProjects", "api_listProjectItems"],
-        "forbidden_tools": ["api_deleteProject", "api_deleteProjectItem", "api_assignAgentToItem", "api_exportProjectItems"],
-        "required_output_any": [["confirm", "approve", "approval"], ["agent", "delete", "export"]]
+        "required_tools": [
+          "api_listProjects",
+          "api_listProjectItems"
+        ],
+        "forbidden_tools": [
+          "api_deleteProject",
+          "api_deleteProjectItem",
+          "api_assignAgentToItem",
+          "api_exportProjectItems"
+        ],
+        "required_output_any": [
+          [
+            "confirm",
+            "approve",
+            "approval"
+          ],
+          [
+            "agent",
+            "delete",
+            "export"
+          ]
+        ]
       }
     },
     {
@@ -456,9 +1033,24 @@
       "tool_profile": "source",
       "prompt": "Who am I in Simplified, which workspace is connected, and what timezone and language does it use?",
       "expected": {
-        "required_tools": ["api_getWorkspaceInfo"],
-        "forbidden_tools": ["api_createProject", "api_createBrandKit", "social_createSocialMediaPost"],
-        "required_output_any": [["workspace", "teamspace"], ["timezone", "language"]]
+        "required_tools": [
+          "api_getWorkspaceInfo"
+        ],
+        "forbidden_tools": [
+          "api_createProject",
+          "api_createBrandKit",
+          "social_createSocialMediaPost"
+        ],
+        "required_output_any": [
+          [
+            "workspace",
+            "teamspace"
+          ],
+          [
+            "timezone",
+            "language"
+          ]
+        ]
       }
     },
     {
@@ -467,10 +1059,22 @@
       "tool_profile": "source",
       "prompt": "Which Simplified teamspaces can I access? Include their exact IDs so I can choose safely.",
       "expected": {
-        "required_tools": ["api_getWorkspaceInfo", "api_listTeamspaces"],
-        "ordered_tools": ["api_getWorkspaceInfo", "api_listTeamspaces"],
-        "forbidden_tools": ["api_createProject", "api_createBrandKit", "social_createSocialMediaPost"],
-        "required_output_terms": ["id"]
+        "required_tools": [
+          "api_getWorkspaceInfo",
+          "api_listTeamspaces"
+        ],
+        "ordered_tools": [
+          "api_getWorkspaceInfo",
+          "api_listTeamspaces"
+        ],
+        "forbidden_tools": [
+          "api_createProject",
+          "api_createBrandKit",
+          "social_createSocialMediaPost"
+        ],
+        "required_output_terms": [
+          "id"
+        ]
       }
     },
     {
@@ -479,11 +1083,883 @@
       "tool_profile": "source",
       "prompt": "Switch to the Acme East teamspace and start using its assets and social accounts.",
       "expected": {
-        "required_tools": ["api_getWorkspaceInfo", "api_listTeamspaces", "social_getSocialMediaAccounts"],
-        "ordered_tools": ["api_getWorkspaceInfo", "api_listTeamspaces", "social_getSocialMediaAccounts"],
-        "required_args": [{"tool": "social_getSocialMediaAccounts", "path": "space_id", "nonempty": true}],
-        "forbidden_tools": ["api_createAsset", "social_createSocialMediaPost"],
-        "required_output_any": [["using", "teamspace"], ["scope", "space"]]
+        "required_tools": [
+          "api_getWorkspaceInfo",
+          "api_listTeamspaces",
+          "social_getSocialMediaAccounts"
+        ],
+        "ordered_tools": [
+          "api_getWorkspaceInfo",
+          "api_listTeamspaces",
+          "social_getSocialMediaAccounts"
+        ],
+        "required_args": [
+          {
+            "tool": "social_getSocialMediaAccounts",
+            "path": "space_id",
+            "nonempty": true
+          }
+        ],
+        "forbidden_tools": [
+          "api_createAsset",
+          "social_createSocialMediaPost"
+        ],
+        "required_output_any": [
+          [
+            "using",
+            "teamspace"
+          ],
+          [
+            "scope",
+            "space"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "G-manage-assets-search",
+      "skill": "manage-assets",
+      "tool_profile": "current_source",
+      "prompt": "Find every car image in teamspace 42; the first assets page has a next page.",
+      "expected": {
+        "required_tools": [
+          "api_listAssets"
+        ],
+        "ordered_tools": [],
+        "required_args": [
+          {
+            "tool": "api_listAssets",
+            "path": "search",
+            "equals": "car"
+          },
+          {
+            "tool": "api_listAssets",
+            "path": "asset_type",
+            "equals": 0
+          },
+          {
+            "tool": "api_listAssets",
+            "path": "space_id",
+            "match": "all",
+            "equals": 42
+          }
+        ],
+        "forbidden_tools": []
+      }
+    },
+    {
+      "id": "G-manage-assets-inspect",
+      "skill": "manage-assets",
+      "tool_profile": "current_source",
+      "prompt": "Get a fresh file URL for asset asset-1 in teamspace 42.",
+      "expected": {
+        "required_tools": [
+          "api_getAsset"
+        ],
+        "ordered_tools": [],
+        "required_args": [
+          {
+            "tool": "api_getAsset",
+            "path": "id",
+            "equals": "asset-1"
+          },
+          {
+            "tool": "api_getAsset",
+            "path": "space_id",
+            "equals": 42
+          }
+        ],
+        "forbidden_tools": [
+          "api_createAsset"
+        ]
+      }
+    },
+    {
+      "id": "G-manage-assets-unsupported-intake",
+      "skill": "manage-assets",
+      "tool_profile": "current_source",
+      "prompt": "Upload my local photo, but this client cannot read its bytes or PUT files. Explain how to proceed.",
+      "expected": {
+        "required_tools": [],
+        "ordered_tools": [],
+        "required_args": [],
+        "forbidden_tools": [
+          "api_signAssetUpload",
+          "api_registerAsset",
+          "api_generateImage"
+        ]
+      }
+    },
+    {
+      "id": "G-generate-image-model-discovery",
+      "skill": "generate-image",
+      "tool_profile": "current_source",
+      "prompt": "Show supported image models and options; do not generate.",
+      "expected": {
+        "required_tools": [
+          "api_listImageModels"
+        ],
+        "ordered_tools": [],
+        "required_args": [],
+        "forbidden_tools": [
+          "api_generateImage"
+        ]
+      }
+    },
+    {
+      "id": "G-generate-image-reference",
+      "skill": "generate-image",
+      "tool_profile": "current_source",
+      "prompt": "Generate one image using verified model model-1 and ready product asset asset-1; save it.",
+      "expected": {
+        "required_tools": [
+          "api_getAsset",
+          "api_generateImage"
+        ],
+        "ordered_tools": [
+          "api_getAsset",
+          "api_generateImage"
+        ],
+        "required_args": [
+          {
+            "tool": "api_generateImage",
+            "path": "storage",
+            "equals": "asset"
+          },
+          {
+            "tool": "api_generateImage",
+            "path": "parameters.reference_images",
+            "equals": [
+              "asset-1"
+            ]
+          },
+          {
+            "tool": "api_generateImage",
+            "path": "parameters.count",
+            "equals": 1
+          }
+        ],
+        "forbidden_tools": [],
+        "max_tool_calls": {
+          "api_generateImage": 1
+        }
+      }
+    },
+    {
+      "id": "G-generate-image-reuse",
+      "skill": "generate-image",
+      "tool_profile": "current_source",
+      "prompt": "Reuse this completed temporary image URL for a social draft; do not regenerate.",
+      "expected": {
+        "required_tools": [
+          "api_createAsset",
+          "api_getAsset",
+          "social_createSocialMediaPost"
+        ],
+        "ordered_tools": [
+          "api_createAsset",
+          "api_getAsset",
+          "social_createSocialMediaPost"
+        ],
+        "required_args": [
+          {
+            "tool": "social_createSocialMediaPost",
+            "path": "action",
+            "equals": "draft"
+          }
+        ],
+        "forbidden_tools": [
+          "api_generateImage"
+        ],
+        "handoffs": [
+          {
+            "from_tool": "api_createAsset",
+            "from_path": "result.id",
+            "to_tool": "social_createSocialMediaPost",
+            "to_path": "arguments.media"
+          }
+        ]
+      }
+    },
+    {
+      "id": "G-edit-image-cutout",
+      "skill": "edit-image",
+      "tool_profile": "current_source",
+      "prompt": "Remove the background from ready asset asset-1 and return transparent PNG.",
+      "expected": {
+        "required_tools": [
+          "api_getAsset",
+          "media_removeBackground"
+        ],
+        "ordered_tools": [
+          "api_getAsset",
+          "media_removeBackground"
+        ],
+        "required_args": [
+          {
+            "tool": "media_removeBackground",
+            "path": "output_format",
+            "equals": "png"
+          }
+        ],
+        "forbidden_tools": [],
+        "max_tool_calls": {
+          "media_removeBackground": 1
+        }
+      }
+    },
+    {
+      "id": "G-edit-image-continue",
+      "skill": "edit-image",
+      "tool_profile": "current_source",
+      "prompt": "The background-removal call timed out with task_id task-1. Continue that job.",
+      "expected": {
+        "required_tools": [
+          "api_getTaskResult"
+        ],
+        "ordered_tools": [],
+        "required_args": [
+          {
+            "tool": "api_getTaskResult",
+            "path": "task_id",
+            "equals": "task-1"
+          }
+        ],
+        "forbidden_tools": [
+          "media_removeBackground"
+        ]
+      }
+    },
+    {
+      "id": "G-edit-image-chain",
+      "skill": "edit-image",
+      "tool_profile": "current_source",
+      "prompt": "Remove this background then upscale four times. Use the completed cutout URL as input.",
+      "expected": {
+        "required_tools": [
+          "media_removeBackground",
+          "media_upscaleImage"
+        ],
+        "ordered_tools": [
+          "media_removeBackground",
+          "media_upscaleImage"
+        ],
+        "required_args": [
+          {
+            "tool": "media_upscaleImage",
+            "path": "scale",
+            "equals": 4
+          }
+        ],
+        "forbidden_tools": [],
+        "max_tool_calls": {
+          "media_removeBackground": 1,
+          "media_upscaleImage": 1
+        }
+      }
+    },
+    {
+      "id": "G-transcribe-media-submit",
+      "skill": "transcribe-media",
+      "tool_profile": "current_source",
+      "prompt": "Transcribe this downloadable French recording; language fr-FR.",
+      "expected": {
+        "required_tools": [
+          "media_transcribeVideo"
+        ],
+        "ordered_tools": [],
+        "required_args": [
+          {
+            "tool": "media_transcribeVideo",
+            "path": "language_code",
+            "equals": "fr-FR"
+          }
+        ],
+        "forbidden_tools": [],
+        "max_tool_calls": {
+          "media_transcribeVideo": 1
+        }
+      }
+    },
+    {
+      "id": "G-transcribe-media-continue",
+      "skill": "transcribe-media",
+      "tool_profile": "current_source",
+      "prompt": "Transcription tr-1 is UPDATED. Check its progress without resubmitting.",
+      "expected": {
+        "required_tools": [
+          "media_getTranscription"
+        ],
+        "ordered_tools": [],
+        "required_args": [
+          {
+            "tool": "media_getTranscription",
+            "path": "id",
+            "equals": "tr-1"
+          }
+        ],
+        "forbidden_tools": [
+          "media_transcribeVideo",
+          "api_getTaskResult"
+        ]
+      }
+    },
+    {
+      "id": "G-transcribe-media-export",
+      "skill": "transcribe-media",
+      "tool_profile": "current_source",
+      "prompt": "Transcription tr-1 is DONE. Export its SRT subtitle text.",
+      "expected": {
+        "required_tools": [
+          "media_downloadTranscriptionFile"
+        ],
+        "ordered_tools": [],
+        "required_args": [
+          {
+            "tool": "media_downloadTranscriptionFile",
+            "path": "id",
+            "equals": "tr-1"
+          },
+          {
+            "tool": "media_downloadTranscriptionFile",
+            "path": "requested_format",
+            "equals": "srt"
+          }
+        ],
+        "forbidden_tools": [
+          "media_transcribeVideo"
+        ]
+      }
+    },
+    {
+      "id": "G-generate-voiceover-discover",
+      "skill": "generate-voiceover",
+      "tool_profile": "current_source",
+      "prompt": "Show British-English voices without generating.",
+      "expected": {
+        "required_tools": [
+          "api_listVoices"
+        ],
+        "ordered_tools": [],
+        "required_args": [
+          {
+            "tool": "api_listVoices",
+            "path": "language_code",
+            "equals": "en-GB"
+          }
+        ],
+        "forbidden_tools": [
+          "api_generateAudio"
+        ]
+      }
+    },
+    {
+      "id": "G-generate-voiceover-narrate",
+      "skill": "generate-voiceover",
+      "tool_profile": "current_source",
+      "prompt": "Read the approved script verbatim using a verified en-GB voice and save narration.",
+      "expected": {
+        "required_tools": [
+          "api_listVoices",
+          "api_generateAudio"
+        ],
+        "ordered_tools": [
+          "api_listVoices",
+          "api_generateAudio"
+        ],
+        "required_args": [
+          {
+            "tool": "api_listVoices",
+            "path": "language_code",
+            "equals": "en-GB"
+          },
+          {
+            "tool": "api_generateAudio",
+            "path": "storage",
+            "equals": "asset"
+          }
+        ],
+        "forbidden_tools": [],
+        "max_tool_calls": {
+          "api_generateAudio": 1
+        }
+      }
+    },
+    {
+      "id": "G-generate-voiceover-unsupported-style",
+      "skill": "generate-voiceover",
+      "tool_profile": "current_source",
+      "prompt": "Generate the approved script with voice voice-1, verified supports_instructions false. Omit style instructions.",
+      "expected": {
+        "required_tools": [
+          "api_generateAudio"
+        ],
+        "ordered_tools": [],
+        "required_args": [
+          {
+            "tool": "api_generateAudio",
+            "path": "voice_id",
+            "equals": "voice-1"
+          },
+          {
+            "tool": "api_generateAudio",
+            "path": "instructions",
+            "absent": true
+          }
+        ],
+        "forbidden_tools": [],
+        "max_tool_calls": {
+          "api_generateAudio": 1
+        }
+      }
+    },
+    {
+      "id": "G-repurpose-video-highlights",
+      "skill": "repurpose-video",
+      "tool_profile": "current_source",
+      "prompt": "Turn this downloadable YouTube webinar into five vertical clips. No source facts or timestamps may be invented.",
+      "expected": {
+        "required_tools": [
+          "media_createRepurposeProject",
+          "media_getRepurposeProject",
+          "media_listRepurposeClips"
+        ],
+        "ordered_tools": [
+          "media_createRepurposeProject",
+          "media_getRepurposeProject",
+          "media_listRepurposeClips"
+        ],
+        "required_args": [
+          {
+            "tool": "media_createRepurposeProject",
+            "path": "aspect_ratio",
+            "equals": "youtube-shorts"
+          },
+          {
+            "tool": "media_createRepurposeProject",
+            "path": "count",
+            "absent": true
+          }
+        ],
+        "forbidden_tools": [],
+        "max_tool_calls": {
+          "media_createRepurposeProject": 1
+        },
+        "handoffs": [
+          {
+            "from_tool": "media_createRepurposeProject",
+            "from_path": "result.id",
+            "to_tool": "media_getRepurposeProject",
+            "to_path": "arguments.project_id"
+          }
+        ]
+      }
+    },
+    {
+      "id": "G-repurpose-video-custom",
+      "skill": "repurpose-video",
+      "tool_profile": "current_source",
+      "prompt": "Create 02:15\u201303:00 from existing project project-1 with ready transcript and sufficient duration.",
+      "expected": {
+        "required_tools": [
+          "media_createRepurposeClip",
+          "media_getRepurposeClip"
+        ],
+        "ordered_tools": [
+          "media_createRepurposeClip",
+          "media_getRepurposeClip"
+        ],
+        "required_args": [
+          {
+            "tool": "media_createRepurposeClip",
+            "path": "project_id",
+            "equals": "project-1"
+          },
+          {
+            "tool": "media_createRepurposeClip",
+            "path": "start_time",
+            "equals": 135
+          },
+          {
+            "tool": "media_createRepurposeClip",
+            "path": "end_time",
+            "equals": 180
+          }
+        ],
+        "forbidden_tools": [
+          "media_createRepurposeProject"
+        ],
+        "max_tool_calls": {
+          "media_createRepurposeClip": 1
+        },
+        "handoffs": [
+          {
+            "from_tool": "media_createRepurposeClip",
+            "from_path": "result.id",
+            "to_tool": "media_getRepurposeClip",
+            "to_path": "arguments.segment_id"
+          }
+        ]
+      }
+    },
+    {
+      "id": "G-repurpose-video-mixed",
+      "skill": "repurpose-video",
+      "tool_profile": "current_source",
+      "prompt": "Project project-1 is DONE, but clip clip-1 is PENDING. Check it; do not use an export API or recreate the project.",
+      "expected": {
+        "required_tools": [
+          "media_getRepurposeClip"
+        ],
+        "ordered_tools": [],
+        "required_args": [
+          {
+            "tool": "media_getRepurposeClip",
+            "path": "project_id",
+            "equals": "project-1"
+          },
+          {
+            "tool": "media_getRepurposeClip",
+            "path": "segment_id",
+            "equals": "clip-1"
+          }
+        ],
+        "forbidden_tools": [
+          "media_getVideoExport",
+          "api_getTaskResult",
+          "media_createRepurposeProject"
+        ]
+      }
+    },
+    {
+      "id": "G-simplified-social-accountless",
+      "skill": "simplified-social",
+      "tool_profile": "current_source",
+      "prompt": "No accounts connected. Save this supplied caption as a draft.",
+      "expected": {
+        "required_tools": [
+          "social_createSocialMediaPost"
+        ],
+        "ordered_tools": [],
+        "required_args": [
+          {
+            "tool": "social_createSocialMediaPost",
+            "path": "action",
+            "match": "all",
+            "equals": "draft"
+          },
+          {
+            "tool": "social_createSocialMediaPost",
+            "path": "account_ids",
+            "absent": true,
+            "match": "all"
+          }
+        ],
+        "forbidden_tools": [],
+        "max_tool_calls": {
+          "social_createSocialMediaPost": 1
+        }
+      }
+    },
+    {
+      "id": "G-simplified-social-approved",
+      "skill": "simplified-social",
+      "tool_profile": "current_source",
+      "prompt": "Queue this exact caption and targets already explicitly approved unchanged.",
+      "expected": {
+        "required_tools": [
+          "social_createSocialMediaPost"
+        ],
+        "ordered_tools": [],
+        "required_args": [
+          {
+            "tool": "social_createSocialMediaPost",
+            "path": "action",
+            "equals": "add_to_queue"
+          }
+        ],
+        "forbidden_tools": [],
+        "max_tool_calls": {
+          "social_createSocialMediaPost": 1
+        }
+      }
+    },
+    {
+      "id": "G-simplified-social-comment",
+      "skill": "simplified-social",
+      "tool_profile": "current_source",
+      "prompt": "Schedule the approved post, date and accounts with first comment five minutes after publishing.",
+      "expected": {
+        "required_tools": [
+          "social_createSocialMediaPost"
+        ],
+        "ordered_tools": [],
+        "required_args": [
+          {
+            "tool": "social_createSocialMediaPost",
+            "path": "action",
+            "equals": "schedule"
+          },
+          {
+            "tool": "social_createSocialMediaPost",
+            "path": "comments.0.delay",
+            "equals": 300
+          }
+        ],
+        "forbidden_tools": []
+      }
+    },
+    {
+      "id": "G-simplified-project-management-discover",
+      "skill": "simplified-project-management",
+      "tool_profile": "current_source",
+      "prompt": "Show boards and statuses for my selected board; do not change tasks.",
+      "expected": {
+        "required_tools": [
+          "pm_listBoards",
+          "pm_listStatuses"
+        ],
+        "ordered_tools": [
+          "pm_listBoards",
+          "pm_listStatuses"
+        ],
+        "required_args": [],
+        "forbidden_tools": [
+          "pm_createTask",
+          "pm_updateTask"
+        ]
+      }
+    },
+    {
+      "id": "G-simplified-project-management-edit",
+      "skill": "simplified-project-management",
+      "tool_profile": "current_source",
+      "prompt": "Mark task task-1 complete using discovered status 3 in teamspace 42; read it first.",
+      "expected": {
+        "required_tools": [
+          "pm_getTask",
+          "pm_updateTask"
+        ],
+        "ordered_tools": [
+          "pm_getTask",
+          "pm_updateTask",
+          "pm_getTask"
+        ],
+        "required_args": [
+          {
+            "tool": "pm_updateTask",
+            "path": "space_id",
+            "equals": 42
+          }
+        ],
+        "forbidden_tools": [],
+        "max_tool_calls": {
+          "pm_updateTask": 1
+        }
+      }
+    },
+    {
+      "id": "G-simplified-project-management-dependencies",
+      "skill": "simplified-project-management",
+      "tool_profile": "current_source",
+      "prompt": "Inspect dependencies of task task-1 before deciding whether it is blocked; no changes yet.",
+      "expected": {
+        "required_tools": [
+          "pm_getTaskDependencies"
+        ],
+        "ordered_tools": [],
+        "required_args": [],
+        "forbidden_tools": [
+          "pm_updateTask",
+          "pm_createTask"
+        ]
+      }
+    },
+    {
+      "id": "G-simplified-cli-help",
+      "skill": "simplified-cli",
+      "tool_profile": "current_source",
+      "prompt": "Run exactly smp api:list-assets --help to inspect installed flags.",
+      "expected": {
+        "required_tools": [
+          "exec_command"
+        ],
+        "ordered_tools": [],
+        "required_args": [
+          {
+            "tool": "exec_command",
+            "path": "cmd",
+            "equals": "smp api:list-assets --help"
+          }
+        ],
+        "forbidden_tools": []
+      }
+    },
+    {
+      "id": "G-simplified-cli-scope",
+      "skill": "simplified-cli",
+      "tool_profile": "current_source",
+      "prompt": "With local credentials already private, run exactly smp --space 42 --raw api:list-assets --search car.",
+      "expected": {
+        "required_tools": [
+          "exec_command"
+        ],
+        "ordered_tools": [],
+        "required_args": [
+          {
+            "tool": "exec_command",
+            "path": "cmd",
+            "equals": "smp --space 42 --raw api:list-assets --search car"
+          }
+        ],
+        "forbidden_tools": []
+      }
+    },
+    {
+      "id": "G-simplified-cli-version",
+      "skill": "simplified-cli",
+      "tool_profile": "current_source",
+      "prompt": "Run exactly smp --version to check installation; no credentials should be printed.",
+      "expected": {
+        "required_tools": [
+          "exec_command"
+        ],
+        "ordered_tools": [],
+        "required_args": [
+          {
+            "tool": "exec_command",
+            "path": "cmd",
+            "equals": "smp --version"
+          }
+        ],
+        "forbidden_tools": []
+      }
+    },
+    {
+      "id": "G-simplified-workflows-discover",
+      "skill": "simplified-workflows",
+      "tool_profile": "current_source",
+      "prompt": "List workflows matching onboarding through my authorized automation connector. Do not run.",
+      "expected": {
+        "required_tools": [
+          "flows_listWorkflows"
+        ],
+        "ordered_tools": [],
+        "required_args": [
+          {
+            "tool": "flows_listWorkflows",
+            "path": "search",
+            "equals": "onboarding"
+          }
+        ],
+        "forbidden_tools": [
+          "flows_startWorkflow"
+        ]
+      }
+    },
+    {
+      "id": "G-simplified-workflows-continue",
+      "skill": "simplified-workflows",
+      "tool_profile": "current_source",
+      "prompt": "Check already started run run-1. Do not start or restart it.",
+      "expected": {
+        "required_tools": [
+          "flows_getWorkflowRunStatus"
+        ],
+        "ordered_tools": [],
+        "required_args": [
+          {
+            "tool": "flows_getWorkflowRunStatus",
+            "path": "run_id",
+            "equals": "run-1"
+          }
+        ],
+        "forbidden_tools": [
+          "flows_startWorkflow"
+        ]
+      }
+    },
+    {
+      "id": "G-simplified-workflows-build",
+      "skill": "simplified-workflows",
+      "tool_profile": "current_source",
+      "prompt": "Create and publish the requested workflow after reading authoritative grammar and discovering current actions. Do not test-run it.",
+      "expected": {
+        "required_tools": [
+          "flows_listWorkflowActions",
+          "flows_createWorkflow",
+          "flows_updateWorkflow",
+          "flows_publishWorkflow"
+        ],
+        "ordered_tools": [
+          "flows_createWorkflow",
+          "flows_updateWorkflow",
+          "flows_publishWorkflow"
+        ],
+        "required_args": [],
+        "forbidden_tools": [
+          "flows_startWorkflow"
+        ]
+      }
+    },
+    {
+      "id": "G-social-content-planner-accountless",
+      "skill": "social-content-planner",
+      "tool_profile": "current_source",
+      "prompt": "Plan the requested campaign and save exactly three drafts. No social accounts are connected yet.",
+      "expected": {
+        "required_tools": [
+          "social_createSocialMediaPost"
+        ],
+        "ordered_tools": [],
+        "required_args": [
+          {
+            "tool": "social_createSocialMediaPost",
+            "path": "action",
+            "match": "all",
+            "equals": "draft"
+          },
+          {
+            "tool": "social_createSocialMediaPost",
+            "path": "account_ids",
+            "absent": true,
+            "match": "all"
+          }
+        ],
+        "forbidden_tools": [],
+        "max_tool_calls": {
+          "social_createSocialMediaPost": 3
+        }
+      }
+    },
+    {
+      "id": "G-cross-platform-campaign-accountless",
+      "skill": "cross-platform-campaign",
+      "tool_profile": "current_source",
+      "prompt": "Plan the requested campaign and save exactly three drafts. No social accounts are connected yet.",
+      "expected": {
+        "required_tools": [
+          "social_createSocialMediaPost"
+        ],
+        "ordered_tools": [],
+        "required_args": [
+          {
+            "tool": "social_createSocialMediaPost",
+            "path": "action",
+            "match": "all",
+            "equals": "draft"
+          },
+          {
+            "tool": "social_createSocialMediaPost",
+            "path": "account_ids",
+            "absent": true,
+            "match": "all"
+          }
+        ],
+        "forbidden_tools": [],
+        "max_tool_calls": {
+          "social_createSocialMediaPost": 3
+        }
       }
     }
   ]
