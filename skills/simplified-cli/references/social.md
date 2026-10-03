@@ -1,129 +1,41 @@
-# `smp social` — Social Media Reference
+# `smp social` reference
 
-Connected accounts, posts (publish/draft/schedule), tags, and analytics.
+Use [simplified-social](../../simplified-social/SKILL.md) and its platform/analytics references for current behavioral rules. Use command help for exact installed flags.
 
-## Capabilities at a Glance
-
-- **Accounts** — `get-social-media-accounts`
-- **Posts** — create, update, delete (published)
-- **Drafts** — get, update, delete (unpublished)
-- **Tags** — list, create
-- **Analytics** — range (time series), posts, aggregated, audience
-
-## Posting
+## Accounts and drafts
 
 ```bash
-# 1. Find the connected accounts
-smp social get-social-media-accounts
-
-# 2. Publish, schedule, or draft a post
-smp social create-social-media-post \
-  --message "Big launch tomorrow!" \
-  --account-ids '["<account_uuid>"]' \
-  --action publish                          # publish | schedule | draft
+smp social:get-social-media-accounts
+smp social:create-social-media-post --message "Product launch preview" --action draft --account-ids '["<resolved-account-id>"]' --media '["<ready-asset-uuid>"]'
+smp social:update-social-media-draft --draft-id <draft-id> --message "Updated approved copy"
+smp social:create-social-media-post --message "An accountless draft" --action draft
 ```
 
-### Action types
+Post `account_ids` entries are strings under the current request schema. Use the exact discovered account identifier, serialized as a string; do not invent an account UUID. Asset UUIDs are a different resource. Drafts can be accountless; publication cannot.
 
-- `publish` — go out immediately
-- `schedule` — publish at `--date "YYYY-MM-DD HH:MM"`
-- `draft` — save as a draft (no publish)
+Actions are `draft`, `schedule`, and `add_to_queue`; there is no `publish` action. Scheduling/queueing requires concrete authorization and connected accounts. Read the current queue and timezone contract rather than promise immediate timing from the action name.
 
-### Media
+## Lifecycle identifiers
 
-`--media` accepts a JSON array. Each entry is either:
-- A **Simplified asset UUID** (resolved server-side to a fresh permanent URL).
-  Use this when the media was produced by `smp api generate-image` with
-  `storage: "asset"`.
-- A **fully qualified URL** (passed through as-is). Use only for media at a
-  permanent public location.
+Draft updates take `draft_id`. Published deletion uses `group_id` and/or `post_schedule_id` according to the requested target; draft deletion accepts `group_id` or `draft_ids`. Inspect returned identifiers instead of assuming every operation takes a common post UUID.
 
 ```bash
-smp social create-social-media-post \
-  --message "..." \
-  --account-ids '["<account>"]' \
-  --action publish \
-  --media '["<asset_uuid>"]'
+smp social:delete-social-media-post --help
+smp social:delete-social-media-draft --help
+smp social:update-social-media-post --help
 ```
 
-### Scheduling
+`media` accepts asset UUIDs, supported URLs, or URL/thumbnail objects. Prefer permanent asset UUIDs for Simplified files. Draft update supports copy, timing, media, and tags; it does not change destination accounts or platform-specific settings.
+
+## Reviews and analytics
 
 ```bash
-smp social create-social-media-post \
-  --message "Live in 24h" \
-  --account-ids '["<account>"]' \
-  --action schedule \
-  --date "2026-06-15 09:00"
+smp social:create-social-media-review-bundle --help
+smp social:add-drafts-to-social-media-review-bundle --help
+smp social:get-social-media-analytics-range --help
+smp social:get-social-media-analytics-aggregated --help
+smp social:get-social-media-analytics-posts --help
+smp social:get-social-media-analytics-audience --help
 ```
 
-### Tags
-
-Tags are user-facing labels used to filter the Drafts/Publishing views.
-
-```bash
-smp social list-social-media-tags
-smp social create-social-media-tag --name "Q2-launch"
-
-smp social create-social-media-post \
-  --message "..." \
-  --account-ids '["<account>"]' \
-  --action draft \
-  --tags '["<tag_id>"]'
-```
-
-## Updating and Deleting
-
-```bash
-# Published post
-smp social update-social-media-post --post-id <uuid> --message "..."
-smp social delete-social-media-post --post-id <uuid>
-
-# Draft (addressed by group id, not post id)
-smp social update-social-media-draft --group-id <uuid> --message "..."
-smp social delete-social-media-draft --group-id <uuid>
-```
-
-## Reading
-
-```bash
-smp social get-social-media-posts                # published
-smp social get-social-media-drafts               # unpublished
-```
-
-## Analytics
-
-```bash
-# Aggregated metrics (followers, engagement, reach)
-smp social get-social-media-analytics-aggregated --account-id <id>
-
-# Per-post breakdown
-smp social get-social-media-analytics-posts --account-id <id>
-
-# Time series
-smp social get-social-media-analytics-range \
-  --account-id <id> \
-  --start-date "2026-04-01" \
-  --end-date "2026-05-01"
-
-# Audience demographics (follower breakdown by age/gender/geo)
-smp social get-social-media-analytics-audience --account-id <id>
-```
-
-## Gotchas
-
-**Drafts are addressed by `group-id`, not `post-id`.** Use
-`update-social-media-draft` / `delete-social-media-draft` for drafts, and
-`update-social-media-post` / `delete-social-media-post` for published posts.
-
-**`--account-ids` is a JSON array** — `'["<uuid>"]'`, not `<uuid>`.
-
-**Media UUIDs vs URLs.** Prefer asset UUIDs over URLs whenever the media is in
-Simplified — the server resolves to a fresh signed URL at publish time,
-avoiding link-rot.
-
-## Discovering Commands
-
-```bash
-smp social --help
-smp social <command> --help
-```
+Range uses `date_from`, `date_to`, and required `metrics`, not `start_date`/`end_date`. Timezone parameters vary by operation; pass only fields its schema exposes. Use comparable completed-day windows and disclose partial current-day data. Follow pagination and distinguish unavailable metrics from zero.

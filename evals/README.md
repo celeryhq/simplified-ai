@@ -16,8 +16,7 @@ contributors. Safe to ignore if you're just installing the skills.
 - [hosted-tool-inventory.json](hosted-tool-inventory.json) — authenticated snapshot
   of the live hosted tool names and critical input schemas.
 - [source-profile-tool-inventory.json](source-profile-tool-inventory.json) — generated
-  inventory of the compact local `simplified-apikit` `mcp` profile. The hosted
-  deployment currently exposes a broader 105-tool allowlist.
+  historical inventory of the older local `simplified-apikit` `mcp` profile. It does not represent today's source profiles or hosted deployment.
 - [run_skill_evals.py](run_skill_evals.py) — zero-credential contract validator and
   optional agent-trace grader for routing, tool order, arguments, handoffs, and safety.
 - [fixtures/sample-skill-traces.json](fixtures/sample-skill-traces.json) — example
@@ -43,7 +42,8 @@ contributors. Safe to ignore if you're just installing the skills.
 
 The contract suite has no third-party dependencies, credentials, network calls, or
 live mutations. It also rejects eval cases that reference tools absent from the
-verified hosted inventory:
+selected inventory snapshot. A historical snapshot can pass these checks while
+missing new tools or carrying outdated schemas.
 
 ```bash
 python3 evals/run_skill_evals.py
@@ -82,8 +82,9 @@ Without `--allow-missing`, every catalog case must have a trace. The grader chec
 - required safety language in the final output.
 
 ## Prerequisites
-- An OAuth access token (`SMP_ACCESS_TOKEN`). Tokens last ~1 hour.
-- AI credits (only for image cases, run with `--with-image`).
+- An OAuth access token (`SMP_ACCESS_TOKEN`), configured privately; refresh it when expired.
+- The apikit Python environment, which supplies `fastmcp`.
+- AI credits only for opt-in image cases; select a current model explicitly.
 - A connected social account in the workspace (only for the analytics case; the
   draft cases use accountless drafts and need no connected account).
 
@@ -126,10 +127,36 @@ curl -s -X POST "https://api.simplified.com/api/o/token/" \
 
 ```bash
 export SMP_ACCESS_TOKEN=<access_token>
-python3 evals/run_evals.py              # read-only + draft cases (no credit spend)
-python3 evals/run_evals.py --with-image # also image-gen + cross-skill (consume credits)
-python3 evals/run_evals.py --keep-drafts
+/path/to/apikit/.venv/bin/python evals/run_evals.py # read-only MCP checks
+/path/to/apikit/.venv/bin/python evals/run_evals.py --with-drafts # creates/cleans accountless drafts
+/path/to/apikit/.venv/bin/python evals/run_evals.py --with-image --model <current-model-id> --with-drafts # spends credits, retains generated asset
+/path/to/apikit/.venv/bin/python evals/run_evals.py --with-drafts --keep-drafts
 ```
 
-Exit code is non-zero if any non-skipped case fails. Image cases default to
-`flux.flux-schnell` (8 credits); override with `SMP_EVAL_MODEL`.
+The harness calls canonical MCP tools at `https://apikit.simplified.com/mcp`, including middleware and validation. Set `SMP_MCP_URL` for an explicitly chosen environment and `--space-id` only after resolving the intended teamspace. It never schedules or queues posts. There is no fixed image model or credit estimate: choose `--model` from the live catalog and review its current pricing. `--with-image` retains the generated asset. Draft cleanup uses only returned typed draft/group IDs and fails visibly if cleanup cannot be verified.
+
+Exit code is non-zero if any run case fails. Skipped cases do not establish success. The harness covers C1/C3/C4/C5/C6 response contracts; C2 text rendering and composition remain a manual visual review.
+
+Run harness regressions without credentials or network:
+
+```bash
+python3 -m unittest discover -s evals -p test_run_evals.py
+```
+
+## Asset and generation documentation review
+
+See [media scenarios](media-scenarios.md) for the added asset/generation/client checks. The October 2026 documentation review compares local API contracts and read-only agent scenario responses. It does not replace authenticated live testing or prove that a hosted tool is deployed.
+
+The current `run_evals.py` uses MCP rather than the legacy raw image route. Recorded older golden outputs remain historical and do not become evidence for the new harness. The new regression tests use simulated MCP responses; authenticated live mutation tests must be reported separately.
+
+## Full source audit
+
+All skills and references are covered in [the full audit](../docs/FULL-AUDIT-2026-10-02.md). Additional realistic scenarios are in [marketer cases](marketer-audit-scenarios.md), [social/PM cases](social-pm-audit-scenarios.md), and [brand/projects/workflow cases](brand-projects-workflow-audit-scenarios.md).
+
+Run the source checker using the Python environment that has apikit dependencies installed:
+
+```bash
+/path/to/simplified-apikit/.venv/bin/python evals/check_source_contracts.py --apikit /path/to/simplified-apikit
+```
+
+It compares canonical tool names and literal smp command names/options/required fields/top-level enums against that checkout, without dispatching API calls. It does not validate arbitrary prose, all nested payload semantics, deployment availability, or live behavior. `--root` can point it at another skills tree. Use generated schemas and realistic traces to verify those remaining dimensions.

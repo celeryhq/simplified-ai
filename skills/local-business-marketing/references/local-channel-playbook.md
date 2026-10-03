@@ -36,3 +36,7 @@ Select one primary action per post: call, book, order, get directions, visit, re
 - Working CTA destination
 - Applicable disclaimer or eligibility rule
 - Media matches the actual location, product, or service
+
+## Scoped production
+
+Resolve the correct location account inside the selected workspace/teamspace and carry its `space_id` into related calls. Use `manage-assets` for existing local media and attachment transfer capability checks. A draft can describe an unproduced asset requirement, but must not be presented as ready to publish until required media and operational facts are verified.

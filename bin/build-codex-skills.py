@@ -100,6 +100,14 @@ class CodexSkillBundle:
         ]
 
 
+def display_path(path: Path) -> str:
+    """Keep repo paths compact while supporting external output directories."""
+    try:
+        return str(path.relative_to(ROOT))
+    except ValueError:
+        return str(path)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -165,12 +173,12 @@ def main() -> int:
         "Excluded:\n"
         + "".join(f"  {name}: {reason}\n" for name, reason in sorted(EXCLUDED.items()))
         + "\nUpload one of:\n"
-        f"  {bundle.relative_to(ROOT)}         all skills in one zip\n"
-        f"  {per_skill.relative_to(ROOT)}/<skill>.zip   one skill at a time\n"
-        f"  {tree.relative_to(ROOT)}/          drop as a folder\n"
+        f"  {display_path(bundle)}         all skills in one zip\n"
+        f"  {display_path(per_skill)}/<skill>.zip   one skill at a time\n"
+        f"  {display_path(tree)}/          drop as a folder\n"
     )
 
-    print(f"\nWrote {len(selected)} skills to {args.out.relative_to(ROOT)}/")
+    print(f"\nWrote {len(selected)} skills to {display_path(args.out)}/")
     print(f"  simplified-ai-skills.zip   all {len(selected)} in one zip")
     print(f"  per-skill/<skill>.zip      {len(selected)} individual zips")
     print("  skills/                    plain folder")

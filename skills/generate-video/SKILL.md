@@ -1,42 +1,56 @@
 ---
 name: generate-video
-description: Generate AI videos with Simplified from text, reference images, first and last frames, multiple images, or source video. Use when the user asks to create an AI video, product teaser, social clip, campaign motion asset, image-to-video animation, first/last-frame transition, or reusable generated video asset, or asks which Simplified video model supports a particular format, duration, resolution, or capability.
+description: Use when the user asks Simplified to generate an AI video, animate an image, create a product teaser, guide motion with several images, make a first/last-frame transition, transform a source video, or check supported video models, duration, resolution, or audio options.
 ---
 
 # Generate Video
 
-Create a production-appropriate video by discovering the live model contract, generating with valid parameters, and returning a reusable result.
-
-## Guardrails
-
-- Video generation spends credits. Proceed when generation is explicit; confirm before spending when the user is exploring options or has not approved generation.
-- Call `api_getModelFields` before generation. Never rely on a memorized model list, price, duration, aspect ratio, or parameter schema.
-- Use only parameters returned for the selected model and capability.
-- File-typed parameters take permanent Simplified asset UUIDs, not local paths, signed URLs, or arbitrary remote URLs.
-- Use `storage: "asset"` when the video will be posted, reused, or retained. Use `transient` only for an explicitly temporary result.
-- Do not treat the submission `task_id` as render completion. Follow the variation status contract in [references/models-and-polling.md](references/models-and-polling.md).
-- Show returned URLs as clickable links; never embed them.
+Create one clear motion asset using a compatible model, ready workspace references, and the current tool's nested parameters.
 
 ## Workflow
 
-1. Define the job: audience, objective, placement, aspect ratio, duration, visual subject, action, camera language, pacing, brand constraints, references, audio needs, and required delivery format. Infer common social dimensions only when the requested placement makes them unambiguous.
-2. Call `api_getModelFields` with `type: "video"` and no model ID to discover current choices. Shortlist by supported capability, quality, speed, estimated time, and credit cost—not model fame alone.
-3. Call `api_getModelFields` again with the selected `model_id` and capability to retrieve exact required fields, enums, defaults, and file-field expectations.
-4. For image-to-video, multiple-image, or first/last-frame work, ensure every reference is a permanent asset UUID. Use the Simplified signed-upload asset workflow for user-supplied local files.
-5. Write a motion prompt that describes subject, action over time, environment, camera behavior, composition, lighting, pacing, and exclusions. Avoid stacking contradictory movements or scene changes into a short clip.
-6. Show the chosen model, capability, duration, format, credit information when available, storage mode, and prompt before generation when cost or creative direction remains ambiguous.
-7. Call `api_generateVideo` with the exact nested `parameters` contract and the chosen storage mode.
-8. If the call returns before terminal completion, preserve both returned IDs and call `api_getVideoVariation` until `job_status` is `DONE` or `FAILED`. Use a reasonable interval; do not busy-loop.
-9. On success, report the reusable asset UUID, rendered video link, thumbnail link when available, model, format, and any material limitations. On failure, surface the provider error and suggest one targeted correction.
+1. Resolve scope with `simplified-workspace` when a workspace/teamspace is named or uncertain. Carry `space_id` into every related call.
+2. Define the subject, action, placement, aspect ratio, duration, camera behavior, and audio needs. Infer ordinary choices from the user's brief; ask only for missing constraints that change the result or cost.
+3. Discover current models with `api_listVideoModels` or `api_getModelFields(type: "video")`, depending on the exposed tools. Inspect `api_getVideoModelFields` or the available model-fields tool for model-specific durations, resolutions, and capabilities. Do not guess model IDs, costs, or supported values.
+4. Use `manage-assets` to find/import/upload references and check readiness with `api_getAsset`. Every video input slot takes a Simplified asset UUID from the same workspace, not a local path or remote URL.
+5. Choose `storage: "asset"` for a reusable video. Generation spends credits; proceed for an explicit request, and clarify material ambiguity in scope/cost before submitting.
+6. Call `api_generateVideo` once. Current apikit waits for the rendered result; wait for this call before using any continuation tool.
+7. Inspect the actual terminal status and return the rendered video link plus its real asset ID when present. Handle pending/timeout/older deployments as described in [references/models-and-polling.md](references/models-and-polling.md).
 
-## Creative Standard
+## Current input contract
 
-- Design one clear visual beat per short clip. A six-second asset needs a readable action, not a miniature screenplay.
-- Match the first frame and opening motion to the social hook; assume many viewers begin muted unless generated audio is central to the concept.
-- Preserve product geometry, logos, packaging, people, and claims when references are supplied. Flag visible inconsistencies instead of presenting them as final.
-- For paid or conversion creative, leave intentional visual space for on-screen copy and CTA overlays.
-- Treat AI-generated people, testimonials, product behavior, and locations as synthetic; never imply documentary proof.
+Top-level: `model`, `parameters`, and chosen `storage`; optional `capability` and `space_id`. All generation controls belong inside `parameters`.
 
-## Output
+| Mode | Nested input |
+|---|---|
+| Text-to-video | `prompt` |
+| Animate one image | `image_url: "<asset UUID>"` and optional motion prompt |
+| Multiple image guidance | `image_urls: ["<asset UUID>", "<asset UUID>"]` |
+| First/last-frame transition | `first_frame_url` and `last_frame_url`, both asset UUIDs |
+| Source video transformation | `video_url: "<video asset UUID>"` |
+| Supported lipsync/audio modes | `audio_url` or `reference_audio_urls`, containing audio asset UUIDs |
 
-Lead with the creative choice and generation status. Then provide the permanent asset ID, result links, intended placement, model/capability, and next useful action such as drafting a post or producing a controlled variant.
+Despite `_url` in the names, these slots take **asset UUIDs**. Use the same public slot names across models. Choose only controls the selected model supports, such as `duration`, `resolution`, `aspect_ratio`, or `generate_audio`. Image-driven modes may derive their ratio from the reference; do not force an unsupported ratio. Omit `capability` to let the current tool infer it from inputs, or use an explicitly supported mode.
+
+```json
+{
+  "model": "<discovered image-to-video model ID>",
+  "storage": "asset",
+  "parameters": {
+    "image_url": "<ready image asset UUID>",
+    "prompt": "A slow push toward the product, soft light moving across its packaging"
+  }
+}
+```
+
+Replace placeholders before calling. Do not assume every model supports every slot, duration, or audio option.
+
+## Creative quality
+
+Use one readable visual beat for a short clip. Preserve product geometry, packaging, logos, and identity in references; avoid contradictory camera moves. Leave space for overlays when needed. If the client can inspect the output, check it; otherwise state that visual quality has not been inspected. Synthetic people/scenes are not documentary evidence.
+
+## Handoff
+
+Use a clickable video link; preserve any thumbnail link and permanent asset UUID. Signed URLs can expire. `default` gallery storage is not a guarantee of a standalone reusable asset; `transient` may supply only a temporary URL. If no asset ID exists and the user wants reuse, import the downloadable output using `api_createAsset`. Never invent an asset ID from an art or variation ID.
+
+Pass confirmed assets to `simplified-social` for drafts when requested. Generating a video does not authorize publishing. Report failures directly and avoid duplicate paid submissions after a timeout.

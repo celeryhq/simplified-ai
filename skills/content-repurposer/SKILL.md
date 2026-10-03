@@ -16,9 +16,13 @@ Extract the strongest ideas from supplied source material and reshape them for t
 - Stop on MCP authorization failure or when required accounts are not connected.
 - Present returned URLs as links, never as embedded media.
 
+## Workspace and handoff
+
+Before connected operations, use `simplified-workspace` when the client/workspace/teamspace is named or uncertain. Resolve the exact numeric teamspace and carry its `space_id` on every related account, analytics, asset, generation, draft, tag, review, and continuation call. Re-list scoped resources after switching clients; stop on access failures rather than falling back to another space. Pass the resolved context to every delegated skill.
+
 ## Workflow
 
-1. Read the complete source material available to the user. If only a link is provided, retrieve it with an available browsing or connector tool before writing; do not guess its contents.
+1. Read the complete source material available to the user. If only a link is provided, retrieve it with an available browsing or connector tool before writing; do not guess its contents. If retrieval, transcription, or attachment access is unavailable, state which material was actually read and request the missing text/transcript; do not imply a complete review.
 2. Build a source ledger: central thesis, useful facts, proof points, quotes that may be paraphrased, stories, objections, CTA, and prohibited or unsupported claims.
 3. Identify reusable angles such as insight, checklist, contrarian point, customer proof, behind-the-scenes detail, FAQ, short tip, and offer.
 4. Select an output sequence that matches the source depth. Prefer fewer distinct posts over padded variations.
@@ -28,7 +32,7 @@ Extract the strongest ideas from supplied source material and reshape them for t
 8. If new supporting visuals are explicitly requested, use `$generate-image` with `storage: "asset"` and pass each returned `asset_id` into social `media`.
    If the user supplies a local visual, follow `$simplified-social` through
    signed upload and `api_registerAsset`, then reuse the returned UUID.
-9. Wait for explicit approval before any scheduling or queueing operation.
+9. Obtain explicit approval of the concrete final posts, accounts, timing, media, and settings before scheduling or queueing; preserve existing approval if that matrix is unchanged.
 
 ## Transformation Patterns
 
@@ -37,6 +41,12 @@ Extract the strongest ideas from supplied source material and reshape them for t
 - Case study or testimonial: challenge, turning point, outcome, lesson, and proof-led offer. Preserve exact attribution requirements.
 - Product announcement: problem, benefit, differentiator, demonstration, objection response, and launch CTA.
 - Event or promotion: announce, explain value, social proof, reminder, last call, and recap.
+
+## Media and write results
+
+Use `manage-assets` to find existing library media before generating copies. Resolve names/tags through exposed asset discovery, preserve pagination and scope, import accessible remote files, and require ready assets before generation or attaching media. Check byte access and HTTP PUT capability before signing a local/chat attachment upload; if unavailable, ask for a Simplified asset ID or downloadable URL. Pass permanent UUIDs into drafts. A missing required visual remains a stated production gap; do not report a media-ready post without it.
+
+For a batch of drafts, retain each successful returned ID and report created, pending, and failed items. Continue only unfinished items; do not recreate successful drafts after a later failure. A plan or test design alone does not authorize remote writes.
 
 ## Output
 

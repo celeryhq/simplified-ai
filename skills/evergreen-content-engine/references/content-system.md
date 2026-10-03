@@ -45,3 +45,7 @@ Refresh when facts, products, customer behavior, platform formats, or business p
 ## Measurement
 
 Match metrics to the franchise's job. Discovery may use qualified reach or video hold; trust may use saves, substantive engagement, profile actions, or return viewing; conversion may use tracked clicks, leads, bookings, or sales. State when Simplified supplies platform metrics rather than business outcomes.
+
+## Execution boundaries
+
+The renewal loop is a proposed process unless a separate recurring task is explicitly requested and configured. State who owns review and when it happens. Carry the resolved `space_id` through source/assets, drafts, and analytics; retain successful draft IDs and production gaps. Do not imply ongoing monitoring from a saved content bank alone.

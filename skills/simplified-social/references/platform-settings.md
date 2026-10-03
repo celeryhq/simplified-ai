@@ -73,7 +73,7 @@ Required additionals: **`postType`**, **`channel`**
 |-----------|--------|----------------------|----------|
 | **value** | string | `direct`, `reminder` | `direct` |
 
-- **`direct`** — publish immediately
+- **`direct`** — direct delivery when the chosen draft/schedule/queue action permits publishing
 - **`reminder`** — send as a reminder notification instead of direct publish
 
 ### `instagram.postReel`
@@ -111,7 +111,7 @@ Required additionals: **`postType`**, **`channel`**, **`post`**
 |-----------|--------|----------------------|----------|
 | **value** | string | `direct`, `reminder` | `direct` |
 
-- **`direct`** — publish immediately
+- **`direct`** — direct delivery when the chosen draft/schedule/queue action permits publishing
 - **`reminder`** — send as a reminder notification instead of direct publish
 
 ### `tiktok.post` *(required for video)*
@@ -199,6 +199,14 @@ Required additionals: **`audience`**
 
 **Message limit:** 3000 chars.
 
+### LinkedIn document (PDF carousel)
+
+Pass `additional.linkedin.document: {url: "<fully-qualified-pdf-url>", title: "<optional-title>"}`
+and `media: []`. The `url` field is required and accepts a PDF URL, not an asset
+UUID. For a Simplified PDF asset (`asset_type:17`), wait until `status:4` and obtain
+a fresh `file_url` from `api_getAsset`. Title is optional, max 255 characters;
+PDF limits are 300 pages and 100 MB. Include the normal audience setting.
+
 ---
 
 ## Pinterest
@@ -227,7 +235,7 @@ Required additionals: **`channel`**
 |-----------|--------|----------------------|----------|
 | **value** | string | `direct`, `reminder` | `direct` |
 
-- **`direct`** — publish immediately
+- **`direct`** — direct delivery when the chosen draft/schedule/queue action permits publishing
 - **`reminder`** — send as a reminder notification instead of direct publish
 
 ---
@@ -318,7 +326,7 @@ No required additionals. No platform-specific `additional` settings.
 
 ## Gotchas
 
-- **Date format** for `schedule` must be `YYYY-MM-DD HH:MM` (24-hour, no seconds, no timezone — uses account timezone).
+- **Date format** for `schedule` must be `YYYY-MM-DD HH:MM` (24-hour, no seconds, no timezone — resolve service timezone interpretation from workspace/account context before scheduling).
 - **`date` is required** when `action` is `schedule`; omit it for `add_to_queue` and `draft`.
 - **Media** must be a Simplified asset UUID (from `generate-image` with `storage:"asset"`) or a publicly accessible URL — localhost does not work.
 - **Reddit requires targets** — `additional.reddit.post.targets` must contain at

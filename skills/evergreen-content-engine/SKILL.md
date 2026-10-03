@@ -16,6 +16,10 @@ Design a compounding content program in which durable ideas become repeatable fr
 - Do not automate indefinite recycling. Every reusable asset needs a review date, fatigue signal, and retirement rule.
 - Stop when Simplified is unauthorized or required accounts are not connected.
 
+## Workspace and handoff
+
+Before connected operations, use `simplified-workspace` when the client/workspace/teamspace is named or uncertain. Resolve the exact numeric teamspace and carry its `space_id` on every related account, analytics, asset, generation, draft, tag, review, and continuation call. Re-list scoped resources after switching clients; stop on access failures rather than falling back to another space. Pass the resolved context to every delegated skill.
+
 ## Workflow
 
 1. Define the business objective, audience segments, buying questions, offers, expertise, proof library, content capacity, channels, cadence, and measurement horizon. State assumptions rather than forcing a long intake.
@@ -37,6 +41,12 @@ Design a compounding content program in which durable ideas become repeatable fr
 - Maintain an intentional conversion bridge. Evergreen does not mean every post sells, but the program should make the next step obvious over time.
 - Protect production sustainability. A viable engine respects access to experts, customer proof, design/video capacity, approval time, and channel cadence.
 - Use performance as directional evidence; do not let one outlier post rewrite the entire strategy.
+
+## Media and write results
+
+Use `manage-assets` to find existing library media before generating copies. Resolve names/tags through exposed asset discovery, preserve pagination and scope, import accessible remote files, and require ready assets before generation or attaching media. Check byte access and HTTP PUT capability before signing a local/chat attachment upload; if unavailable, ask for a Simplified asset ID or downloadable URL. Pass permanent UUIDs into drafts. A missing required visual remains a stated production gap; do not report a media-ready post without it.
+
+For a batch of drafts, retain each successful returned ID and report created, pending, and failed items. Continue only unfinished items; do not recreate successful drafts after a later failure. A plan or test design alone does not authorize remote writes.
 
 ## Output
 

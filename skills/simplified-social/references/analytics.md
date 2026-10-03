@@ -12,7 +12,8 @@ Detailed reference for the four analytics tools:
 - **`account_id` is an integer** (the numeric `id` from `social_getSocialMediaAccounts`) — not the stringified form used in `account_ids` for posting.
 - **Analytics date format** is `YYYY-MM-DD` (no time component, unlike post scheduling).
 - **LinkedIn account type** — check the `type` field from `social_getSocialMediaAccounts`: `"LinkedIn company"` = Company metrics set, `"LinkedIn profile"` = Personal metrics set.
-- **Unknown metrics are silently ignored** by `social_getSocialMediaAnalyticsRange`.
+- **Unknown metric names fail connector enum validation.** Known metric names
+  unsupported by the selected network may be ignored upstream.
 - **Audience data availability varies** by network — `social_getSocialMediaAnalyticsAudience` may return partial or empty data.
 
 ---
@@ -23,27 +24,30 @@ Translate common user expressions to concrete dates using today's date:
 
 | User says | `date_from` | `date_to` |
 |---|---|---|
-| last 7 days | today − 7 days | today |
-| last 30 days | today − 30 days | today |
-| last 90 days | today − 90 days | today |
-| this week | Monday of current week | today |
-| last week | Monday of last week | Sunday of last week |
+| last 7 days, including today | today − 6 days | today |
+| last 30 days, including today | today − 29 days | today |
+| last 90 days, including today | today − 89 days | today |
+| this week | Workspace start-of-week for current week | today |
+| last week | Workspace start-of-week for previous week | Day before current week starts |
 | this month | 1st of current month | today |
 | last month | 1st of last month | last day of last month |
 | this year | January 1 of current year | today |
 | last year | January 1 of last year | December 31 of last year |
 
-Always cap `date_to` at today — never use a future date.
+These rolling ranges count calendar dates inclusively. For N completed days,
+use today − N through yesterday. Use workspace `start_of_week` for week ranges,
+falling back to Monday when unknown. Always cap `date_to` at today.
 
 ---
 
 ## Timezone
 
-Analytics day boundaries depend on timezone. UTC is the default but can produce misleading data for users in other timezones (e.g. a post published at 23:00 Warsaw time appears on the next day in UTC).
+Analytics day boundaries depend on timezone. UTC is the default but can produce misleading data for users in other timezones (e.g. a post published at 00:30 Warsaw time appears on the previous day in UTC).
 
 **Rules:**
 - If the user mentions a timezone or location (e.g. "Warsaw", "New York", "CET"), pass it as `tz` using IANA format (e.g. `Europe/Warsaw`, `America/New_York`).
-- If the user's timezone is known from context, always pass `tz` explicitly.
+- If the user's timezone is known, pass `tz` explicitly to Range and Audience.
+  Posts and Aggregated do not expose `tz`; do not invent that parameter.
 - If timezone is unknown and the data is time-sensitive (daily breakdown), ask the user before proceeding.
 - For simple totals or aggregated KPIs, UTC is acceptable without asking.
 
@@ -72,7 +76,8 @@ Use these when the user does not specify metrics for `social_getSocialMediaAnaly
 
 ## Available Metrics by Network
 
-Use these values in the `metrics` array for `social_getSocialMediaAnalyticsRange`. Unknown metrics are silently ignored by the API.
+Use these values in the `metrics` array for `social_getSocialMediaAnalyticsRange`. Use only names in the exposed tool enum; arbitrary metric names fail connector
+validation. Network-specific support may be narrower than that enum.
 
 ### Instagram
 
@@ -246,7 +251,8 @@ Use these values in the `metrics` array for `social_getSocialMediaAnalyticsRange
 
 ### AnalyticsMetric (shared schema)
 
-All analytics tools return metrics using this unified shape:
+Range and Aggregated series/baseline metrics use this shape. Posts metrics are
+network-specific maps of numbers; Audience contains demographic maps or arrays:
 
 ```json
 { "id": "reach", "value": 4500, "prevValue": 3800 }
@@ -304,9 +310,11 @@ each with `id`, `message`, `publishedDate`, `postUrl`, `postType`, `media`, and
 
 ### `social_getSocialMediaAnalyticsAggregated`
 
-Parameters: `account_id` (int, required), `date_from` / `date_to` (required).
+Parameters: `account_id` (int) or `account_ids` (comma-separated string), plus
+required `date_from` / `date_to`. Supply at least one selector; `account_id` wins
+if both are present. Inspect `accounts_status` to disclose excluded accounts.
 
-`baseLine` always contains four KPIs:
+When analytics is available, `baseLine` exposes four KPI keys:
 
 | Key                       | Meaning                           |
 |---------------------------|-----------------------------------|
@@ -340,3 +348,14 @@ Parameters: `account_id` (int, required), `date_from` / `date_to` (required), `t
 | `audience_page_fans_city`      | Follower count by city name                                |
 
 Not all fields are available for every network; missing fields may be empty or absent.
+
+## Availability and permissions
+
+Range, Posts, and Audience return `status` and `account_active`; Aggregated
+returns per-account `accounts_status`. Status values are uppercase `ENABLED`,
+`PROCESSING`, `DISABLED`, `ERROR`, `NO_PERMISSION`, and `NOT_SUPPORTED`.
+When `account_active:false`, explain that the account needs reconnecting.
+When availability is disabled, errored, denied, or unsupported, explain that
+state instead of treating null/empty data as zero activity or rendering a chart.
+Treat `PROCESSING` as pending. Aggregated data covers enabled accounts only;
+disclose omitted accounts. Audience gender/age can be an empty array or a map.

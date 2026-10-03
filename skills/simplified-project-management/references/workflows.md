@@ -9,7 +9,7 @@ Use this reference when selecting tools or coordinating a multi-step PM change.
 | Find or inspect boards | `pm_listBoards`, `pm_getBoard` |
 | Create, edit, clone, or delete a board | `pm_createBoard`, `pm_updateBoard`, `pm_cloneBoard`, `pm_deleteBoard` |
 | Resolve or manage columns | `pm_listStatuses`, `pm_getStatus`, `pm_createStatus`, `pm_updateStatus`, `pm_deleteStatus` |
-| Drain and retire statuses | `pm_moveStatus` |
+| Drain a status, then optionally delete it | `pm_moveStatus`, then separately authorized `pm_deleteStatus` |
 | Find tasks | `pm_searchTasks`, `pm_searchRecentTasks` |
 | Create, inspect, edit, clone, or delete a task | `pm_createTask`, `pm_getTask`, `pm_updateTask`, `pm_cloneTask`, `pm_deleteTask` |
 | Manage assignees or tags | `pm_listWorkspaceMembers`, `pm_updateTaskAssignees`, `pm_updateTaskTags` |
@@ -23,7 +23,8 @@ Use this reference when selecting tools or coordinating a multi-step PM change.
 
 1. Resolve the board with `pm_listBoards`.
 2. Resolve the target status with `pm_listStatuses`.
-3. Resolve assignees with `pm_listWorkspaceMembers` when names were supplied.
+3. Resolve assignees with `pm_listWorkspaceMembers` when names were supplied;
+   use integer user IDs from `options[].value`.
 4. Call `pm_createTask` with the status UUID. The board is inferred from the
    status.
 5. Pass tag names and integer assignee IDs when requested.
@@ -51,7 +52,9 @@ assume adding one assignee replaces existing assignees.
 2. If `is_blocked` or incomplete blockers are present, explain the blockers and
    do not force completion.
 3. Resolve the workspace's completed status if the user asked to move the task.
-4. Apply the requested completion field and/or status change.
+4. Apply `complete:true` when completion was requested, and/or the requested
+   status change. A running timer also prevents completion; explain the cause
+   if the server rejects it rather than forcing completion.
 5. Verify the final task state directly.
 
 Do not assume every board uses a column named `Completed`; use the live status
@@ -61,14 +64,14 @@ list and ask when several completion-like columns exist.
 
 Read the dependency graph first to avoid duplicates. For
 `pm_addTaskDependency`, pass the source task as `task_id`, the counterpart task
-as `target_task_id`, and one uppercase relation:
+as `target_task_id`, and set `relation_type` to one uppercase relation:
 
 - `BLOCKS`: the source task blocks the target task.
 - `RELATES_TO`: the tasks are related without ordering.
 - `DUPLICATES`: the source task duplicates the target task.
 
 Remove a relationship only with the `relationship_id` returned by
-`pm_getTaskDependencies`, and confirm immediately before removal.
+`pm_getTaskDependencies`, and ensure the user explicitly authorized removal of that relationship.
 
 ## Comments
 
@@ -85,17 +88,22 @@ For a threaded reply, read comments first and pass the integer comment ID as
 ## Boards and statuses
 
 - Use `pm_updateStatus(order=...)` to reorder a status.
-- Use `pm_moveStatus` to migrate every task from source statuses into a target
-  status and retire the sources. Confirm because this is a bulk change.
-- Confirm before `pm_deleteStatus`; the status must be empty.
-- Confirm before `pm_cloneBoard`; cloning can create many resources.
-- Confirm before board, status, and task deletion.
+- Use `pm_moveStatus` to migrate every task from one source status into a
+  destination status. The source remains; verify it is empty and use
+  `pm_deleteStatus` separately only when deletion was authorized.
+  Ensure explicit authorization covers the bulk migration.
+- Ensure explicit authorization covers `pm_deleteStatus`; the status must be empty.
+- Ensure explicit authorization covers `pm_cloneBoard`; cloning can create many resources.
+- Ensure explicit authorization covers board, status, and task deletion.
+  Existing explicit authorization for the exact effect is sufficient.
 
 ## Search across a board
 
 1. Resolve the board.
 2. List its statuses.
 3. Call `pm_searchTasks` once per relevant status with both `board` and `status`.
+   Include `include_subtasks:true` when the request includes subtasks or all tickets.
+   Direct-read any known slug/UUID before concluding a missing ticket does not exist.
 4. Continue pages until exhausted, keeping `page_size <= 100`.
 5. Deduplicate by task ID and filter title/description client-side when a broad
    full-text term matched comments or tags.

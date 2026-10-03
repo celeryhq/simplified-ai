@@ -2,3 +2,14 @@ interface:
   display_name: "Simplified Workflows"
   short_description: "Build, publish and run multi-step Simplified workflows."
   default_prompt: "Use $simplified-workflows to show me the workflows in my Simplified workspace and what inputs each one takes."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "simplified-automation"
+      description: "Simplified automation connector for workflows, agents, and REST passthrough; requires this separate connection to be enabled."
+      transport: "http"
+      url: "https://apikit.simplified.com/automation/mcp"
+
+policy:
+  allow_implicit_invocation: true

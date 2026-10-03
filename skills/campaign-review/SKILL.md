@@ -42,15 +42,21 @@ Turn a group of social drafts into a clear approval package without publishing t
      in the resolved client scope. Retrieve every draft page for those accounts,
      using `per_page: 100` and incrementing `page` until the response is exhausted.
      Apply the per-account fallback when needed, merge the results, and deduplicate
-     by exact draft ID. “All” means all drafts in the resolved client scope, never
-     all drafts across other client teamspaces.
+     by exact draft ID. This covers drafts discoverable for connected accounts in the resolved client
+     scope. Accountless drafts can exist, but the current listing requires account
+     IDs and does not establish coverage of accountless drafts. Disclose this
+     limitation rather than claiming complete workspace coverage; include separately
+     supplied draft IDs only after scoped verification.
 4. Present a review manifest with client/teamspace, draft, channel/account, copy
    preview, media status, planned timing, and issues requiring attention. If the
    user did not identify the drafts, let them choose from this manifest before
    creating the bundle.
-5. Apply requested copy, media, account, or settings changes with
-   `social_updateSocialMediaDraft`, following the connector's current tool schema
-   and carrying the selected `space_id`.
+5. Apply requested supported changes with `social_updateSocialMediaDraft`: its
+   current schema accepts `draft_id`, `message`, `media`, `tags`, `date`, `time`,
+   and `timezone`. Carry the selected `space_id`. Account reassignment and platform
+   `additional` settings are not exposed by this update operation. Explain that
+   limitation; create a replacement draft only when explicitly requested, retaining
+   the original unless its removal is separately authorized.
 6. When authorized, call `social_createSocialMediaReviewBundle` once with `title`,
    optional `description`, all selected draft IDs in `draft_ids`, and the same
    `space_id`. Use a client-identifying title such as
@@ -59,15 +65,19 @@ Turn a group of social drafts into a clear approval package without publishing t
    plus a concise manifest. For an “all drafts” request, state the total discovered,
    included, excluded, and failed counts so the user can verify completeness. Keep
    a separate bundle/link record for each client.
-8. The hosted connector currently does not expose a separate append-to-existing-bundle tool. If the user asks to append drafts, explain the limitation; do not silently recreate or replace the bundle.
-9. If the user later approves publication, hand off to `$simplified-social`: show the final account/date/media matrix and obtain explicit publishing confirmation before `schedule` or `add_to_queue`.
+8. For an authorized append, use `social_addDraftsToSocialMediaReviewBundle` when
+   exposed, with the verified `bundle_id`, nonempty selected `draft_ids`, and the
+   same `space_id`. The current operation is idempotent. Inspect the returned full
+   draft list and review URL. If the deployed client lacks this tool, explain the
+   limitation; do not silently recreate or replace the bundle.
+9. If the user later approves publication, hand off to `$simplified-social`: show the final account/date/media matrix and obtain explicit publishing confirmation before `schedule` or `add_to_queue` unless the user already approved that unchanged concrete matrix. Review approval alone is insufficient.
 
 ## Review Checklist
 
 - Copy: factual accuracy, brand voice, CTA, spelling, and platform length.
 - Targeting: correct connected account and audience setting.
 - Media: present, accessible, and valid for the selected post type.
-- Timing: intended date, account timezone, campaign order, and no past dates.
+- Timing: intended date, verified scheduling timezone, campaign order, and no past dates.
 - Platform requirements: all required `additional` fields are present.
 - Campaign consistency: offer, link, naming, visual identity, and legal terms agree across drafts.
 - Client isolation: every draft, account, and bundle belongs to the same resolved

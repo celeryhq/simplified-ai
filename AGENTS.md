@@ -23,6 +23,7 @@ simplified-ai/
 ├── .claude-plugin/plugin.json   # Claude Code manifest
 ├── .codex-plugin/plugin.json    # Codex / ChatGPT Apps manifest
 ├── skills/                   # SKILL.md workflows (Agent Skills spec)
+│   ├── manage-assets/
 │   ├── generate-image/
 │   ├── generate-video/
 │   ├── simplified-workspace/
@@ -31,6 +32,7 @@ simplified-ai/
 │   ├── manage-projects/
 │   ├── simplified-project-management/
 │   ├── simplified-cli/
+│   ├── simplified-workflows/
 │   ├── social-content-planner/
 │   ├── cross-platform-campaign/
 │   ├── content-repurposer/
@@ -47,14 +49,16 @@ simplified-ai/
 
 | Skill | Purpose | Tools |
 |---|---|---|
+| [manage-assets](skills/manage-assets/SKILL.md) | Search/list, import/upload, inspect, and reuse workspace media | `api_listAssets`, `api_getAsset`, intake tools |
 | [generate-image](skills/generate-image/SKILL.md) | Text-to-image generation (Flux, Gemini/Imagen, GPT Image, Ideogram, …); saves as a reusable asset | `api_generateImage` |
-| [generate-video](skills/generate-video/SKILL.md) | Model-aware AI video generation and render polling | `api_getModelFields`, `api_generateVideo`, `api_getVideoVariation` |
+| [generate-video](skills/generate-video/SKILL.md) | Model-aware AI video generation and completion handling | `api_getModelFields`, `api_generateVideo`, `api_getVideoVariation` |
 | [simplified-workspace](skills/simplified-workspace/SKILL.md) | Authenticated identity, workspace settings, and safe teamspace discovery | workspace and teamspace tools |
 | [simplified-social](skills/simplified-social/SKILL.md) | Draft / schedule / queue posts, timed auto-comments, and analytics across 13 platforms | `social_*` |
 | [manage-brand](skills/manage-brand/SKILL.md) | Evidence-led brand kits and reusable brand context | brand-kit and context-document tools |
 | [manage-projects](skills/manage-projects/SKILL.md) | Marketing projects, deliverables, assignments, and exports | project and item tools |
 | [simplified-project-management](skills/simplified-project-management/SKILL.md) | Boards, tasks, subtasks, dependencies, assignees, tags, custom fields, comments | `pm_*` |
 | [simplified-cli](skills/simplified-cli/SKILL.md) | The `smp` command line across PM, media, assets, social, and `smp serve` | CLI, not MCP |
+| [simplified-workflows](skills/simplified-workflows/SKILL.md) | Build, publish, run, and control multi-step workflows | Separate automation connection, `flows_*` |
 | [social-content-planner](skills/social-content-planner/SKILL.md) | Goal-led weekly and monthly content calendars | accounts, analytics, drafts, scheduling |
 | [cross-platform-campaign](skills/cross-platform-campaign/SKILL.md) | Coordinated channel-native campaign rollouts | image generation + social |
 | [content-repurposer](skills/content-repurposer/SKILL.md) | Source content into channel-native post sequences | drafts + optional image generation |
@@ -64,9 +68,9 @@ simplified-ai/
 | [social-performance-analyst](skills/social-performance-analyst/SKILL.md) | KPI, trend, post, and audience analysis with next actions | social analytics |
 | [campaign-review](skills/campaign-review/SKILL.md) | Draft QA, revisions, and stakeholder review bundles | drafts + review bundles |
 
-The outcome-driven skills compose the eight platform operators. Workspace identity
+The outcome-driven skills compose the platform operators. Workspace identity
 establishes the scope for every other operator. Image and video
-generation return permanent **asset IDs** for `simplified-social.media`; brand and
+generation with asset storage returns permanent **asset IDs** for `simplified-social.media`; brand and
 project skills provide reusable context and operational handoffs. Workflow skills
 orchestrate those primitives around marketer jobs without duplicating API mechanics.
 
@@ -89,18 +93,17 @@ client refreshes its token automatically (server emits the standard challenge).
   workspace/teamspace context is named or uncertain. Resolve names to exact numeric
   IDs, then pass `space_id` on every downstream tool call in that scoped task.
 - **Draft before publish.** For social posts, create a `draft` and show it before
-  scheduling/queuing. Never publish without explicit user confirmation.
+  scheduling/queuing. Publish only within explicit user authorization; reuse approval for the same content, accounts, timing, and comments instead of asking again.
 - **Keep agency reviews client-isolated.** Resolve the client's workspace/teamspace,
   carry its `space_id` through every account, draft, update, and review-bundle call,
   and create a separate bundle per client and campaign. Never mix cross-client IDs.
-- **"Post now" → `add_to_queue`** (publishes ASAP). There is no separate immediate
+- **"Post now" uses the available publishing action `add_to_queue`**. Do not promise immediate delivery; report the actual timing returned by the service. There is no separate immediate
   publish action; the `action` enum is `schedule | add_to_queue | draft`.
 - **Auto-comments are post-relative.** `comments[].delay` is a nonnegative number
   of seconds after the post publishes, not after the preceding comment. Convert
   “first comment after X minutes” to `X * 60`, and include the comment text and
-  delay in the pre-publish confirmation.
-- **Carry the `asset_id`, not the URL.** Generated-image URLs are signed and expire;
-  the `asset_id` is permanent and is what `simplified-social.media` accepts.
+  delay in the publication plan the user authorizes.
+- **Prefer asset IDs for Simplified media.** Generated file URLs can expire. Social media accepts asset UUIDs, supported URLs, or URL/thumbnail objects. Posting `account_ids` is string[], while analytics `account_id` is integer; do not conflate these identifiers.
 - **Show returned URLs as links — never embed them.** Any URL a tool or skill
   returns (image results, asset URLs, review-bundle links, exports) must be shown as
   a plain URL or a Markdown link — **never** Markdown image syntax (`![alt](url)`)
@@ -108,10 +111,13 @@ client refreshes its token automatically (server emits the standard challenge).
   clicks the link; the agent does not render it. Inline rendering breaks on signed/
   expiring URLs and produces poor UX (e.g. Codex trying to display the image instead
   of showing a clickable URL).
-- **Stop if not connected.** If `social_getSocialMediaAccounts` is empty, tell the
-  user to connect an account — don't attempt to post.
+- **Accountless drafts are supported.** If connected accounts are empty, continue an authorized `action: "draft"` request without `account_ids`. Scheduling, queueing, and account-specific analytics require the relevant connected accounts.
 
 ## Commit attribution
 
 When an AI agent commits to this repo, include a `Co-Authored-By:` line with the
 agent model's name.
+
+## Media contracts
+
+Route asset discovery/intake/reuse to `manage-assets`. Use current generation schemas: image `parameters.reference_images` takes asset IDs or URLs; video normalized slots take asset UUIDs. Current middleware waits for generation completion; continue only returned non-terminal jobs. Installed skills do not change deployed tool availability. Do not use historical eval tool counts as current capabilities.

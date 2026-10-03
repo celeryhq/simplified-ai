@@ -7,9 +7,13 @@ description: Analyze connected social accounts and translate metrics into decisi
 
 Turn Simplified social analytics into clear signals, limitations, and next actions. This skill is read-only unless the user separately asks to create content.
 
+## Workspace and handoff
+
+Before connected operations, use `simplified-workspace` when the client/workspace/teamspace is named or uncertain. Resolve the exact numeric teamspace and carry its `space_id` on every related account, analytics, asset, generation, draft, tag, review, and continuation call. Re-list scoped resources after switching clients; stop on access failures rather than falling back to another space. Pass the resolved context to every delegated skill.
+
 ## Workflow
 
-1. Resolve the reporting period. Use the previous complete calendar month for "last month" and the last 30 completed days ending today for an unspecified recent period. Never send a future `date_to`.
+1. Resolve the reporting period. Use the previous complete calendar month for "last month" and the last 30 completed calendar days ending yesterday (date_from = today minus 30 days, date_to = yesterday) for an unspecified recent period. Never send a future `date_to`. For a user-requested period through today, label today as partial. Pass a known IANA `tz` only to tools exposing it (Range and Audience); Posts and Aggregated do not expose `tz`, so disclose day-boundary limitations when material.
 2. Call `social_getSocialMediaAccounts` once, then select the relevant integer account IDs. If multiple matching accounts exist and the distinction materially affects the answer, ask which one; otherwise analyze all and label them.
 3. Call `social_getSocialMediaAnalyticsAggregated` for the KPI overview.
 4. Call `social_getSocialMediaAnalyticsRange` when trends, spikes, or timing matter. Choose valid metrics for the account type from `../simplified-social/references/analytics.md`.

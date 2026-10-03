@@ -9,7 +9,9 @@ authenticated user
     └── zero or more accessible teamspaces (Spaces)
 ```
 
-`api_getWorkspaceInfo` is the primary identity call. It returns the current user, workspace, workspace settings, and active teamspaces. `api_listTeamspaces` supports focused search and pagination. `api_getWorkspace` reads richer metadata for the known workspace integer ID.
+`api_getWorkspaceInfo` is the primary identity call. It returns the current user, workspace, workspace settings, and active teamspaces. Visible teamspaces in this response are not membership authority. Always use
+`api_listTeamspaces` to discover or resolve accessible memberships; it supports
+focused search and pagination. `api_getWorkspace` reads richer metadata for the known workspace integer ID.
 
 ## CLI versus hosted MCP
 
@@ -20,7 +22,9 @@ Hosted MCP serves many independent users and requests. Server-side mutable teams
 ## Safe resolution
 
 1. Read `api_getWorkspaceInfo`.
-2. Match the requested teamspace against returned name and slug. Use `api_listTeamspaces(search=...)` when necessary.
+2. Call `api_listTeamspaces`, optionally with `search`, and paginate all relevant
+   matches. Match the requested name/slug against this membership list; never
+   authorize scope from `api_getWorkspaceInfo.teamspaces`.
 3. If zero matches, report that it is not accessible. If multiple matches remain, ask the user which one; include names and numeric IDs.
 4. Preserve the exact numeric ID in the handoff.
 5. Pass `space_id: <id>` on every downstream Simplified call in the task. Do not pass it only on the first call.
@@ -41,4 +45,8 @@ After a context change, re-list resources with the new `space_id` instead of car
 
 ## Marketing defaults
 
-Workspace timezone, language, and start-of-week can guide calendar presentation and planning. For live social scheduling, use the selected connected account's timezone and surface any conflict with the workspace default. Brand memory belongs in approved brand-kit context documents, not unverified conversational assumptions.
+Workspace timezone, language, and start-of-week can guide calendar presentation and planning. For live social scheduling, inspect workspace settings and account metadata.
+The create tool has no timezone field; canonical guidance identifies workspace
+timezone, but resolve any conflicting service/account interpretation before
+converting the user's requested time. Disclose uncertainty rather than assume
+a timezone. Brand memory belongs in approved brand-kit context documents, not unverified conversational assumptions.

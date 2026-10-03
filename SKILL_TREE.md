@@ -1,17 +1,18 @@
 # Skill Tree
 
-The plugin ships every folder under `skills/`. The sixteen documented below are
+The plugin ships every folder under `skills/`. The workflows documented below are
 the supported skills, split between Simplified platform operators and marketer
 workflows.
 
 Each top-level folder contains a canonical `SKILL.md`. Skills surfaced in Codex
 also carry `agents/openai.yaml`, which adds Codex UI metadata without forking the
-workflow instructions. `simplified-cli` deliberately has none: it drives the `smp`
-shell command rather than the hosted connector, so it is a Claude Code / Cursor
-skill and is not presented as a Codex app skill.
+workflow instructions. `simplified-cli` also carries metadata for local agents, but is excluded from the
+hosted ChatGPT bundle because it needs a shell. `simplified-workflows` requires
+the separate automation connection and is excluded from that bundle as well.
 
 ```text
 skills/
+├── manage-assets/                  # find/import/upload → ready asset UUIDs
 ├── generate-image/                 # model discovery → reusable image asset
 ├── generate-video/                 # model discovery → reusable video asset
 ├── simplified-workspace/           # whoami + workspace/teamspace resolution
@@ -20,6 +21,7 @@ skills/
 ├── manage-projects/                # projects, deliverables, handoffs, exports
 ├── simplified-project-management/  # boards, tasks, assignees, dependencies
 ├── simplified-cli/                 # the `smp` command line
+├── simplified-workflows/           # automation connection, step graphs and runs
 ├── social-content-planner/         # goals → weekly/monthly calendar
 ├── cross-platform-campaign/        # brief → coordinated channel rollout
 ├── content-repurposer/             # source → channel-native post sequence
@@ -37,6 +39,10 @@ skills/
 Identify the authenticated user and workspace, read workspace defaults, resolve
 accessible teamspaces to numeric IDs, and prevent cross-space resource mistakes.
 
+### `manage-assets`
+
+Find/list assets by name or tag, import URLs, gate local uploads on client capabilities, check readiness, and hand off permanent IDs for generation or social drafts. Named-folder listing is not implied by text search.
+
 ### `generate-image`
 
 Discover current image models and field schemas, generate from prompts or
@@ -45,7 +51,7 @@ references, and return a permanent asset ID when the result will be reused.
 ### `generate-video`
 
 Discover current video models and capabilities, generate text/image/video-guided
-motion, poll the correct variation status, and preserve reusable video assets.
+motion, wait for completion and continue a non-terminal variation when needed, and preserve reusable video assets.
 
 ### `simplified-social`
 
@@ -73,9 +79,8 @@ consequential changes, execute precise writes, and verify the result directly.
 
 ### `simplified-cli`
 **Trigger:** scripted, CI, or terminal work rather than a conversational flow.
-**Tools:** the `simplified` npm CLI for social, scheduling, analytics and media;
-the `smp` toolkit CLI for the full platform.
-**Does:** authenticate a profile, resolve teamspace context, and run JSON-native
+**Tools:** the Python `simplified-apikit` package's generated `smp` commands; this is separate from the npm `simplified` CLI.
+**Does:** resolve local credentials and teamspace context, and run JSON-native
 commands whose output feeds directly into pipelines.
 
 ## Marketer workflows
@@ -144,7 +149,4 @@ approved plan → manage-projects → accountable production and handoffs
 
 ## Release dependency
 
-The expanded hosted MCP profile is live. Authenticated discovery verified 105
-hosted tools on July 15, 2026; the local `full` profile exposes 106. The only known
-profile difference is that hosted MCP does not yet expose
-`social_addDraftsToSocialMediaReviewBundle`.
+Skills and hosted tool releases are independent. Check current tool discovery before promising a capability. The July hosted/source inventories in `evals/` remain historical snapshots. `manage-assets` uses `api_listAssets` when exposed; installing it does not deploy that operation.
