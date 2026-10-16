@@ -52,7 +52,7 @@ Current source profiles:
 | `automation` | Workflow/agent-building namespaces and generic passthrough |
 | `full` | All registered namespaces; default for local toolkit |
 
-When multiple profiles are mounted by the toolkit, `public` owns `/mcp`; others use `/social/mcp`, `/automation/mcp`, and `/full/mcp`. This describes source routing, not proof that every path is deployed publicly. Use the declared connector for this plugin. Automation-only skills require their own compatible connection; the ChatGPT bundle excludes them.
+When multiple profiles are mounted by the toolkit, `public` owns `/mcp`; others use `/social/mcp`, `/automation/mcp`, and `/full/mcp`. This describes source routing, not proof that every path is deployed publicly. This plugin declares two of them: `simplified` (`/mcp`) and `simplified-automation` (`/automation/mcp`), which the agent and workflow skills use. The hosted ChatGPT app connects only to `/mcp`, so its bundle excludes the automation skills.
 
 The older `mcp` local profile and July tool counts in historical eval captures are not the current source profile definition.
 

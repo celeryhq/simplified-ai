@@ -3,6 +3,10 @@
     "simplified": {
       "type": "http",
       "url": "https://apikit.simplified.com/mcp"
+    },
+    "simplified-automation": {
+      "type": "http",
+      "url": "https://apikit.simplified.com/automation/mcp"
     }
   }
 }

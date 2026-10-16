@@ -1,14 +1,14 @@
 # Skill Tree
 
 The plugin ships every folder under `skills/`. The workflows documented below are
-the 22 supported skills, split between Simplified platform operators and marketer
+the 23 supported skills, split between Simplified platform operators and marketer
 workflows.
 
 Each top-level folder contains a canonical `SKILL.md`. Skills surfaced in Codex
 also carry `agents/openai.yaml`, which adds Codex UI metadata without forking the
 workflow instructions. `simplified-cli` also carries metadata for local agents, but is excluded from the
-hosted ChatGPT bundle because it needs a shell. `simplified-workflows` requires
-the separate automation connection and is excluded from that bundle as well.
+hosted ChatGPT bundle because it needs a shell. `simplified-workflows` and
+`simplified-agents` require the separate automation connection and are excluded from that bundle as well.
 
 ```text
 skills/
@@ -26,6 +26,7 @@ skills/
 ├── simplified-project-management/  # boards, tasks, assignees, dependencies
 ├── simplified-cli/                 # the `smp` command line
 ├── simplified-workflows/           # automation connection, step graphs and runs
+├── simplified-agents/              # automation connection, build and manage AI agents
 ├── social-content-planner/         # goals → weekly/monthly calendar
 ├── cross-platform-campaign/        # brief → coordinated channel rollout
 ├── content-repurposer/             # source → channel-native post sequence
@@ -38,7 +39,7 @@ skills/
 
 ## Platform operators
 
-Fourteen operators provide the platform primitives.
+Fifteen operators provide the platform primitives.
 
 ### `simplified-workspace`
 
@@ -109,6 +110,15 @@ consequential changes, execute precise writes, and verify the result directly.
 **Tools:** the Python `simplified-apikit` package's generated `smp` commands; this is separate from the npm `simplified` CLI.
 **Does:** resolve local credentials and teamspace context, and run JSON-native
 commands whose output feeds directly into pipelines.
+
+### `simplified-agents`
+**Trigger:** build, change, schedule, or publish a Simplified AI agent, or put one
+on a website as a chat widget.
+**Tools:** `agents_*` on the separate automation connection.
+**Does:** interview about the job, propose the whole agent (prompt in full,
+skills, toolkits, onboarding checklist) and build it as a draft only after a yes;
+read an existing agent before changing it; set a website agent up from one
+website address.
 
 ## Marketer workflows
 
