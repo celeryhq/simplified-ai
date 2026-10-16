@@ -28,8 +28,12 @@ EXCLUDED: dict[str, str] = {
         "shell in the ChatGPT app surface"
     ),
     "simplified-workflows": (
-        "calls flows_* tools served by the /automation/mcp mount, which this "
-        "plugin does not declare; unusable against apikit.simplified.com/mcp"
+        "calls flows_* tools served by the /automation/mcp mount; the ChatGPT "
+        "app connects only to apikit.simplified.com/mcp"
+    ),
+    "simplified-agents": (
+        "calls agents_* tools served by the /automation/mcp mount; the ChatGPT "
+        "app connects only to apikit.simplified.com/mcp"
     ),
 }
 

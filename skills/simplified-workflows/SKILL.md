@@ -12,7 +12,7 @@ executes that graph once against a set of inputs.
 
 ## Connection and scope
 
-Workflow tools (`flows_*`), agent tools, and `smp_callApi` belong to the automation connector at `https://apikit.simplified.com/automation/mcp` in the current multi-profile layout. The plugin’s root `https://apikit.simplified.com/mcp` connection serves public content/project/social tools and does not automatically grant automation tools. Verify exposed capabilities first; connect the automation surface if missing. A full connector, when explicitly configured, also serves these tools.
+Workflow tools (`flows_*`), agent tools, and `smp_callApi` belong to the automation connector at `https://apikit.simplified.com/automation/mcp` in the current multi-profile layout. The plugin declares it as `simplified-automation`, alongside the root `https://apikit.simplified.com/mcp` connection that serves content, project and social tools. Verify the workflow tools are exposed first; if they are not, the automation connection has not been authorized yet — ask the user to connect it. A full connector, when explicitly configured, also serves these tools.
 
 Resolve named or uncertain workspace/teamspace context with `simplified-workspace` on the public/full connection and carry the resolved numeric `space_id` on every workflow tool and passthrough call. Scope is stateless. Workflow resources have no `space_id` argument: use `flows_getWorkflow(workflow_id=..., expand="extra", space_id=...)` for a scoped diagram, and scoped `flows_listWorkflowActions` calls for live action schemas. The static grammar/run-control resources are safe to use independently of teamspace selection.
 
