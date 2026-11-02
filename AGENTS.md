@@ -65,7 +65,7 @@ simplified-ai/
 | [simplified-social](skills/simplified-social/SKILL.md) | Draft / schedule / queue posts, timed auto-comments, and analytics across 13 platforms | `social_*` |
 | [manage-brand](skills/manage-brand/SKILL.md) | Evidence-led brand kits and reusable brand context | brand-kit and context-document tools |
 | [manage-projects](skills/manage-projects/SKILL.md) | Marketing projects, deliverables, assignments, and exports | project and item tools |
-| [simplified-project-management](skills/simplified-project-management/SKILL.md) | Boards, tasks, subtasks, dependencies, assignees, tags, custom fields, comments | `pm_*` |
+| [simplified-project-management](skills/simplified-project-management/SKILL.md) | Boards, tasks, subtasks, dependencies, assignees, tags, custom fields, comments | `pm_*` (`simplified-full` connector) |
 | [simplified-cli](skills/simplified-cli/SKILL.md) | The `smp` command line across PM, media, assets, social, and `smp serve` | CLI, not MCP |
 | [simplified-workflows](skills/simplified-workflows/SKILL.md) | Build, publish, run, and control multi-step workflows | Separate automation connection, `flows_*` |
 | [simplified-agents](skills/simplified-agents/SKILL.md) | Build, change, schedule, and publish Simplified AI agents, including website chat agents | Separate automation connection, `agents_*` |
@@ -86,14 +86,15 @@ orchestrate those primitives around marketer jobs without duplicating API mechan
 
 ## MCP servers
 
-Two connectors, configured in [.mcp.json](.mcp.json):
+Three connectors, configured in [.mcp.json](.mcp.json):
 
 | Server | URL | Serves |
 |---|---|---|
-| `simplified` | `https://apikit.simplified.com/mcp` | content, assets, brand, projects, PM, social (`api_`, `media_`, `notify_`, `pm_`, `social_`) |
+| `simplified` | `https://apikit.simplified.com/mcp` | content, assets, brand, projects, social (`api_`, `media_`, `notify_`, `social_`) |
 | `simplified-automation` | `https://apikit.simplified.com/automation/mcp` | agents and workflows (`agents_`, `flows_`, `smp_callApi`) |
+| `simplified-full` | `https://apikit.simplified.com/full/mcp` | everything above plus project management (`pm_*`); used by `simplified-project-management` |
 
-Both are the same Simplified account. Each is OAuth-secured — the client walks the OAuth flow; no API key to set. The hosted ChatGPT app connects only to `simplified`, which is why the automation skills are left out of that bundle. On a 401, the
+All three are the same Simplified account. Each is OAuth-secured — the client walks the OAuth flow; no API key to set. The hosted ChatGPT app connects only to `simplified`, which is why the automation skills are left out of that bundle. On a 401, the
 client refreshes its token automatically (server emits the standard challenge).
 
 ## Key conventions (agent behavior)

@@ -28,7 +28,7 @@ When assets are attached in `data.assets`, store permanent Simplified asset UUID
 - Project get/update/delete/export uses `id` for the project.
 - Item list/create uses `parent_lookup_project_id`; item get/update/delete/reorder/assign additionally uses `id` for the item. All take the matching `resourcetype` and selected `space_id`.
 - Read with `api_getProject` or `api_getProjectItem`, then update with `api_updateProject` or `api_updateProjectItem`. When changing `data`, send the complete merged object, preserving unrelated campaign state.
-- Dates are ISO date-time strings. Item status is at most 16 characters; priority is an integer. Native owner/dependency fields are not declared here: record metadata in `data`/description, or route actual team task management to `pm_*`.
+- Dates are ISO date-time strings. Item status is at most 16 characters; priority is an integer. Native owner/dependency fields are not declared here: record metadata in `data`/description, or leave actual team task management to the full connector, where available.
 - `primary_type` is a category, separate from routing `resourcetype`; list filters accept one case-sensitive category of at most 24 characters.
 - Reorder takes integer `position`; assignment takes `agent_id` (UUID); export takes numeric `partner_id` and UUID `item_ids`. No public partner-discovery operation is declared. Resolve the integration before exporting, and never invent an endpoint or ID.
 - Agent discovery requires a separately configured automation/full connection with the discovery operation exposed; follow `simplified-workflows` for the supported operation. Public projects plus automation agents may require two connected surfaces; installation does not grant those tools automatically.

@@ -101,7 +101,7 @@ authorization.
 ### `simplified-project-management`
 **Trigger:** inspect or change Simplified boards, statuses, tasks, assignees,
 tags, dependencies, comments, activity, or tracked work.
-**Tools:** `pm_*` plus `api_listComments` and `api_addComment` for task comments.
+**Tools:** `pm_*` plus `api_listComments` and `api_addComment` for task comments, all served by the `simplified-full` connector (`/full/mcp`); not part of the ChatGPT bundle.
 **Does:** discover tenant-specific identifiers, read current state, confirm
 consequential changes, execute precise writes, and verify the result directly.
 

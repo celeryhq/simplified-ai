@@ -10,6 +10,7 @@ produces the subset appropriate to that surface.
 from __future__ import annotations
 
 import argparse
+import json
 import re
 import shutil
 import sys
@@ -18,6 +19,17 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SKILLS_DIR = ROOT / "skills"
+CODEX_MANIFEST = ROOT / ".codex-plugin" / "plugin.json"
+MCP_CONFIG = ROOT / ".mcp.json"
+
+# The portal connects one MCP server per plugin, and the automation server only
+# serves the skills withheld in EXCLUDED.
+CONNECTOR_SERVER = "simplified"
+
+# The portal keys the published plugin by this id and rejects an update whose
+# manifest `name` differs. Only the packaged copy carries it; the repo manifests
+# keep `simplified-ai` for Claude Code and the marketplaces.
+PORTAL_PLUGIN_NAME = "app-6a1ea93307208191b5fe82494caf73a8"
 
 # Skills deliberately withheld from the ChatGPT Apps bundle, with the reason each
 # one is withheld. A skill is excluded here rather than deleted because it stays
@@ -35,11 +47,15 @@ EXCLUDED: dict[str, str] = {
         "calls agents_* tools served by the /automation/mcp mount; the ChatGPT "
         "app connects only to apikit.simplified.com/mcp"
     ),
+    "simplified-project-management": (
+        "calls pm_* tools served only by the /full/mcp mount; the ChatGPT app "
+        "connects only to apikit.simplified.com/mcp, which carries no PM tools"
+    ),
 }
 
 # Tool namespaces served by https://apikit.simplified.com/mcp. A skill in the
 # bundle that calls anything outside these cannot work for a reviewer.
-CONNECTOR_NAMESPACES = ("api_", "media_", "notify_", "pm_", "social_")
+CONNECTOR_NAMESPACES = ("api_", "media_", "notify_", "social_")
 
 # Tool names are `namespace_camelCaseOperation`, so the operation half always
 # carries an uppercase letter. Requiring one is what separates a tool call from
@@ -94,6 +110,38 @@ class CodexSkillBundle:
                 info.compress_type = zipfile.ZIP_DEFLATED
                 info.external_attr = 0o644 << 16
                 zf.writestr(info, source.read_bytes())
+
+    @staticmethod
+    def build_plugin(selected: list[Path], out: Path) -> Path:
+        """Assemble the plugin root the portal's ZIP upload expects."""
+        manifest = json.loads(CODEX_MANIFEST.read_text())
+        tree = out / "plugin"
+        (tree / ".codex-plugin").mkdir(parents=True)
+        packaged = {**manifest, "name": PORTAL_PLUGIN_NAME}
+        (tree / ".codex-plugin" / "plugin.json").write_text(
+            f"{json.dumps(packaged, indent=2, ensure_ascii=False)}\n"
+        )
+
+        mcp = json.loads(MCP_CONFIG.read_text())
+        mcp["mcpServers"] = {CONNECTOR_SERVER: mcp["mcpServers"][CONNECTOR_SERVER]}
+        (tree / ".mcp.json").write_text(f"{json.dumps(mcp, indent=2)}\n")
+
+        (tree / "assets").mkdir()
+        for key in ("composerIcon", "logo"):
+            shutil.copy(ROOT / manifest["interface"][key], tree / manifest["interface"][key])
+        for skill in selected:
+            shutil.copytree(skill, tree / "skills" / skill.name)
+
+        package = out / f"simplified-ai-plugin-{manifest['version']}.zip"
+        CodexSkillBundle.write_zip(
+            package,
+            [
+                (f, str(f.relative_to(tree)))
+                for f in sorted(tree.rglob("*"))
+                if f.is_file() and f.name != ".DS_Store"
+            ],
+        )
+        return package
 
     @staticmethod
     def skill_files(skill: Path) -> list[tuple[Path, str]]:
@@ -169,6 +217,7 @@ def main() -> int:
 
     bundle = args.out / "simplified-ai-skills.zip"
     CodexSkillBundle.write_zip(bundle, combined)
+    package = CodexSkillBundle.build_plugin(selected, args.out)
 
     manifest = args.out / "MANIFEST.txt"
     manifest.write_text(
@@ -176,13 +225,16 @@ def main() -> int:
         f"Included ({len(selected)}): {', '.join(s.name for s in selected)}\n\n"
         "Excluded:\n"
         + "".join(f"  {name}: {reason}\n" for name, reason in sorted(EXCLUDED.items()))
-        + "\nUpload one of:\n"
+        + "\nUpload to the plugin submission portal:\n"
+        f"  {display_path(package)}   plugin root: manifest, MCP config, assets, skills\n"
+        "\nSkills only (no manifest, not accepted by the portal's plugin upload):\n"
         f"  {display_path(bundle)}         all skills in one zip\n"
         f"  {display_path(per_skill)}/<skill>.zip   one skill at a time\n"
         f"  {display_path(tree)}/          drop as a folder\n"
     )
 
     print(f"\nWrote {len(selected)} skills to {display_path(args.out)}/")
+    print(f"  {package.name}   plugin package for the portal upload")
     print(f"  simplified-ai-skills.zip   all {len(selected)} in one zip")
     print(f"  per-skill/<skill>.zip      {len(selected)} individual zips")
     print("  skills/                    plain folder")
