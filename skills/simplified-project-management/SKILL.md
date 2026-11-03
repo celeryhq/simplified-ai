@@ -3,7 +3,7 @@ name: simplified-project-management
 description: >-
   Manage Simplified project-management boards, statuses, tasks, assignees,
   tags, dependencies, comments, activity, and searches through the Simplified
-  hosted MCP connector. Use when the user explicitly asks to inspect or change
+  full MCP connector (`/full/mcp`). Use when the user explicitly asks to inspect or change
   Simplified PM data, create or triage tasks, update assignments or status,
   manage boards and columns, review dependencies, or complete tracked work. Do
   not invoke for generic coding or debugging unless the request also involves
@@ -18,7 +18,9 @@ agent memory; never ship or assume tenant-specific IDs.
 
 ## Connector
 
-Use the Simplified hosted MCP connector at `https://apikit.simplified.com/mcp`.
+Use the Simplified **full** MCP connector at `https://apikit.simplified.com/full/mcp`
+(the `simplified-full` server). The default connector at `/mcp` does not serve
+the `pm_*` tools; if they are missing, ask the user to connect `simplified-full`.
 Use logical `pm_*` tool names for PM resources and `api_listComments` /
 `api_addComment` for task comments.
 

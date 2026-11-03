@@ -1,2 +1,5 @@
 [mcp_servers.simplified]
 url = "https://apikit.simplified.com/mcp"
+
+[mcp_servers.simplified-automation]
+url = "https://apikit.simplified.com/automation/mcp"

@@ -1,6 +1,6 @@
 {
   "name": "simplified-ai",
-  "version": "1.4.0",
+  "version": "2.1.0",
   "description": "AI social media management, on-brand content creation, scheduling, analytics, and marketing workflows with Simplified.",
   "author": {
     "name": "Simplified",
@@ -33,8 +33,8 @@
   "mcpServers": "./.mcp.json",
   "interface": {
     "displayName": "Simplified for AI",
-    "shortDescription": "Create, schedule, and analyze on-brand social content.",
-    "longDescription": "Simplified for AI is an AI social media management and content creation plugin for marketers, agencies, and businesses. Create on-brand images, videos, and channel-native posts; manage brand kits, marketing projects, and tasks; build content calendars and cross-platform campaigns; schedule safely across 13 social platforms; prepare client review bundles; and turn social media analytics into actionable next steps through the hosted Simplified MCP connector.",
+    "shortDescription": "Create. Schedule. Automate",
+    "longDescription": "Simplified for AI helps marketers, agencies, and small businesses manage their social media marketing from one conversation: plan content calendars and campaigns, create on-brand images and videos, draft and schedule posts across 13 social platforms, and turn analytics into next steps. It also manages brand kits, marketing projects, and client review bundles, all through the hosted Simplified connector. Requires a Simplified account. Posts are drafted for your review and only scheduled or published after you confirm, and image and video generation uses your workspace credits.",
     "developerName": "Simplified",
     "category": "Productivity",
     "capabilities": [
@@ -42,9 +42,11 @@
       "Write"
     ],
     "websiteURL": "https://simplified.com",
+    "supportURL": "https://app.simplified.com",
     "privacyPolicyURL": "https://simplified.com/privacy",
     "termsOfServiceURL": "https://simplified.com/terms",
-    "brandColor": "#FFAD00",
+    "brandColor": "#DB8A00",
+    "brandColorDark": "#FFAD00",
     "composerIcon": "./assets/simplified-icon-256.png",
     "logo": "./assets/simplified-logo.png",
     "defaultPrompt": [

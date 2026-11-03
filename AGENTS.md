@@ -37,6 +37,7 @@ simplified-ai/
 │   ├── simplified-project-management/
 │   ├── simplified-cli/
 │   ├── simplified-workflows/
+│   ├── simplified-agents/
 │   ├── social-content-planner/
 │   ├── cross-platform-campaign/
 │   ├── content-repurposer/
@@ -64,9 +65,10 @@ simplified-ai/
 | [simplified-social](skills/simplified-social/SKILL.md) | Draft / schedule / queue posts, timed auto-comments, and analytics across 13 platforms | `social_*` |
 | [manage-brand](skills/manage-brand/SKILL.md) | Evidence-led brand kits and reusable brand context | brand-kit and context-document tools |
 | [manage-projects](skills/manage-projects/SKILL.md) | Marketing projects, deliverables, assignments, and exports | project and item tools |
-| [simplified-project-management](skills/simplified-project-management/SKILL.md) | Boards, tasks, subtasks, dependencies, assignees, tags, custom fields, comments | `pm_*` |
+| [simplified-project-management](skills/simplified-project-management/SKILL.md) | Boards, tasks, subtasks, dependencies, assignees, tags, custom fields, comments | `pm_*` (`simplified-full` connector) |
 | [simplified-cli](skills/simplified-cli/SKILL.md) | The `smp` command line across PM, media, assets, social, and `smp serve` | CLI, not MCP |
 | [simplified-workflows](skills/simplified-workflows/SKILL.md) | Build, publish, run, and control multi-step workflows | Separate automation connection, `flows_*` |
+| [simplified-agents](skills/simplified-agents/SKILL.md) | Build, change, schedule, and publish Simplified AI agents, including website chat agents | Separate automation connection, `agents_*` |
 | [social-content-planner](skills/social-content-planner/SKILL.md) | Goal-led weekly and monthly content calendars | accounts, analytics, drafts, scheduling |
 | [cross-platform-campaign](skills/cross-platform-campaign/SKILL.md) | Coordinated channel-native campaign rollouts | image generation + social |
 | [content-repurposer](skills/content-repurposer/SKILL.md) | Source content into channel-native post sequences | drafts + optional image generation |
@@ -82,15 +84,17 @@ generation with asset storage returns permanent **asset IDs** for `simplified-so
 project skills provide reusable context and operational handoffs. Workflow skills
 orchestrate those primitives around marketer jobs without duplicating API mechanics.
 
-## MCP server
+## MCP servers
 
-Same connector for every client, configured in [.mcp.json](.mcp.json):
+Three connectors, configured in [.mcp.json](.mcp.json):
 
-```json
-{ "mcpServers": { "simplified": { "type": "http", "url": "https://apikit.simplified.com/mcp" } } }
-```
+| Server | URL | Serves |
+|---|---|---|
+| `simplified` | `https://apikit.simplified.com/mcp` | content, assets, brand, projects, social (`api_`, `media_`, `notify_`, `social_`) |
+| `simplified-automation` | `https://apikit.simplified.com/automation/mcp` | agents and workflows (`agents_`, `flows_`, `smp_callApi`) |
+| `simplified-full` | `https://apikit.simplified.com/full/mcp` | everything above plus project management (`pm_*`); used by `simplified-project-management` |
 
-OAuth-secured — the client walks the OAuth flow; no API key to set. On a 401, the
+All three are the same Simplified account. Each is OAuth-secured — the client walks the OAuth flow; no API key to set. The hosted ChatGPT app connects only to `simplified`, which is why the automation skills are left out of that bundle. On a 401, the
 client refreshes its token automatically (server emits the standard challenge).
 
 ## Key conventions (agent behavior)
