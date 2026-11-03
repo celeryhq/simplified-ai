@@ -1331,6 +1331,64 @@
           "social_createSocialMediaPost": 3
         }
       }
+    },
+    {
+      "id": "G-simplified-agents-discover",
+      "skill": "simplified-agents",
+      "tool_profile": "current_source",
+      "prompt": "Which AI agents do I already have in this workspace? Just list them.",
+      "expected": {
+        "required_tools": [
+          "agents_listAgents"
+        ],
+        "ordered_tools": [],
+        "required_args": [],
+        "forbidden_tools": [
+          "agents_createAgent",
+          "agents_updateAgent",
+          "agents_deleteAgent"
+        ]
+      }
+    },
+    {
+      "id": "G-simplified-agents-propose-before-build",
+      "skill": "simplified-agents",
+      "tool_profile": "current_source",
+      "prompt": "I want an agent that answers customer questions about our pricing. What would you build?",
+      "expected": {
+        "required_tools": [
+          "agents_listAgents",
+          "agents_listToolkits"
+        ],
+        "ordered_tools": [],
+        "required_args": [],
+        "forbidden_tools": [
+          "agents_createAgent",
+          "agents_deleteAgent"
+        ]
+      }
+    },
+    {
+      "id": "G-simplified-agents-read-before-change",
+      "skill": "simplified-agents",
+      "tool_profile": "current_source",
+      "prompt": "Make my Support Bot agent's replies shorter and more direct.",
+      "expected": {
+        "required_tools": [
+          "agents_listAgents",
+          "agents_getAgent",
+          "agents_updateAgent"
+        ],
+        "ordered_tools": [
+          "agents_getAgent",
+          "agents_updateAgent"
+        ],
+        "required_args": [],
+        "forbidden_tools": [
+          "agents_deleteAgent",
+          "agents_createAgent"
+        ]
+      }
     }
   ]
 }
