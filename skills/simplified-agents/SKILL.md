@@ -9,7 +9,7 @@ A Simplified agent is a prompt, the skills that carry its behaviour, and the too
 
 ## Connection and scope
 
-Agent tools (`agents_*`) come from the plugin's `simplified-automation` connection (`https://apikit.simplified.com/automation/mcp`); brand kits and other content tools come from the `simplified` connection. Check that `agents_listAgents` is exposed before starting; if it is not, the automation connection has not been authorized yet — ask the user to connect it, and stop there.
+Agent tools (`agents_*`) come from the plugin's `simplified-full` connection (`https://apikit.simplified.com/full/mcp`); brand kits and other content tools come from the `simplified` connection. Check that `agents_listAgents` is exposed before starting; if it is not, the full connection has not been authorized yet — ask the user to connect it, and stop there.
 
 Resolve a named or uncertain teamspace with `simplified-workspace`, and carry the resolved numeric `space_id` on every agent call in that task.
 

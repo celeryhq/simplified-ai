@@ -1,0 +1,21 @@
+{
+  "name": "simplified",
+  "version": "1.0.0",
+  "description": "Draft, schedule and review social posts, manage brand context, assets, projects and tasks, and read analytics in Simplified.",
+  "author": {
+    "name": "Simplified",
+    "url": "https://simplified.com"
+  },
+  "homepage": "https://simplified.com",
+  "repository": "https://github.com/celeryhq/simplified-ai",
+  "license": "MIT",
+  "keywords": [
+    "social-media",
+    "social-media-scheduling",
+    "social-media-analytics",
+    "content-calendar",
+    "brand-management",
+    "project-management",
+    "simplified"
+  ]
+}

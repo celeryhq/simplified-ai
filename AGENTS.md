@@ -86,15 +86,14 @@ orchestrate those primitives around marketer jobs without duplicating API mechan
 
 ## MCP servers
 
-Three connectors, configured in [.mcp.json](.mcp.json):
+Two connectors, configured in [.mcp.json](.mcp.json):
 
 | Server | URL | Serves |
 |---|---|---|
 | `simplified` | `https://apikit.simplified.com/mcp` | content, assets, brand, projects, social (`api_`, `media_`, `notify_`, `social_`) |
-| `simplified-automation` | `https://apikit.simplified.com/automation/mcp` | agents and workflows (`agents_`, `flows_`, `smp_callApi`) |
-| `simplified-full` | `https://apikit.simplified.com/full/mcp` | everything above plus project management (`pm_*`); used by `simplified-project-management` |
+| `simplified-full` | `https://apikit.simplified.com/full/mcp` | everything above plus project management (`pm_*`), agents and workflows (`agents_`, `flows_`, `smp_callApi`) |
 
-All three are the same Simplified account. Each is OAuth-secured — the client walks the OAuth flow; no API key to set. The hosted ChatGPT app connects only to `simplified`, which is why the automation skills are left out of that bundle. On a 401, the
+Both are the same Simplified account. Each is OAuth-secured — the client walks the OAuth flow; no API key to set. The hosted ChatGPT app connects only to `simplified`, which is why the automation skills are left out of that bundle. On a 401, the
 client refreshes its token automatically (server emits the standard challenge).
 
 ## Key conventions (agent behavior)
