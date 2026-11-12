@@ -33,10 +33,10 @@
   "mcpServers": "./.mcp.json",
   "interface": {
     "displayName": "Simplified for AI",
-    "shortDescription": "Create. Schedule. Automate",
-    "longDescription": "Simplified for AI helps marketers, agencies, and small businesses manage their social media marketing from one conversation: plan content calendars and campaigns, create on-brand images and videos, draft and schedule posts across 13 social platforms, and turn analytics into next steps. It also manages brand kits, marketing projects, and client review bundles, all through the hosted Simplified connector. Requires a Simplified account. Posts are drafted for your review and only scheduled or published after you confirm, and image and video generation uses your workspace credits.",
+    "shortDescription": "Plan, create, schedule posts",
+    "longDescription": "Plan, create, and schedule social media posts across 13 platforms, with on-brand images and video, from one conversation. Simplified for AI helps marketers, agencies, and small businesses plan content calendars and campaigns, draft and schedule posts, and turn analytics into next steps. It also manages brand kits, marketing projects, and client review bundles, all through the hosted Simplified connector. Requires a Simplified account. Posts are drafted for your review and only scheduled or published after you confirm, and image and video generation uses your workspace credits.",
     "developerName": "Simplified",
-    "category": "Productivity",
+    "category": "Business & Operations",
     "capabilities": [
       "Interactive",
       "Write"
