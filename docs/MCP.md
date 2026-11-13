@@ -48,12 +48,10 @@ Current source profiles:
 | Profile | Intended surface |
 |---|---|
 | `public` | Workspace/assets/generation, projects/tasks, social, media, notifications |
-| `social` | Curated social operations plus identity, assets, credits, and brand lookup |
-| `automation` | Workflow/agent-building namespaces and generic passthrough |
 | `claude` | Curated allowlist (social, assets, brand, projects, PM, transcription, repurpose) with no AI image, video or audio generation |
-| `full` | All registered namespaces; default for local toolkit |
+| `full` | All registered namespaces, including workflows, agents, PM and the generic passthrough; default for local toolkit |
 
-When multiple profiles are mounted by the toolkit, `public` owns `/mcp`; others use `/social/mcp`, `/automation/mcp`, `/claude/mcp`, and `/full/mcp`. This describes source routing, not proof that every path is deployed publicly: the hosted deployment mounts `/mcp`, `/claude/mcp` and `/full/mcp`. This plugin declares two of them: `simplified` (`/mcp`) and `simplified-full` (`/full/mcp`), which the agent, workflow and project-management skills use. The hosted ChatGPT app connects only to `/mcp`, so its bundle excludes those skills. The `claude` profile is the same toolset minus AI image, video and audio generation, built into `plugins/claude/` by `bin/build-claude-plugin.py`.
+When multiple profiles are mounted by the toolkit, `public` owns `/mcp`; the others use `/claude/mcp` and `/full/mcp`. The hosted deployment mounts all three. This plugin declares two of them: `simplified` (`/mcp`) and `simplified-full` (`/full/mcp`), which the agent, workflow and project-management skills use. The hosted ChatGPT app connects only to `/mcp`, so its bundle excludes those skills. The `claude` profile is the same toolset minus AI image, video and audio generation, built into `plugins/claude/` by `bin/build-claude-plugin.py`.
 
 The older `mcp` local profile and July tool counts in historical eval captures are not the current source profile definition.
 

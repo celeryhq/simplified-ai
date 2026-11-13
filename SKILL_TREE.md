@@ -8,7 +8,7 @@ Each top-level folder contains a canonical `SKILL.md`. Skills surfaced in Codex
 also carry `agents/openai.yaml`, which adds Codex UI metadata without forking the
 workflow instructions. `simplified-cli` also carries metadata for local agents, but is excluded from the
 hosted ChatGPT bundle because it needs a shell. `simplified-workflows` and
-`simplified-agents` require the separate automation connection and are excluded from that bundle as well.
+`simplified-agents` require the separate full connection and are excluded from that bundle as well.
 
 ```text
 skills/
@@ -25,8 +25,8 @@ skills/
 ├── manage-projects/                # projects, deliverables, handoffs, exports
 ├── simplified-project-management/  # boards, tasks, assignees, dependencies
 ├── simplified-cli/                 # the `smp` command line
-├── simplified-workflows/           # automation connection, step graphs and runs
-├── simplified-agents/              # automation connection, build and manage AI agents
+├── simplified-workflows/           # full connection, step graphs and runs
+├── simplified-agents/              # full connection, build and manage AI agents
 ├── social-content-planner/         # goals → weekly/monthly calendar
 ├── cross-platform-campaign/        # brief → coordinated channel rollout
 ├── content-repurposer/             # source → channel-native post sequence
@@ -114,7 +114,7 @@ commands whose output feeds directly into pipelines.
 ### `simplified-agents`
 **Trigger:** build, change, schedule, or publish a Simplified AI agent, or put one
 on a website as a chat widget.
-**Tools:** `agents_*` on the separate automation connection.
+**Tools:** `agents_*` on the separate full connection.
 **Does:** interview about the job, propose the whole agent (prompt in full,
 skills, toolkits, onboarding checklist) and build it as a draft only after a yes;
 read an existing agent before changing it; set a website agent up from one

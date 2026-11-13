@@ -15,7 +15,7 @@ Reviewed all 18 skills, all supporting Markdown references and agent metadata. C
 | `manage-projects` | CRUD argument routing, merged data updates, PM distinction, export/execution scope |
 | `simplified-project-management` | Status migration vs deletion, subtasks, assignee/tag IDs, direct verification |
 | `simplified-cli` | All five references checked; corrected command groups/flags/actions and removed unsafe selection scripts |
-| `simplified-workflows` | Automation connection, resource scope, graph preservation, approval/restart/input contracts |
+| `simplified-workflows` | Full connection, resource scope, graph preservation, approval/restart/input contracts |
 | `social-content-planner` | Scope, authorized drafts, asset sourcing, partial-batch recovery |
 | `cross-platform-campaign` | Scope, asset reuse/intake, channel adaptation, partial-batch recovery |
 | `content-repurposer` | Source-access limits, grounded claims, scope, attachment and draft handoffs |
@@ -34,7 +34,7 @@ Reviewed all 18 skills, all supporting Markdown references and agent metadata. C
 - PM status migration does not itself delete the source status; subtasks need explicit search inclusion. User IDs and tag names use their actual write shapes.
 - Canonical pillars and ICPs use structured brand-build arrays. A rendered pillar context view has no editable KnowledgeDoc UUID.
 - Project updates preserve complete merged data and correct model/parent/item routing; marketing metadata is not native PM ownership/dependencies.
-- Workflow resources cannot carry a per-call space ID. Scoped tool alternatives, automation connection requirements, approval field mapping, restart/input semantics, and duplicate-run risks are explicit.
+- Workflow resources cannot carry a per-call space ID. Scoped tool alternatives, full connection requirements, approval field mapping, restart/input semantics, and duplicate-run risks are explicit.
 - CLI references no longer advertise removed commands, a comments namespace, top-level image prompt, publish action, wrong brand/context/project flags, or selecting arbitrary first results. The new checker guards documented tool names and literal command contracts against current source.
 
 ## Verification and limits

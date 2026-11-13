@@ -67,8 +67,8 @@ simplified-ai/
 | [manage-projects](skills/manage-projects/SKILL.md) | Marketing projects, deliverables, assignments, and exports | project and item tools |
 | [simplified-project-management](skills/simplified-project-management/SKILL.md) | Boards, tasks, subtasks, dependencies, assignees, tags, custom fields, comments | `pm_*` (`simplified-full` connector) |
 | [simplified-cli](skills/simplified-cli/SKILL.md) | The `smp` command line across PM, media, assets, social, and `smp serve` | CLI, not MCP |
-| [simplified-workflows](skills/simplified-workflows/SKILL.md) | Build, publish, run, and control multi-step workflows | Separate automation connection, `flows_*` |
-| [simplified-agents](skills/simplified-agents/SKILL.md) | Build, change, schedule, and publish Simplified AI agents, including website chat agents | Separate automation connection, `agents_*` |
+| [simplified-workflows](skills/simplified-workflows/SKILL.md) | Build, publish, run, and control multi-step workflows | Separate full connection, `flows_*` |
+| [simplified-agents](skills/simplified-agents/SKILL.md) | Build, change, schedule, and publish Simplified AI agents, including website chat agents | Separate full connection, `agents_*` |
 | [social-content-planner](skills/social-content-planner/SKILL.md) | Goal-led weekly and monthly content calendars | accounts, analytics, drafts, scheduling |
 | [cross-platform-campaign](skills/cross-platform-campaign/SKILL.md) | Coordinated channel-native campaign rollouts | image generation + social |
 | [content-repurposer](skills/content-repurposer/SKILL.md) | Source content into channel-native post sequences | drafts + optional image generation |
@@ -93,7 +93,7 @@ Two connectors, configured in [.mcp.json](.mcp.json):
 | `simplified` | `https://apikit.simplified.com/mcp` | content, assets, brand, projects, social (`api_`, `media_`, `notify_`, `social_`) |
 | `simplified-full` | `https://apikit.simplified.com/full/mcp` | everything above plus project management (`pm_*`), agents and workflows (`agents_`, `flows_`, `smp_callApi`) |
 
-Both are the same Simplified account. Each is OAuth-secured — the client walks the OAuth flow; no API key to set. The hosted ChatGPT app connects only to `simplified`, which is why the automation skills are left out of that bundle. On a 401, the
+Both are the same Simplified account. Each is OAuth-secured — the client walks the OAuth flow; no API key to set. The hosted ChatGPT app connects only to `simplified`, which is why the workflow, agent and project-management skills are left out of that bundle. On a 401, the
 client refreshes its token automatically (server emits the standard challenge).
 
 ## Key conventions (agent behavior)
