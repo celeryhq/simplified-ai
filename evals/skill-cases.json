@@ -1209,7 +1209,7 @@
       "id": "G-simplified-workflows-discover",
       "skill": "simplified-workflows",
       "tool_profile": "current_source",
-      "prompt": "List workflows matching onboarding through my authorized automation connector. Do not run.",
+      "prompt": "List workflows matching onboarding through my authorized full connector. Do not run.",
       "expected": {
         "required_tools": [
           "flows_listWorkflows"

@@ -57,7 +57,7 @@ Generation consumes credits and social scheduling/queueing can publish content. 
 ```bash
 smp serve
 smp serve --profile public
-smp serve --transport http --port 9000 --profile social
+smp serve --transport http --port 9000 --profile claude
 ```
 
-`full` is the default local profile. Hosted connector tools/profile are deployed separately; local full access does not prove a hosted client has the same tools. `flows`, `agents`, and the generic passthrough require an automation/full surface. See [client setup](../../docs/CLIENTS.md).
+`full` is the default local profile. Hosted connector tools/profile are deployed separately; local full access does not prove a hosted client has the same tools. `flows`, `agents`, and the generic passthrough require the full surface. See [client setup](../../docs/CLIENTS.md).

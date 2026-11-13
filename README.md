@@ -82,6 +82,6 @@ python3 evals/run_skill_evals.py
 python3 bin/build-codex-skills.py --out /tmp/simplified-ai-skills
 ```
 
-See [evals](evals/README.md) for the difference between document checks, agent evaluations, and live tool tests. Packaging success does not prove a hosted deployment works. The ChatGPT skill bundle omits CLI-only and automation-only skills whose tools are unavailable on the declared connector.
+See [evals](evals/README.md) for the difference between document checks, agent evaluations, and live tool tests. Packaging success does not prove a hosted deployment works. The ChatGPT skill bundle omits CLI-only, workflow and agent skills whose tools are unavailable on the declared connector.
 
 AI-authored commits should include a `Co-Authored-By:` line naming the model. Licensed under [MIT](LICENSE).
